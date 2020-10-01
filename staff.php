@@ -1,12 +1,13 @@
  <?php
 require_once ("includes/application_top.php") ;
-require ("includes/w3_header_tp1.php"); ?>
+require ("includes/bs3_header.php"); ?>
 
 
 <!-- !PAGE CONTENT! -->
 
 <!-- Header -->
 <header id="portfolio" class="w3-theme">
+
 <div class="w3-display-container w3-padding-64">
 
   <div class="w3-display-left  w3-padding">
@@ -15,7 +16,7 @@ require ("includes/w3_header_tp1.php"); ?>
   <div class="w3-display-left"  style="margin-left:100px;" >
       <span class="w3-text-black w3-opacity  w3-xxxlarge"  style="text-shadow:1px 1px 0 #444" ><b>Staff-kiev</b></span>.com 
   </div>
-  <div class="w3-display-right w3-padding "><span class="fa fa-phone w3-large"> 0932901228 - 0673355979</span></div> 
+  <div class="w3-display-right w3-padding "><i class="tiny material-icons">phonelink_ring</i>  0932901228 - 0673355979</div> 
 </div>
  </header>
     
@@ -36,13 +37,14 @@ require ("includes/w3_header_tp1.php"); ?>
 <?php endif ?>
 
 <!-- les pages -->
-<div  class="w3-container w3-theme-l5" >   
+<div  class="teal lighten-5" >   
   <?php do { ?>        
-  <div id="<?=$site_page_act->id;?>" class="w3-padding-64 w3-border-bottom"  >
+    <div id="<?=$site_page_act->id;?>" class="card-panel z-depth-5"  >
     <h1><b><?=$site_page_act->titre;?></b></h1>
     <?= str_replace ("<!--url-->", $sitecnf->url, $site_page_act->contenu  ); ?>
-  </div>
+    </div>
   <?php } while ($site_page_act = page_courante ($data, (int)$site_page_act->id + 1, $sitecnf->langue) ) ; ?>
-  
+
+  </div>
   <!-- Footer -->
-<?php require ("includes/w3_footer_tp1.php"); ?>
+<?php require ("includes/bs3_footer.php"); ?>

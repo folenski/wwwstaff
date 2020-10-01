@@ -1,32 +1,22 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?=$site_page_act->keywords;?>">
-    <meta name="author" content="">
-    <link rel="icon" href="<?=$sitecnf->url?>img/favicon.ico">
-    <title><?= $site_page_act->titre ; ?></title>
+<!DOCTYPE html>
+<html>
+<title> <?= $sitecnf->titre; ?></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="assets/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-purple.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Bootstrap core CSS -->
-    <link href="<?=$sitecnf->url?>css/bootstrap.min.css" rel="stylesheet">
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+<link rel="stylesheet" href="css/site.css">
 
-    <!-- Custom styles for this template -->
-    <link href="<?=$sitecnf->url?>css/site.css" rel="stylesheet">
+<!--Let browser know website is optimized for mobile-->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <style>
-      .affix {
-        top: 0;
-        width: 100%;
-        z-index: 9999 !important;
-      }
-
- /*      .affix + .container-fluid {
-        padding-top: 70px;
-      } */
-    </style>
-  </head>
+<body  class="w3-margin"  id="myPage">
