@@ -2,7 +2,6 @@
 /*  
     Collection de foncitons utiles 
 */
-
 function send_mail (string $mail_to, string $mail_from,  string $sujet, string $name, string $tel, string $email, string $msg): bool 
 // send email contat
 {
@@ -14,5 +13,4 @@ function send_mail (string $mail_to, string $mail_from,  string $sujet, string $
                 . "\n Email : " . htmlentities ($email). "\n Message \n " . htmlentities($msg) . "\n";
  	return mail ($mail_to, $sujet, $message, $headers) ;
 } 
-
 ?>

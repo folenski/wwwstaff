@@ -51,7 +51,7 @@ function print_menu_xml_one (object $xml, string $lang, string $tagstart, string
 		if ( $fils->langue == $lang )  {
 			$href = "#{$fils->id}";	
 
-			$html_ret .=  "{$tagstart}\" href='$href' > " . $fils->libelle . " $tagend " ;
+			$html_ret .=  "{$tagstart} href='$href' > " . $fils->libelle . " $tagend " ;
 		}
 	} 
 	return $html_ret;

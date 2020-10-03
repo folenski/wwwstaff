@@ -34,6 +34,8 @@ if (  ! empty ($_GET ['action']) ) {
     if ( htmlentities( $_GET ['action' ] ) == 'mail')  {
       if ( $sitecnf->deb == "oui" ) {
         echo "** deb **  On traite l'envoi des mails <br>" ;
+        print_r ( $_POST);
+        echo "<br>";
       }
       $ret = (bool) send_mail( $sitecnf->mail_to, $sitecnf->mail_from, $sitecnf->titre . " contact",  $_POST['cont_form_name'],  $_POST['cont_form_tel'], $_POST['cont_form_email'], $_POST['cont_form_msg']) ;
       if (  $ret )  {
