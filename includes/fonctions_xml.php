@@ -2,6 +2,9 @@
 /* 
 Fonctions pour lire les données au format XML
 
+MFE le 4/10/2020
+
+
 => necessite le module simplexml
 => sudo apt install php7.4-xml
 */
