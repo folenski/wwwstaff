@@ -1,38 +1,63 @@
 <?php
-// script de création de la base 
-// v1.00 - le 07/11/2020 - mfe
-
-/*         echo "<br>";
-        print_r ($tabDesc);
- */
+// Class nécessaure pour la création d'une base pour les sites staff
+// v1.00 - 07/11/2020 - version initiale
+// v1.05 - 25/12/2020 - ajout de la fonction initTable
+// v1.10 - 10/01/2020 - ajout de la fonction initTable
 
 class siteModeleData {
+
+    const MODULEVS_MODELEDATA = "1.10";
+
     var $table   =  ["categorie", "info", "grpinfo", "user"];
-    var $tableDesc= ["categorie" => ["idCat", "nom", "actif" ],
-                     "info"      => ["idInfo", "idGrpDown", "actif", "titre", "meta", "contenu", "dateCreat", "dateMaj"],
+    var $tableDesc= ["categorie" => ["idCat", "nom", "boolActif" ],
+                     "info"      => ["idInfo", "idGrpDown", "boolActif", "titre", "meta", "contenu", "dateCreat", "dateMaj"],
                      "grpinfo"   => ["idGrpInfo", "idGrpItem", "idInfo",  "nbrClassement", "idCat"],
-                     "user"      => ["idUser", "nom", "mail" , "pass", "dateCreat", "dateMaj"]
+                     "user"      => ["idAutoUser", "nom", "mail" , "pass", "nbrLevel" ,"dateCreat", "dateMaj"]
                     ];
     var $tableCle = ["categorie" => "idCat",
                      "info"      => "idInfo",
                      "grpinfo"   => "idGrpInfo",
-                     "user"      => "idUser"
+                     "user"      => "idAutoUser"
                     ];
     var $index;
-    var $type     = ["SQLITE" => ["id" => "INTEGER", "nbr" => "INTEGER", "date" => "DATE", "defaut" => "TEXT"]
+    var $type     = ["SQLITE" => ["id" => "INTEGER", "nbr" => "INTEGER", "date" => "DATE", "bool" => "INTEGER", "defaut" => "TEXT"]
                     ];
+
+    private $initTabuser = [];
+    private $initTabcategorie = [["idCat" => 1, "nom" => "site", "boolActif" => 1]
+                                ,["idCat" => 2, "nom" => "menu", "boolActif" => 1]
+                                ,["idCat" => 3, "nom" => "page", "boolActif" => 1]
+                                ,["idCat" => 4, "nom" => "article", "boolActif" => 1]];
+    private $initTabinfo = [ 
+     ["idInfo" => 1, "idGrpDown" => 10, "boolActif" => 1, "titre" => "DEMO", "meta" => "lang=fr", "dateCreat" => "<_f>datetime('now')", "dateMaj" => "<_f>datetime('now')"]
+    ,["idInfo" => 2, "boolActif" => 1, "titre" => "HOME", "meta" => "home", "dateCreat" => "<_f>datetime('now')", "dateMaj" => "<_f>datetime('now')"]
+    ,["idInfo" => 3, "boolActif" => 1, "titre" => "BIENVENUE", "meta" => "home",  "dateCreat" => "<_f>datetime('now')", "dateMaj" => "<_f>datetime('now')", 
+       "contenu" => "<div class='container'> Bienvenue sur le site créé avec l'outil wwwstaff</div>" ]    
+    ];
+    private $initTabgrpinfo = [  ["idGrpInfo" => 1, "idGrpItem" => 1,  "idInfo" => 1, "idCat" => 1]
+                                ,["idGrpInfo" => 2, "idGrpItem" => 10, "idInfo" => 2, "nbrClassement" => 1, "idCat" => 2]
+                                ,["idGrpInfo" => 3, "idGrpItem" => 10, "idInfo" => 3, "nbrClassement" => 1, "idCat" => 3]
+    ];
+
     private $_prefixe;
     private $_typeDB;
 
     function __construct(string $prefixe, string $typeDB = "SQLITE") {
     // creation, avec le prefixe des tables 
-        $this->_prefixe = $prefixe . "_";
         $this->_typeDB = $typeDB;
+        $this->_prefixe = $prefixe;
+        if ( substr($this->_prefixe, -1) != "_" )   // on rajoute l'underscore si le prefixe n'en contient pas
+            $this->_prefixe .= "_";
     }
 
     function fin() {
     // destruction
     // A completer, peut etre :)
+    }
+    
+    public static function  version(): string {
+    // retourne la version du module
+        return self::MODULEVS_MODELEDATA;
     }
 
     function createTable(string $table): string {
@@ -44,11 +69,31 @@ class siteModeleData {
         $preSql  = "CREATE TABLE {$this->_prefixe}$table (";
         foreach ($tabDesc as $champs) {
             $preSql .= "$sep $champs " . $this->champsType($champs);
-            if ($champs == $cle)
+            if ($champs == $cle) {   
                 $preSql .= " PRIMARY KEY";
+                if (substr($champs, 0, 6) == "idAuto")  // ajout de l'auto incrementation
+                    $preSql .= " AUTOINCREMENT NOT NULL";
+            }
             $sep = ",";
         }
         return "$preSql );";
+    }
+
+    function initTable(string $table, int $occurence): string {
+    // initialise une table avec les valeurs par defaut
+        switch ($table) {
+            case "user" : $tab = $this->initTabuser; break;
+            case "categorie" : $tab = $this->initTabcategorie; break;
+            case "info" : $tab = $this->initTabinfo; break;
+            case "grpinfo" : $tab = $this->initTabgrpinfo; break;
+            default : return (string)null;
+        }
+
+        if ($occurence >= count($tab))
+            return (string)null;
+
+        // UtilDebug("insert ", $this->insertLigne($table, $tab[$occurence]), true);
+        return (string)$this->insertLigne($table, $tab[$occurence]);
     }
 
     function insertLigne(string $table, array $tableCont): string {
@@ -61,7 +106,8 @@ class siteModeleData {
             // bcle pour la construction des champs 
             foreach ($tabDesc as $champs) {
                 if (isset ($tableCont[$champs])) {
-                    $preSql .= "$sep $champs";
+                    if (substr($champs, 0, 6) != "idAuto")   // si autoincrement , on laisse sqlite3 
+                        $preSql .= "$sep $champs";
                 }
                 $sep = ",";
             }
@@ -77,7 +123,7 @@ class siteModeleData {
     }
 
     function deleteLigne(string $table, array $tableCont): string {
-    // Contruit la requete Insert 
+    // Contruit la requete delete 
             if (! isset(($this->tableDesc)[$table])) return ""; // la table existe ?
             $tabDesc = ($this->tableDesc)[$table];  
 

@@ -1,8 +1,7 @@
 <?php 
-/*  
-    Collection de foncitons utiles 
-    le 4/10/2020  ajout d'une foncton pour calculer la repertoire racine du site 
-*/
+//    Collection de fonctions utiles 
+//    4/10/2020 - ajout d'une fonction pour calculer la repertoire racine du site 
+//    26/12/2020 - ajout de la fonction utilProtect
 
 function ecritFichier(string $ligne, string $fichier): int {
 // ecrit dans un fichier et si ce parametre est null , il l'affiche sur l'ecran
@@ -27,9 +26,14 @@ function utilGetSite(array $get, string $parametre): string {
 
 function utilSendMail(string $mail_to, string $mail_from,  string $sujet, string $message): bool {
 // send email contat
-	$headers  = "From: '$mail_from' \n Content-Type: text/html; charset='UTF-8' \n" .
-	            "Content-Transfer-Encoding: 8bit \n" ; 
- 	return (bool)mail($mail_to, $sujet, $message, $headers) ;
+  $headers  = "MIME-Version: 1.0 \n";
+  $headers  .= "From: $mail_from \nContent-Type: text/html; charset='iso-8859-1'\n"; 
+
+/*   utilDebug("mail to ",  $mail_to, true);
+  utilDebug("mail from ",  $mail_from, true);
+  utilDebug("sujet ",  $sujet, true);
+  utilDebug("message",  $message, true); */
+ 	return (bool)mail($mail_to, $sujet, $message, $headers);
 } 
 
 function utilRepRacine(string $root , string $uri): string {
@@ -51,11 +55,17 @@ function utilRepRacine(string $root , string $uri): string {
     return $loc_racine;
 }
 
-function utilDebug(string $libelle, $obj, bool $trace = false) {
+function utilDebug(string $libelle, $obj, bool $trace = true): void {
 // affiche l'objet PHP
   if ($trace) {
     echo "<br><strong>$libelle</strong><pre>";
     print_r($obj);
     echo "</pre>";
   }
+}
+
+function utilProtected($strUnSecure = null): string {
+// Protege une variable saisie par l'utilisateur
+  $protected =  str_replace([';', ',', '\\', '&', '\'', '"'], "", $strUnSecure);  // supprime les caracteres problematiques
+  return htmlentities($protected);
 }
