@@ -1,0 +1,47 @@
+@url = localhost:8080/api
+@contentType = application/json
+
+### sans le service , erreur
+
+GET http://{{url}}/staff.php  HTTP/1.1
+
+### service incorrect 
+
+GET http://{{url}}/staff.php/coucou/ HTTP/1.1
+
+### Methode incorrecte pour le service demandé 
+
+GET http://{{url}}/staff.php/mail HTTP/1.1
+
+### Il manque un paramétre ( msg )
+POST http://{{url}}/staff.php/mail HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "nom": "sample",
+    "mail": "coucou@email.fr"
+}
+
+### mail  ko
+POST http://{{url}}/staff.php/mail HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "nom": "sample",
+    "tel" : "4555555",
+    "mail": "coucouemail.fr",
+    "message": "il fait beau aujourd'hui"
+}
+
+
+### requete de maj ok
+POST http://{{url}}/staff.php/mail HTTP/1.1
+content-type: {{contentType}}
+
+{
+    "nom": "sample",
+    "tel" : "4555555",
+    "mail": "coucou@email.fr",
+    "message": "il fait beau aujourd'hui"
+}
+

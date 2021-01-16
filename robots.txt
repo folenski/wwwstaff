@@ -1,8 +1,8 @@
 User-Agent: *
-Disallow: /asset/
+Disallow: /api/
+Disallow: /admin/
 Disallow: /css/
 Disallow: /images/
 Disallow: /img/
 Disallow: /includes/
 Disallow: /js/
-Disallow: /xmldata/
