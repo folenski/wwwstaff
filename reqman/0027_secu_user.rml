@@ -1,0 +1,153 @@
+################################################################################
+#             Tests de sécurité sur la class User
+# le 8/07/2022
+################################################################################
+
+################################################################################
+### Mise à jour mot de passe sans token => KO
+
+- PUT: /api/user
+  doc: |
+    - Mise à jour mot de passe sans token
+  headers:
+    content-type: application/json
+  body: {"password" : "Mypass123456"}
+  tests:
+    - status: 401 
+    - json.http: "Unauthorized"
+
+################################################################################
+### Creation d'un compte sans token => KO
+
+- POST: /api/user
+  doc: |
+    - Creation d'un compte sans token
+  headers:
+    content-type: application/json
+  body: {"user": "tstadm", "mail": "t2@local.com", "password": "Pass123456", "group": "admin"}
+  tests:
+    - status: 401 
+    - json.http: "Unauthorized"
+
+################################################################################
+### Suppression de l'utilisateur tstadm sans token => KO
+
+- DELETE: /api/user
+  doc: |
+    - Suppression de l'utilisateur tstadm sans token
+  headers:
+    content-type: application/json
+  body: {"user": "testadm"}
+  tests:
+    - status: 401 
+    - json.http: "Unauthorized"
+
+################################################################################
+### 
+###  Cinématique : vérifier que apres une déconnexion que le token est invalide
+### 
+################################################################################
+
+################################################################################
+### On demande un token <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin afin d'avoir un token  
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+
+################################################################################
+### Deconnexion pour avoir un token non valide <<myToken>> => OK
+
+- DELETE: /api/auth
+  doc: |
+    - Deconnexion, le token devient non valide  
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+
+################################################################################
+### Maj de mail avec un mauvais token => KO
+
+- PUT: /api/user
+  doc: |
+    - Changement l'email avec mauvaus token d'autorisation
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken>>
+  body: {"mail" : "t3@t.com"}
+  tests:
+    - status: 401
+    - json.http: "Unauthorized"
+
+
+################################################################################
+### 
+###  Cinématique : vérifier que la 2eme connexion, on rend le 1er token invalide
+### 
+################################################################################
+
+################################################################################
+### On demande un token <<myToken2>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin afin d'avoir un token  
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken2: <<json.token>>
+
+################################################################################
+### On demande un token <<myToken3>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin afin d'avoir un token  
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken3: <<json.token>>
+
+################################################################################
+### Maj de mot de passe avec un mauvais token => KO
+### changement de logique , les tokens ne sont plus revoqués
+
+- PUT: /api/user
+  doc: |
+    - Changement l'email avec mauvais token d'autorisation
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken2>>
+  body: {"password" : "staff@local.com"}
+  tests:
+    - status: 200
+    - json.http: "Ok"

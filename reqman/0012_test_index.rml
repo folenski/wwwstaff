@@ -1,0 +1,18 @@
+################################################################################
+#  Test de l'API index
+#  maj 9/12/2022
+################################################################################
+
+################################################################################
+### Recuperation de l'index du site
+
+- GET: /api/wwwindex
+  doc: |
+    - Recuperation de l'index du site 
+  headers:
+    content-type: application/json
+  tests:
+    - status: 200
+    - content: language
+    - json.size: 2
+    - json.0.language  : fr

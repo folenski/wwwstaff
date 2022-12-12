@@ -1,0 +1,11 @@
+*.swp
+*.swo
+*.tmp
+/vendor/
+/node_modules/
+/sqldb/*db
+/tests/dependances/tmp/*
+/tmp/*php
+/reqman/reqman.html
+/.vscode/
+.prettierrc

@@ -1,0 +1,50 @@
+################################################################################
+#             Test API de la Table log
+# le 8/07/2022
+################################################################################
+
+################################################################################
+###  On demande un token <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin pour avoir le token <<myToken>>
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+
+################################################################################
+### Lecture de la table log avec une limite de 5 enregistrement
+
+- GET: /api/log?limit=5
+  doc: |
+    - Lecture de la table log
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  body: {"limit": 5}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+
+################################################################################
+### Lecture de la table log avec une cle
+
+- GET: /api/log?limit=2&id=1
+  doc: |
+    - Lecture de la table log
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  body: {"limit": 2, "id" : 1}
+  tests:
+    - status: 200 
+    - json.http: "Ok"

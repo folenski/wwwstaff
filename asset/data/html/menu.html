@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <a class="navbar-brand" href="#">Staff-site demo</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+  <ul class="navbar-nav">
+  {{#nav}}
+    {{^down}}
+     <li class="nav-item"><a class="nav-link {{active}}" href="{{uri}}">{{name}}</a></li>
+    {{/down}}
+    {{#down}}
+      <li class="nav-item dropdown"><a class="nav-link dropdown-toggle {{active}}" href="{{uri}}"
+         id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{name}}</a>
+      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        {{#dropdown}}
+        <li><a class="dropdown-item" href="{{uri}}">{{name}}</a></li>
+        {{/dropdown}}
+      </ul></li>
+    {{/down}}
+  {{/nav}}
+  </ul>
+</div>
+</div>

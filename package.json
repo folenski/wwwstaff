@@ -1,0 +1,33 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "tests for folenski/wwwstaff",
+  "main": "public/app.js",
+  "scripts": {
+    "build": "node scripts/dev.js",
+    "sass_dev": "sass app/sass/style.scss:public/css/style.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/folenski/wwwstaff.git"
+  },
+  "keywords": [
+    "admin"
+  ],
+  "author": "folenski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/folenski/wwwstaff/issues"
+  },
+  "homepage": "https://github.com/folenski/wwwstaff#readme",
+  "dependencies": {
+    "fski-ajax": "^1.0.0",
+    "fski-reveal": "^1.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.16.4",
+    "eslint": "^8.19.0",
+    "node-watch": "^0.7.3",
+    "sass": "^1.35.1"
+  }
+}

@@ -1,0 +1,95 @@
+################################################################################
+#             Test du controle de format sur l'API User
+# le 8/07/2022
+################################################################################
+
+################################################################################
+###  On demande un token <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin pour avoir le token <<myToken>>
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+
+################################################################################
+### Connexion avec mais sans indiquer le mot de passe  => KO
+
+- POST: /api/auth
+  doc: |
+    - Test Ko, probleme de format
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin"}
+  tests:
+    - status: 400 
+    - json.http: "Bad Request"
+    - json.content: "password"
+
+################################################################################
+### Création de l'utilisateur testadm  sans mail => KO
+
+- POST: /api/user
+  doc: |
+    - Création de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  body: {"user": "testadm", "password": "Pass123456"}
+  tests:
+    - status: 400 
+    - json.http: "Bad Request"
+    - json.content: "mail"
+
+################################################################################
+###  mise à jour sans body => KO
+
+- PUT: /api/user
+  doc: |
+    - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken>>
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.content: "Une erreur a été rencontrée"
+
+################################################################################
+###  mise à jour sans body => KO
+
+- PUT: /api/user
+  doc: |
+    - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken>>
+  body: {"Password": "testadm"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.content: "Une erreur a été rencontrée"
+
+################################################################################
+### Suppression de l'utilisateur testadm => Ko
+
+- DELETE: /api/user
+  doc: |
+    - Re suppression de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  body: {"uuser": "testadm"}
+  tests:
+    - status: 400 
+    - json.http: "Bad Request"
+    - json.content: "user"

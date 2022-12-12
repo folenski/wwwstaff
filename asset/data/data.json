@@ -1,0 +1,122 @@
+{
+  "nom": "data",
+  "row": [
+    {
+      "ref": "fr_menu",
+      "id_div": "menu",
+      "_j_content": "inc/menu.json"
+    },
+    {
+      "ref": "en_menu",
+      "id_div": "menu",
+      "_j_content": "inc/en_menu.json"
+    },
+    {
+      "ref": "fr_accueil",
+      "id_div": "content",
+      "rank": 1,
+      "j_content": {
+        "_section": "html/fr_accueil_1.html"
+      }
+    },
+    {
+      "ref": "fr_accueil",
+      "id_div": "content",
+      "rank": 2,
+      "j_content": {
+        "_section": "html/fr_accueil_2.html"
+      }
+    },
+    {
+      "ref": "en_home",
+      "id_div": "content",
+      "rank": 1,
+      "j_content": {
+        "_section": "html/en_home_1.html"
+      }
+    },
+    {
+      "ref": "en_home",
+      "id_div": "content",
+      "rank": 2,
+      "j_content": {
+        "_section": "html/en_home_2.html"
+      }
+    },
+    {
+      "ref": "news",
+      "id_div": "news",
+      "rank": 1,
+      "j_content": {
+        "img_src": "/media/moscou.jpg",
+        "img_alt": "Moscow",
+        "title": "Moscow",
+        "date": "",
+        "article": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p>"
+      }
+    },
+    {
+      "ref": "news",
+      "id_div": "news",
+      "rank": 3,
+      "j_content": {
+        "img_src": "/media/london.jpg",
+        "img_alt": "London",
+        "title": "London",
+        "date": "",
+        "article": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p><p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p><p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p>"
+      }
+    },
+    {
+      "ref": "news",
+      "id_div": "news",
+      "rank": 4,
+      "j_content": {
+        "img_src": "/media/paris.jpg",
+        "img_alt": "Paris tour Eiffel",
+        "title": "Paris",
+        "date": "08/08/2019",
+        "article": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p><p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p>"
+      }
+    },
+    {
+      "ref": "news",
+      "id_div": "news",
+      "rank": 5,
+      "j_content": {
+        "img_src": "/media/newyork.jpg",
+        "img_alt": "New York",
+        "title": "New York",
+        "date": "01/05/2021",
+        "article": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p><p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p>"
+      }
+    },
+    {
+      "ref": "news",
+      "id_div": "news",
+      "rank": 6,
+      "j_content": {
+        "img_src": "/media/tokyo.jpg",
+        "img_alt": "Tokyo",
+        "title": "Tokyo",
+        "article": "<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos ut, quisquam ducimus commodi dolore dolorum voluptatum officiis, provident exercitationem ratione asperiores quasi perferendis minus? Adipisci necessitatibus reprehenderit distinctio architecto eligendi?</p>"
+      }
+    },
+    {
+      "ref": "lorem",
+      "id_div": "content",
+      "rank": 1,
+      "j_content": {
+        "_section": "html/lorem.html"
+      }
+    },
+    {
+      "ref": "contact",
+      "id_div": "content",
+      "rank": 1,
+      "j_content": {
+        "_section": "html/contact.html"
+      }
+    }
+  ]
+}

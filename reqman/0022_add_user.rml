@@ -1,0 +1,99 @@
+################################################################################
+#             Tests sur sur l'API User
+################################################################################
+
+################################################################################
+#  on demande un token <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - On demande un token
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+  save:
+     mytoken: <<json.token>>
+
+################################################################################
+### Création de l'utilisateur testadm avec un mot de passe faible => KO
+
+- POST: /api/user
+  doc: |
+    - Création de l'utilisateur testadm avec un mot de passe faible
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<mytoken>>
+  body: {"user": "testadm", "mail": "testadm@local.com", "password": "pass123456"}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+    - json.errorcode: 38
+    - json.content: "Le mot de passe n'est pas conforme"
+
+################################################################################
+### Création de l'utilisateur testadm => OK
+
+- POST: /api/user
+  doc: |
+    - Création de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<mytoken>>
+  body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.user: "testadm"
+
+################################################################################
+### Recréation de l'utilisateur testadm ( controle de doublon) => KO
+
+- POST: /api/user
+  doc: |
+    - Recréation de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<mytoken>>
+  body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+    - json.errorcode: 35
+    - json.content: "L'utilisateur existe déjà"
+
+################################################################################
+### Suppression de l'utilisateur testadm => OK
+
+- DELETE: /api/user
+  doc: |
+    - Suppression de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<mytoken>>
+  body: {"user": "testadm"}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+    - json.errorcode: 0
+
+################################################################################
+### Suppression de l'utilisateur testadm => Ko
+
+- DELETE: /api/user
+  doc: |
+    - Re suppression de l'utilisateur testadm
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<mytoken>>
+  body: {"user": "testadm"}
+  tests:
+    - status: 200 
+    - json.http: "Ok"
+    - json.content: "L'utilisateur n'a pas été trouvé"
+    - json.errorcode: 36
+  

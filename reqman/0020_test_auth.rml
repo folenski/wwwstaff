@@ -1,0 +1,61 @@
+################################################################################
+#             Tests sur l'authentification
+# 08/07/2022, version initiale
+# 10/12/2022, maj du retour
+################################################################################
+
+################################################################################
+###  On demande un token <<myToken>> => OK
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin pour avoir le token <<myToken>>
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.errorcode: null
+    - json.mail: "staff@local.com"
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+
+################################################################################
+###  Deconnexion avec le token <<myToken>> => OK
+- DELETE: /api/auth
+  doc: |
+    - Deconnexion avec un token valide
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 200
+    - json.errorcode: null
+
+################################################################################
+###  Deconnexion avec le token <<myToken>> => KO
+- DELETE: /api/auth
+  doc: |
+    - Deconnexion avec le meme token, ne doit pas fonctionner  
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 401
+    - json.errorcode: 23
+    - json.content: token not valid
+
+################################################################################
+###  Connection au compte admin avec un mauvais mot de passe => KO  
+- POST: /api/auth
+  doc: |
+    - Connection au compte admin avec un mauvais mot de passe  
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "mauvaispass"}
+  tests:
+    - status: 200
+    - json.errorcode: 134 
+    - json.content: "Le mot de passe est erroné"
+
+

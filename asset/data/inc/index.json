@@ -1,0 +1,21 @@
+[
+    {
+      "language": "fr",
+      "default": true,
+      "uri" : "fr",
+      "uri_def": "fr/accueil",
+      "title": "Démo en francais",
+      "meta": {
+        "description": "Lorem ipsum, dolor sit amet consectetur",
+        "revised": "25/05/2021"
+      },
+      "index": "demo.html"
+    },
+    {
+      "language": "en",
+      "uri" : "en",
+      "uri_def": "en/home",
+      "title": "English demo",
+      "index": "demo.html"
+    }
+  ]  

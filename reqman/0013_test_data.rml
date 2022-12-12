@@ -1,0 +1,42 @@
+################################################################################
+#  Test de l'API data
+#  maj 9/12/2022
+################################################################################
+
+################################################################################
+### Recuperation du menu fr_menu
+
+- GET: /api/wwwdata/fr_menu
+  doc: |
+    - Recuperation de l'index du site 
+  headers:
+    content-type: application/json
+  tests:
+    - status: 200
+    - json.ref: fr_menu
+    - json.data.0.name: Accueil
+    - json.data.1.ref: news
+
+################################################################################
+### Recuperation du menu fr_menu
+
+- GET: /api/wwwdata/fr_menu_xx
+  doc: |
+    - Recuperation de l'index inconnu 
+  headers:
+    content-type: application/json
+  tests:
+    - status: 200
+    - json.errorcode: 2
+    - json.data.size: 0
+
+################################################################################
+### Recuperation du menu fr_menu
+
+- GET: /api/wwwdata
+  doc: |
+    - Recuperation de l'index inconnu 
+  headers:
+    content-type: application/json
+  tests:
+    - status: 404

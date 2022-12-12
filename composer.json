@@ -1,0 +1,25 @@
+{
+    "name": "folenski/wwwstaff",
+    "description": "Build website and api REST",
+    "type": "library",
+    "authors": [
+        {
+            "name": "folenski",
+            "email": "folenski@nospan.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Staff\\" : "folenski/staff/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "altorouter/altorouter": "^2.0",
+        "zordius/lightncandy": "dev-master",
+        "zircote/swagger-php": "^4.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}

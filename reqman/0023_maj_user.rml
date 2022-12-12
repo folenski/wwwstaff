@@ -1,0 +1,130 @@
+################################################################################
+#             Tests sur la méthode PUT sur la class User
+# le 8/07/2022
+################################################################################
+
+################################################################################
+### On demande un token <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Init, login pour obtenir un token d'autorisation
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+     myMail: <<json.mail>>
+
+################################################################################
+### Maj à jour du mot de passe => OK
+
+- PUT: /api/user
+  doc: |
+    - Changement du mot de passe du compte admin
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken>>
+  body: {"password" : "Mypass123456"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+
+################################################################################
+### On remet le  mot de passe d'origine sans demander un nouveau token => KO
+
+- PUT: /api/user
+  doc: |
+    - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken>>
+  body: {"password" : "Admin4321@"}
+  tests:
+    - status: 401
+    - json.http: "Unauthorized"
+
+################################################################################
+### On demande un token  <<myToken>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Demande d'un nouveau un token d'autorisation apres changement de mot de passe
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Mypass123456"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.token.size: . > 20 
+  save:
+     myToken2: <<json.token>>
+
+################################################################################
+### On remet le  mot de passe d'origine  => OK
+
+- PUT: /api/user
+  doc: |
+    - On remet le mot de passe afin de rendre rejouable les tests
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken2>>
+  body: {"password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+
+################################################################################
+### On demande un token : <<myToken3>> => OK
+
+- POST: /api/auth
+  doc: |
+    - Demande d'un nouveau un token d'autorisation apres changement de mot de passe
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+    - json.token.size: . > 20 
+  save:
+     myToken3: <<json.token>>
+
+################################################################################
+### On met a jour l'email  => OK
+
+- PUT: /api/user
+  doc: |
+    - On change le mail
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken3>>
+  body: {"mail" : "t@t.com"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
+
+################################################################################
+### On remet l'email initiale => OK
+
+- PUT: /api/user
+  doc: |
+    - On remet l'email initial
+  headers:
+    content-type: application/json
+    Authorization:  Bearer <<myToken3>>
+  body: {"mail" : "staff@local.com"}
+  tests:
+    - status: 200
+    - json.http: "Ok"
+    - json.errorcode: 0
