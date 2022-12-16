@@ -4,7 +4,8 @@
  * Constantes pour la définition des champs pour la base de données
  * 
  * @author  folenski
- * @since 1.0  04/08/2022 : Version initiale 
+ * @version 1.0 04/08/2022: Version initiale 
+ * @version 1.1 14/12/2022: supp interface DBParam 
  *  
  */
 
@@ -12,7 +13,7 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 
-class DBParam implements DBParamInterface
+class DBParam
 {
     const RET_OK = 0;
     const NOT_FOUND = 2;
@@ -29,6 +30,7 @@ class DBParam implements DBParamInterface
 
     static string $prefixe;
     static string $env;
+    static string $db;
     static string $file_pdo;
 
     /**
@@ -52,10 +54,10 @@ class DBParam implements DBParamInterface
         if ($env !== null) {
             if (!array_key_exists($env, $ini)) return self::NOT_FOUND;
             if (($prefixe = $ini[$env]["prefixe"] ?? "") != "") $prefixe .= "_";
-
             self::$prefixe = $prefixe;
             self::$env = $env;
-            self::$file_pdo .= $ini[$env]["database"];
+            self::$db = $valeur["db"] ?? "sqlite";
+            self::$file_pdo .= $ini[$env]["pdo"];
             return true;
         }
 
@@ -66,14 +68,16 @@ class DBParam implements DBParamInterface
                 if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
                 self::$prefixe = $prefixe;
                 self::$env = $key;
-                self::$file_pdo .= $valeur["database"];
+                self::$db = $valeur["db"] ?? "sqlite";
+                self::$file_pdo .= $valeur["pdo"];
                 return true;
             }
             if (array_key_exists("default", $valeur)) {
                 if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
                 self::$prefixe = $prefixe;
                 self::$env = $key;
-                self::$file_pdo .= $valeur["database"];
+                self::$db = $valeur["db"] ?? "sqlite";
+                self::$file_pdo .= $valeur["pdo"];
             }
         }
         return isset(self::$prefixe) ? true : self::NOT_FOUND;

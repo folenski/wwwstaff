@@ -13,8 +13,8 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.token.size: . > 20 
   save:
      mytoken: <<json.token>>
 
@@ -30,9 +30,8 @@
   body: {"user": "testadm", "mail": "testadm@local.com", "password": "pass123456"}
   tests:
     - status: 200 
-    - json.http: "Ok"
-    - json.errorcode: 38
-    - json.content: "Le mot de passe n'est pas conforme"
+    - json.errorcode: 138
+    - json.content: The password is incorrect
 
 ################################################################################
 ### Création de l'utilisateur testadm => OK
@@ -46,9 +45,8 @@
   body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
   tests:
     - status: 200 
-    - json.http: "Ok"
-    - json.errorcode: 0
-    - json.user: "testadm"
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### Recréation de l'utilisateur testadm ( controle de doublon) => KO
@@ -62,9 +60,8 @@
   body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
   tests:
     - status: 200 
-    - json.http: "Ok"
-    - json.errorcode: 35
-    - json.content: "L'utilisateur existe déjà"
+    - json.errorcode: 135
+    - json.content: User already exists
 
 ################################################################################
 ### Suppression de l'utilisateur testadm => OK
@@ -78,8 +75,8 @@
   body: {"user": "testadm"}
   tests:
     - status: 200 
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### Suppression de l'utilisateur testadm => Ko
@@ -93,7 +90,6 @@
   body: {"user": "testadm"}
   tests:
     - status: 200 
-    - json.http: "Ok"
-    - json.content: "L'utilisateur n'a pas été trouvé"
-    - json.errorcode: 36
+    - json.errorcode: 136
+    - json.content: User not found
   

@@ -4,8 +4,9 @@
  * Table Data
  *
  * @author  folenski
- * @since 1.0  4/08/2022: Version Initiale 
- * @since 1.01 4/12/2022: supp du champs "title" 
+ * @version 1.0  4/08/2022: version Initiale 
+ * @version 1.0.1 4/12/2022: supp du champs "title"
+ * @version 1.1 10/12/2022: utilisation des tags
  * 
  */
 
@@ -14,15 +15,15 @@ namespace Staff\Models;
 use Staff\Databases\TableInterface;
 use Staff\Services\Carray;
 
-final class Data  implements DBParamInterface, TableInterface
+final class Data  implements TableInterface
 {
     private const _NAME = "data";
     private const _DESC = [
-        "id"         => "INTEGER PRIMARY KEY AUTOINCREMENT",
-        "ref"        => "VARCHAR(" . self::SZ_SM_TXT . ")",
+        "id"         => "INTEGER PRIMARY KEY #AUTOINCR",
+        "ref"        => "#TXT_SM",
         "rank"       => "INTEGER DEFAULT 0",
-        "j_content"  => "VARCHAR(" . self::SZ_JSON . ")  NOT NULL",
-        "id_div"     => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
+        "j_content"  => "#JSON NOT NULL",
+        "id_div"     => "#TXT_SM NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
         "_key"        => "FOREIGN KEY (id_div) REFERENCES %stemplate(id_div)"

@@ -28,7 +28,7 @@
   body: {"nom" : "test2", "tel" : 901499999, "mail" : "test0009@y.", "message" : "hello it's me"}
   tests:
     - status: 200
-    - json.errorcode: 22
+    - json.errorcode: 151
     - json.msg.size: . > 5
 
 
@@ -44,7 +44,6 @@
   tests:
     - status: 400
     - json.errorcode: 22
-    - json.msg.size: . > 5
     - json.content: message
 
 ################################################################################

@@ -4,7 +4,8 @@
  * Table Message
  *
  * @author  folenski
- * @since 1.0  09/08/2022 : Version Initiale 
+ * @version 1.0 09/08/2022 : Version Initiale 
+ * @version 1.1 10/12/2022: utilisation des tags
  * 
  */
 
@@ -12,15 +13,15 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 
-final class Message implements DBParamInterface, TableInterface
+final class Message implements TableInterface
 {
     private const _NAME = "message";
     private const _DESC = [
-        "id"         => "INTEGER PRIMARY KEY AUTOINCREMENT",
-        "user"       => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
-        "host"       => "VARCHAR(" . self::SZ_SM_TXT . ")",
-        "hash"       => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
-        "j_msg"      => "VARCHAR(" . self::SZ_JSON . ") NOT NULL",
+        "id"         => "INTEGER PRIMARY KEY #AUTOINCR",
+        "user"       => "#TXT_SM NOT NULL",
+        "host"       => "#TXT_SM",
+        "hash"       => "#TXT_SM NOT NULL",
+        "j_msg"      => "#JSON NOT NULL",
         "done"       => "INTEGER DEFAULT 0",
         "created_at" => "DATETIME NOT NULL",
         "_key"       => "FOREIGN KEY (user) REFERENCES %suser(user)",

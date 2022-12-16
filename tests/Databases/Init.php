@@ -4,7 +4,9 @@
  * Init de l'environnement de tests
  *
  * @author  folenski
- * @version 1.0 07/08/2022 : Version initiale  
+ * @version 1.0 07/08/2022: Version initiale  
+ * @version 1.1 15/12/2022: Adaptation à la table user
+ *   
  */
 
 declare(strict_types=1);
@@ -14,6 +16,8 @@ use Staff\Databases\SqlAdmin;
 use Staff\Databases\Database;
 use Staff\Databases\Table;
 use Staff\Models\DBParam;
+use Staff\Drivers\Sqlite;
+use Staff\Services\Authen;
 use PHPUnit\Framework\TestCase;
 
 final class Init extends TestCase
@@ -22,7 +26,7 @@ final class Init extends TestCase
     {
         $cpt = 0;
         foreach (DBParam::TABLE as $nomtable) {
-            $Adm = new SqlAdmin(DBParam::$prefixe, DBParam::get_table($nomtable));
+            $Adm = new SqlAdmin(DBParam::$prefixe, new Sqlite(), DBParam::get_table($nomtable));
             Database::exec($Adm->create()->exists()->table()->toStr());
             $cpt++;
         }
@@ -38,8 +42,8 @@ final class Init extends TestCase
         $Usr->put([
             "user" => USER_SVC,
             "mail" => "no@no.lan",
-            "password" => USER_SVC_PASS,
-            "permisson" => 0b1111
+            "password" => Authen::cyPass(USER_SVC_PASS),
+            "role" => 2
         ]);
         $rows = $Usr->get(["user" => USER_SVC], limit: 0);
         $this->assertSame(1, count($rows));

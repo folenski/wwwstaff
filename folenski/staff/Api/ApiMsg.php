@@ -4,10 +4,10 @@
  * Class ApiMsg, Gestion des messages en REST 
  * 
  * @author folenski
- * @since   1.2.1 09/12/2022
  * @version 1.0.0 Version initialie
  * @version 1.2.0 12/08/2022, Refactoring
  * @version 1.2.1 09/12/2022, utilisation d'un trait
+ *
  */
 
 namespace Staff\Api;
@@ -20,6 +20,8 @@ use Staff\Services\Carray;
 
 final class ApiMsg implements RestInterface
 {
+    const ERR_MSG_MAIL = 51;
+
     use RestTrait;
 
     /**
@@ -30,6 +32,9 @@ final class ApiMsg implements RestInterface
      */
     function post(array $data, array $param, object $Env): array
     {
+        $msgKo = $Env->Contact->msgKo ?? "an error was encountered";
+        $msgOk = $Env->Contact->msgKo ?? "message sent";
+
         [$controle, $fails, $nom, $mail, $message, $tel, $sujet] = Carray::arrayCheck($data, [
             "nom" => ["protected" => true, "limit" => 80],
             "mail" => ["protected" => true, "limit" => 200],
@@ -37,23 +42,10 @@ final class ApiMsg implements RestInterface
             "tel" =>  ["protected" => true, "limit" => 20, "default" => ""],
             "sujet" =>  ["protected" => true, "limit" => 200, "default" => ""]
         ]);
-        if (!$controle)
-            return [
-                "http" => self::HTTP_BAD,
-                "errorcode" => self::ERR_BAD_BODY,
-                "response" => [
-                    "content" => $fails, "msg" => $Env->Contact->msgKo
-                ]
-            ];
+        if (!$controle) return $this->retCrlFail($fails);
+
         if (!filter_var($mail, FILTER_VALIDATE_EMAIL))
-            return [
-                "http" => self::HTTP_OK,
-                "errorcode" => self::ERR_BAD_BODY,
-                "response" => [
-                    "msg" => $Env->Contact->msgKo,
-                    "content" => "mail control fail", "msg" => $Env->Contact->msgKo
-                ]
-            ];
+            return $this->retApi(errorcode: self::ERR_MSG_MAIL, content: null, data: ["msg" => $msgKo], isApp: true);
 
         $user = $Env->Option->user;
         $hash  = sha1($_SERVER["REMOTE_ADDR"] ?? "");
@@ -63,23 +55,9 @@ final class ApiMsg implements RestInterface
 
         $Msg = new Table(DBParam::$prefixe, new Message());
         if (Rest::spam($Msg, $fields))
-            return [
-                "http" => self::HTTP_OK,
-                "errorcode" => self::ERR_OK,
-                "response" => [
-                    "msg" => $Env->Contact->msgOk,
-                    "content" => "[sp]"
-                ]
-            ];
-        if (!$Msg->put($fields))
-            return [
-                "http" => self::HTTP_UNAVAIL,
-                "errorcode" => self::ERR_SQL,
-                "response" => [
-                    "msg" => $Env->Contact->msgKo,
-                    "content" => "internal error"
-                ]
-            ];
+            return $this->retApi(content: null, data: ["msg" => $msgOk, "extra" => "sp"]);
+
+        if (!$Msg->put($fields)) return $this->retUnavail();
 
         if ($Env->Contact->sendMail) {
             $message = preg_replace(
@@ -88,11 +66,14 @@ final class ApiMsg implements RestInterface
                 $Env->Contact->message
             );
             if (!Rest::envoi_mail($Env->Contact->mail, $message)) {
-                return
-                    ["http" => self::HTTP_OK, "errorcode" => self::ERR_INSERT, "response" => ["msg" => $Env->Contact->msgKo]];
+                return $this->retApi(
+                    errorcode: self::ERR_INSERT,
+                    content: null,
+                    data: ["msg" => $msgKo]
+                );
             }
-            return ["http" => self::HTTP_OK, "errorcode" => self::ERR_OK, "response" => ["msg" => $Env->Contact->msgOk]];
+            return $this->retApi(content: null, data: ["msg" => $msgOk]);
         }
-        return ["http" => self::HTTP_OK, "errorcode" => self::ERR_OK, "response" => ["msg" => $Env->Contact->msgOk]];
+        return $this->retApi(content: null, data: ["msg" => $msgOk]);
     }
 }

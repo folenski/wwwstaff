@@ -4,8 +4,9 @@
  * Table Log
  *
  * @author  folenski
- * @since 1.0  09/08/2022: Version Initiale 
- * @since 1.1  10/12/2022: Ajout champ error_code , supp level
+ * @version 1.0 09/08/2022: Version Initiale 
+ * @version 1.1 10/12/2022: Ajout champ error_code , supp level
+ * @version 1.2 10/12/2022: utilisation des tags
  * 
  */
 
@@ -13,15 +14,15 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 
-final class Log implements DBParamInterface, TableInterface
+final class Log implements TableInterface
 {
     private const _NAME = "log";
     private const _DESC = [
-        "id"         => "INTEGER PRIMARY KEY AUTOINCREMENT",
+        "id"         => "INTEGER PRIMARY KEY #AUTOINCR",
         "http_code"  => "INTEGER DEFAULT 0",
         "error_code" => "INTEGER DEFAULT 0",
-        "component"  => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
-        "message"    => "VARCHAR(" . self::SZ_LG_TXT . ") NOT NULL",
+        "component"  => "#TXT_SM NOT NULL",
+        "message"    => "#TXT_LG NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "_index"     => "created_at"
     ];

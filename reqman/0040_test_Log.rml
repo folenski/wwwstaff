@@ -1,6 +1,6 @@
 ################################################################################
 #             Test API de la Table log
-# le 8/07/2022
+# le 16/12/2022 maj
 ################################################################################
 
 ################################################################################
@@ -14,9 +14,7 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
-    - json.mail: "staff@local.com"
+    - json.errorcode: null
     - json.token.size: . > 20 
   save:
      myToken: <<json.token>>
@@ -32,8 +30,9 @@
     Authorization:  Bearer  <<myToken>>
   body: {"limit": 5}
   tests:
-    - status: 200 
-    - json.http: "Ok"
+    - status: 200
+    - json.errorcode: null
+    - json.size: 5 
 
 ################################################################################
 ### Lecture de la table log avec une cle
@@ -47,4 +46,6 @@
   body: {"limit": 2, "id" : 1}
   tests:
     - status: 200 
-    - json.http: "Ok"
+    - json.errorcode: null
+    - json.size: 2 
+

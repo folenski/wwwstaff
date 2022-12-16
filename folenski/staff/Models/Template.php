@@ -4,7 +4,8 @@
  * Table Template
  *
  * @author  folenski
- * @since 1.0  4/08/2022 : Version Initiale 
+ * @version 1.0  4/08/2022 : Version initiale 
+ * @version 1.1 10/12/2022: utilisation des tags
  * 
  */
 
@@ -13,13 +14,13 @@ namespace Staff\Models;
 use Staff\Databases\TableInterface;
 use Staff\Services\Carray;
 
-final class Template  implements DBParamInterface, TableInterface
+final class Template implements TableInterface
 {
     private const _NAME = "template";
     private const _DESC = [
-        "id_div"     => "VARCHAR(" . self::SZ_SM_TXT . ") PRIMARY KEY",
-        "template"   => "VARCHAR(" . self::SZ_LG_TXT . ") NOT NULL",
-        "file_php"   => "VARCHAR(" . self::SZ_SM_TXT . ")",
+        "id_div"     => "#TXT_SM PRIMARY KEY",
+        "template"   => "#TXT_LG NOT NULL",
+        "file_php"   => "#TXT_SM",
         "order_by"   => "INTEGER DEFAULT 0",    
         "compile"    => "INTEGER DEFAULT 0",
         "created_at" => "DATETIME NOT NULL",

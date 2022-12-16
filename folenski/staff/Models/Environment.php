@@ -4,7 +4,8 @@
  * Table Environment
  *
  * @author  folenski
- * @since 1.0  4/08/2022 : Version Initiale 
+ * @version 1.0  4/08/2022: version Initiale 
+ * @version 1.1 10/12/2022: utilisation des tags
  * 
  */
 
@@ -13,15 +14,15 @@ namespace Staff\Models;
 use Staff\Databases\TableInterface;
 use Staff\Services\Carray;
 
-final class Environment implements DBParamInterface, TableInterface
+final class Environment implements TableInterface
 {
     private const _NAME = "environment";
     private const _DESC = [
         "name"       => "VARCHAR(3) PRIMARY KEY",
-        "j_option"   => "VARCHAR(" . self::SZ_JSON . ") NOT NULL",
-        "j_contact"  => "VARCHAR(" . self::SZ_JSON . ")",
-        "j_index"    => "VARCHAR(" . self::SZ_JSON . ") NOT NULL",
-        "j_route"    => "VARCHAR(" . self::SZ_JSON . ") NOT NULL",
+        "j_option"   => "#JSON NOT NULL",
+        "j_contact"  => "#JSON",
+        "j_index"    => "#JSON NOT NULL",
+        "j_route"    => "#JSON NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];

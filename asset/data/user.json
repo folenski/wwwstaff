@@ -1,0 +1,11 @@
+{
+  "nom": "user",
+  "row": [
+    {
+      "user": "svcadmin",
+      "password": "Admin4321@",
+      "mail": "staff@local.com",
+      "role": 2
+    }
+  ]
+}

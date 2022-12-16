@@ -28,42 +28,27 @@ final class ApiData implements RestInterface
     function get(array $data, array $param, object $Env): array
     {
         $Data = new Table(DBParam::$prefixe, new Data());
+        $ref = (array_key_exists("ref", $param)) ? $param["ref"] : "";
 
-        if (!array_key_exists("ref", $param)) {
-            return [
-                "http" => self::HTTP_AUTH_KO,
-                "errorcode" => self::ERR_BAD_URI,
-                "response" => [
-                    "content" => "ref"
-                ]
-            ];
-        }
-        $ref = $param["ref"];
+        if ($ref == "") return $this->retCrlFail("ref", true);
+
         $rows = $Data->get(id: ["ref" => $ref], limit: 1);
-        if ($rows === false) {
-            return [
-                "http" => self::HTTP_ERROR,
-                "errorcode" => self::ERR_SQL
-            ];
-        }
+        if ($rows === false) return $this->retUnAvail();
         if (count($rows) == 0) {
-            return [
-                "http" => self::HTTP_OK,
-                "errorcode" => self::ERR_NOT_FOUND,
-                "response" => [
-                    "data" => []
-                ]
-            ];
+            return $this->retApi(
+                errorcode: self::ERR_NOT_FOUND,
+                content: null,
+                data: ["data" => []]
+            );
         }
         $enr = $rows[0];
-        return [
-            "http" => self::HTTP_OK,
-            "errorcode" => self::ERR_OK,
-            "response" => [
+        return $this->retApi(
+            content: null,
+            data: [
                 "ref" => $enr->ref,
                 "id_div" => $enr->id_div,
                 "data" => json_decode($rows[0]->j_content)
             ]
-        ];
+        );
     }
 }

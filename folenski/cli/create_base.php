@@ -11,6 +11,8 @@
  * @version 1.2.0  Utilisation de l'objet Table
  * @version 1.3.0  on utilise la classe DBdata
  * @version 1.4.0  Utilisation de la class Admin
+ * @version 1.5.0  ajout de la class Driver/sqlite
+ * 
  */
 
 use Staff\Databases\Database;
@@ -18,11 +20,12 @@ use Staff\Databases\SqlAdmin;
 use Staff\Databases\Table;
 use Staff\Models\DBParam;
 use Staff\Services\CliFonct;
+use Staff\Config\Config;
+use Staff\Drivers\Sqlite;
 
 $rep_root = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR;
-$rep_init = $rep_root . "includes" . DIRECTORY_SEPARATOR . "init" . DIRECTORY_SEPARATOR;
+require "{$rep_root}vendor/autoload.php";
 require __DIR__ . "/env.php";
-require DIR_VENDOR . "autoload.php";
 
 /******************************************************************************************* 
  * 
@@ -46,9 +49,10 @@ $optDelete = array_key_exists("delete", $ret["options"]);
 $env = array_key_exists("env", $ret["options"]) ? $ret["options"]["env"] : "DEV";
 
 // read file's config
-$init = DBParam::parse(file: DIR_INI . "config.ini", env: $env);
+$fichierIni = $rep_root . Config::REP_CONFIG . Config::FILE_INI;
+$init = DBParam::parse($fichierIni, env: $env);
 if ($init !== true)
-  CliFonct::exit("Parse " . DIR_INI . "config.ini, code error" . $init);
+  CliFonct::exit("Parse {$fichierIni}, code error {$init}");
 Database::init(DBParam::$file_pdo, DIR_SQLITE);
 
 CliFonct::print("Environnement          => {$env}");
@@ -58,7 +62,7 @@ if ($optDelete) CliFonct::print("L'option drop est activée", CliFonct::TERM_VER
 CliFonct::print("==> Vérification ", CliFonct::TERM_BLEU);
 
 foreach (DBParam::TABLE as $nomtable) {
-  $Adm = new SqlAdmin(DBParam::$prefixe, DBParam::get_table($nomtable));
+  $Adm = new SqlAdmin(DBParam::$prefixe, new Sqlite(), DBParam::get_table($nomtable));
   $Table = new Table(DBParam::$prefixe, DBParam::get_table($nomtable));
   CliFonct::print("+ {$Table->name} ", CliFonct::TERM_BLEU);
 
@@ -85,7 +89,7 @@ foreach (DBParam::TABLE as $nomtable) {
  */
 // lecture du fichier pour le compte admin
 $Usr = new Table(DBParam::$prefixe, DBParam::get_table("user"));
-$fichier_ini = DIR_INI . "user.ini";
+$fichier_ini = $rep_root . Config::REP_CONFIG . "user.ini";
 $nbr = $Usr->count();
 
 if ($nbr == 0) {

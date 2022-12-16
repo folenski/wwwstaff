@@ -8,9 +8,9 @@
  * @since 1.0 08/07/2022 : Version initiale 
  */
 
+
 define("DIR_INI", "{$rep_root}app" . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR);
 define("DIR_SQLITE", "{$rep_root}sqldb" . DIRECTORY_SEPARATOR);
-define("DIR_VENDOR", "{$rep_root}vendor" . DIRECTORY_SEPARATOR);
 date_default_timezone_set('Europe/Paris');
 
 /**

@@ -13,8 +13,9 @@
     content-type: application/json
   body: {"password" : "Mypass123456"}
   tests:
-    - status: 401 
-    - json.http: "Unauthorized"
+    - status: 400
+    - json.errorcode: 23
+    - json.content: token needed
 
 ################################################################################
 ### Creation d'un compte sans token => KO
@@ -26,8 +27,9 @@
     content-type: application/json
   body: {"user": "tstadm", "mail": "t2@local.com", "password": "Pass123456", "group": "admin"}
   tests:
-    - status: 401 
-    - json.http: "Unauthorized"
+    - status: 400 
+    - json.errorcode: 23
+    - json.content: token needed
 
 ################################################################################
 ### Suppression de l'utilisateur tstadm sans token => KO
@@ -39,8 +41,9 @@
     content-type: application/json
   body: {"user": "testadm"}
   tests:
-    - status: 401 
-    - json.http: "Unauthorized"
+    - status: 400
+    - json.errorcode: 23
+    - json.content: token needed
 
 ################################################################################
 ### 
@@ -59,8 +62,6 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
     - json.mail: "staff@local.com"
     - json.token.size: . > 20 
   save:
@@ -77,8 +78,8 @@
     Authorization:  Bearer  <<myToken>>
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### Maj de mail avec un mauvais token => KO
@@ -92,8 +93,8 @@
   body: {"mail" : "t3@t.com"}
   tests:
     - status: 401
-    - json.http: "Unauthorized"
-
+    - json.errorcode: 23
+    - json.content: token not valid
 
 ################################################################################
 ### 
@@ -112,8 +113,7 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
     - json.mail: "staff@local.com"
     - json.token.size: . > 20 
   save:
@@ -130,9 +130,7 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
-    - json.mail: "staff@local.com"
+    - json.errorcode: null
     - json.token.size: . > 20 
   save:
      myToken3: <<json.token>>
@@ -147,7 +145,8 @@
   headers:
     content-type: application/json
     Authorization:  Bearer <<myToken2>>
-  body: {"password" : "staff@local.com"}
+  body: {"mail" : "staff@local.com"}
   tests:
     - status: 200
-    - json.http: "Ok"
+    - json.errorcode: null
+    - json.content: done

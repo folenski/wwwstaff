@@ -2,6 +2,7 @@
 #             Tests sur l'authentification
 # 08/07/2022, version initiale
 # 10/12/2022, maj du retour
+# 16/12/2022, maj api user
 ################################################################################
 
 ################################################################################
@@ -56,6 +57,6 @@
   tests:
     - status: 200
     - json.errorcode: 134 
-    - json.content: "Le mot de passe est erroné"
+    - json.content: "The password is wrong"
 
 

@@ -6,5 +6,5 @@
   ["POST|DELETE", "/api/auth", "api@auth", "authen"],
   ["POST", "/api/msg", "api@message", "msg"],
   ["POST|PUT|DELETE", "/api/user", "api@user", "user"],
-  ["GET|DELETE", "/api/log", "  api@Log", "log"]
+  ["GET|DELETE", "/api/log", "api@log", "log"]
 ]

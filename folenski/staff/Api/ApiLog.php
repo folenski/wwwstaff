@@ -4,9 +4,9 @@
  * Gestion REST pour la lecture des Logs 
  * 
  * @author folenski
- * @since   1.0.1 09/12/2022
- * @version 1.0.0 11/07/2022, Version initialie
- * @version 1.0.1 09/12/2022, Utilisation d'un trait pour les methondes non implementées
+ * @version 1.0 11/07/2022, Version initialie
+ * @version 1.1 09/12/2022, Utilisation d'un trait pour les methondes non implementées
+ * 
  */
 
 namespace Staff\Api;
@@ -30,34 +30,20 @@ final class ApiLog implements RestInterface
     function get(array $data, array $param, object $Env): array
     {
         $Log = new Table(DBParam::$prefixe, new Log());
-
-        if (!array_key_exists("token", $param))
-            return [
-                "http" => self::HTTP_AUTH_KO,
-                "content" => "token needed"
-            ];
+        if (!array_key_exists("token", $param)) return $this->retTokenNeeded();
 
         [$controle, $fails, $limit, $id] = Carray::arrayCheck($data, [
             "limit" => ["default" => 50],
             "id" => ["mandatory" => false],
         ]);
-        if (!$controle)
-            return [
-                "http" => self::HTTP_BAD,
-                "content" => $fails
-            ];
+        if (!$controle) return $this->retCrlFail($fails);
 
         if ($id === null) $fields = null;
-        else    $fields["id"] = "> {$id}";
+        else $fields["id"] = "> {$id}";
 
         $rows = $Log->get(id: $fields, limit: (int)$limit, order: $Log->orderBy(["id"]));
-        if ($rows === false)
-            return [
-                "http" => self::HTTP_OK,
-                "errorcode" => 20, "content" => "Internal Error"
-            ];
+        if ($rows === false) return $this->retUnAvail();
 
-        return ["http" => self::HTTP_OK, $rows];
+        return $this->retApi(content: null, data: $rows);
     }
-
 }

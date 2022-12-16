@@ -1,6 +1,6 @@
 ################################################################################
 #             Test du controle de format sur l'API User
-# le 8/07/2022
+# le 16/12/2022, maj
 ################################################################################
 
 ################################################################################
@@ -14,9 +14,6 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
-    - json.mail: "staff@local.com"
     - json.token.size: . > 20 
   save:
      myToken: <<json.token>>
@@ -32,52 +29,50 @@
   body: {"user" : "svcadmin"}
   tests:
     - status: 400 
-    - json.http: "Bad Request"
-    - json.content: "password"
+    - json.errorcode: 22
+    - json.content: password
 
 ################################################################################
 ### Création de l'utilisateur testadm  sans mail => KO
 
 - POST: /api/user
-  doc: |
-    - Création de l'utilisateur testadm
   headers:
     content-type: application/json
     Authorization:  Bearer  <<myToken>>
   body: {"user": "testadm", "password": "Pass123456"}
   tests:
     - status: 400 
-    - json.http: "Bad Request"
-    - json.content: "mail"
+    - json.errorcode: 22
+    - json.content: mail
 
 ################################################################################
 ###  mise à jour sans body => KO
 
 - PUT: /api/user
   doc: |
-    - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
+    - Mise à jour sans body
   headers:
     content-type: application/json
     Authorization:  Bearer <<myToken>>
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.content: "Une erreur a été rencontrée"
+    - json.errorcode: 131
+    - json.content: An error was encountered
 
 ################################################################################
 ###  mise à jour sans body => KO
 
 - PUT: /api/user
   doc: |
-    - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
+    - Mise à jour sans body
   headers:
     content-type: application/json
     Authorization:  Bearer <<myToken>>
   body: {"Password": "testadm"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.content: "Une erreur a été rencontrée"
+    - json.errorcode: 131
+    - json.content: An error was encountered
 
 ################################################################################
 ### Suppression de l'utilisateur testadm => Ko
@@ -91,5 +86,5 @@
   body: {"uuser": "testadm"}
   tests:
     - status: 400 
-    - json.http: "Bad Request"
-    - json.content: "user"
+    - json.errorcode: 22
+    - json.content: user

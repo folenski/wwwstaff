@@ -4,7 +4,8 @@
  * Table User
  *
  * @author  folenski
- * @since 1.0  4/08/2022 : Version Initiale 
+ * @version 1.0  4/08/2022: version initiale 
+ * @version 1.1 10/12/2022: utilisation des tags, corr bug sur methode save
  * 
  */
 
@@ -12,16 +13,16 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 use Staff\Services\Carray;
-use Staff\Security\Security;
+use Staff\Services\Authen;
 
-final class User implements DBParamInterface, TableInterface
+final class User implements TableInterface
 {
     private const _NAME = "user";
     private const _DESC = [
-        "user"       => "VARCHAR(" . self::SZ_SM_TXT . ") PRIMARY KEY",
-        "mail"       => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
-        "pass"       => "VARCHAR(" . self::SZ_SM_TXT . ")",
-        "permission" => "INTEGER DEFAULT 0",
+        "user"       => "#TXT_SM PRIMARY KEY",
+        "mail"       => "#TXT_SM NOT NULL",
+        "password"   => "#TXT_SM",
+        "role"       => "INTEGER DEFAULT 0",
         "bad_pin"    => "INTEGER DEFAULT 0",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
@@ -42,31 +43,27 @@ final class User implements DBParamInterface, TableInterface
      */
     function check(array $fields): array|false
     {
-        [$ret, $fail, $user, $mail, $password, $permission] = Carray::arrayCheck($fields, [
+        [$ret, $fail, $user, $mail, $passCl, $role] = Carray::arrayCheck($fields, [
             "user" => ["type" => "string"],
             "mail" => ["type" => "string"],
-            "password"  => ["type" => "string"],
-            "permission" => ["mandatory" => false, "default" => "admin"],
+            "password" => ["type" => "string"],
+            "role" => ["mandatory" => false, "default" => 0],
         ]);
         if (!$ret) {
             $this->_error = $fail;
-            return null;
+            return false;
         }
         if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
             $this->_error = "[!mail]";
-            return null;
+            return false;
         }
-        if (!Security::check_pass($password)) {
+        $password = Authen::cyPass($passCl);
+        if (gettype($password) != "string") {
             $this->_error = "[!password]";
-            return null;
-        }
-        $pass = Security::crypt_pass($password);
-        if ($pass === null) {
-            $this->_error = "[!password]";
-            return null;
+            return false;
         }
         unset($this->_error);
-        return compact("user", "mail", "pass", "permission");
+        return compact("user", "mail", "password", "role");
     }
 
     /**
@@ -74,7 +71,7 @@ final class User implements DBParamInterface, TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error: false;
+        return (isset($this->_error)) ? $this->_error : false;
     }
 
     /**
