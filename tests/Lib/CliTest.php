@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Staff\Services\CliFonct;
+use Staff\Lib\CliFonct;
 use PHPUnit\Framework\TestCase;
 
 final class CliTest extends TestCase

@@ -4,8 +4,9 @@
  * Constantes pour la définition des champs pour la base de données
  * 
  * @author  folenski
- * @version 1.0 04/08/2022: Version initiale 
+ * @version 1.0 04/08/2022: version initiale 
  * @version 1.1 14/12/2022: supp interface DBParam 
+ * @version 1.2 17/12/2022: ajout de la table change, modif get_table 
  *  
  */
 
@@ -26,7 +27,7 @@ class DBParam
         self::PARAM_ERROR => "Parse parameters error"
     ];
 
-    const TABLE = ["data", "environment", "template", "user", "token", "log", "message"];
+    const TABLE = ["data", "environment", "template", "user", "token", "log", "message", "change"];
 
     static string $prefixe;
     static string $env;
@@ -89,24 +90,16 @@ class DBParam
      */
     static function get_table(string $nom): TableInterface|null
     {
-        switch ($nom) {
-            case "environment":
-                return new Environment();
-            case "template":
-                return new Template();
-            case "data":
-                return new Data();
-            case "user":
-                return new User();
-            case "token":
-                return new Token();
-            case "log":
-                return new Log();
-            case "message":
-                return new Message();
-
-            default:
-                return null;
-        }
+        return match ($nom) {
+            "environment" => new Environment(),
+            "template" => new Template(),
+            "data" => new Data(),
+            "user" => new User(),
+            "token" => new Token(),
+            "log" => new Log(),
+            "message" => new Message(),
+            "change" => new Change(),
+            default => null
+        };
     }
 }

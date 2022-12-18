@@ -33,14 +33,13 @@ final class TableTest extends TestCase
             $Table->put(compact("file_php", "id_div", "template"))
         );
 
-        $Data = new Table(PREFIXE, new Data());
+        $Data = new Table(Entite: new Data(), prefixe: PREFIXE, debug: true);
         $Data->del(["id_div" => "like __content%"]);
         $this->assertSame(
             true,
             $Data->put([
                 "id_div" => "__content",
                 "ref" => "mycontent",
-                "title" => "coucou",
                 "j_content" => "mydata"
             ])
         );
@@ -69,12 +68,11 @@ final class TableTest extends TestCase
      */
     public function testGetJoinTable(): void
     {
-        $Table = new Table(PREFIXE, new Template());
-
+        $Table = new Table(Entite: new Template(), prefixe: PREFIXE, debug: true);
         $enr = $Table->get(["id_div" => "__content"], join: $Table->join(new Data(), ["id_div"]));
         $this->assertIsArray($enr);
         $this->assertSame(1, count($enr));
-        $this->assertSame("coucou", $enr[0]->title);
+        $this->assertSame("mycontent", $enr[0]->ref);
     }
 
     /**
@@ -125,7 +123,7 @@ final class TableTest extends TestCase
     /**
      * @depends testPutTable
      */
-    public function testudpTable(): void
+    public function testupdTable(): void
     {
         $Table = new Table(PREFIXE, new Template());
 

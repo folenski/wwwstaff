@@ -11,7 +11,7 @@
 use Staff\Core\DbTable;
 use Staff\Core\Database;
 use Staff\Core\Config;
-use Staff\Classes\Extra\CliFonct;
+use Staff\Lib\CliFonct;
 use Staff\Tables\ModeleBDD;
 
 require dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
@@ -28,9 +28,9 @@ function verifTable(DbTable $table): bool
 {
   try {
     $_req = Database::query($table->select("count (1) as nbr"))->fetch();
-    CliFonct::affiche("La table {$table->nom()} => {$_req->nbr} enr", CliFonct::TERM_VERT);
+    CliFonct::print("La table {$table->nom()} => {$_req->nbr} enr", CliFonct::TERM_VERT);
   } catch (Exception $e) {
-    CliFonct::affiche("La table {$table->nom()} n'existe pas !!!!!", CliFonct::TERM_ROUGE);
+    CliFonct::print("La table {$table->nom()} n'existe pas !!!!!", CliFonct::TERM_ROUGE);
     return false;
   }
   return true;

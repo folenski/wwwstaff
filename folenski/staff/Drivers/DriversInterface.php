@@ -4,7 +4,7 @@
  * Interface pour un drivers SQL
  * 
  * @author  folenski
- * @since 1.0  13/12/2022 : Version initiale
+ * @since 1.0  13/12/2022: Version initiale
  *  
  */
 
@@ -31,4 +31,10 @@ interface DriversInterface
      * @return string retourne le autoincrement
      */
     function increment(): string;
+
+    /**
+     * @return string retourne la requête pour lister toutes les tables
+     */
+    function showTables(): string;
+
 }

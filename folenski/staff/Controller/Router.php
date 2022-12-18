@@ -55,12 +55,10 @@ class Router
     static function www(string $root, string $action, object $Env, ?array $param): void
     {
         // html#start.html
-        if (str_starts_with($action, "html")) {
+        if (str_starts_with($action, "link")) {
             [$html, $file] = explode("#", $action);
-            $filefull = $root . Config::REP_PUBLIC . $file;
-            if (file_exists($filefull)) {
-                require "$filefull";
-            }
+            $filefull = "{$root}/{$file}";
+            if (file_exists($filefull)) require "$filefull";
         }
         else Www::start($root, $Env, $param); // start php
     }

@@ -58,7 +58,7 @@ final class User implements TableInterface
             return false;
         }
         $password = Authen::cyPass($passCl);
-        if (gettype($password) != "string") {
+        if (gettype($password) == "integer") {
             $this->_error = "[!password]";
             return false;
         }

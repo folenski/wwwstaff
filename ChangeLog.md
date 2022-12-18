@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Class Drivers/Sqlite
 - Utilisation de tag sur les class Models : Data, Environment, Log, Message, Template, Token, Log
 - Renommage du champs Token/revoke en Token/revoked, revoke est un mot clé sur MYSQL
+- url pour l'installation de la base et chargement des données http://localhost:8080/start
 
 ### Fixed
 

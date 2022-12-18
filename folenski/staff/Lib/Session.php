@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Class **Session** Use the static method getInstance to get the object.
+ * Class Session, use the static method getInstance to get the object.
  *
  * @author  
  *
  */
 
-namespace Staff\Classes\Commun;
+namespace Staff\Lib;
 
 class Session
 {

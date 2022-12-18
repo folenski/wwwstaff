@@ -1,14 +1,15 @@
 <?php
 
 /**
- * Class **CliFonct** utile pour le mode client PHP.
+ * Class CliFonct utile pour le mode client PHP.
  *
  * @author  folenski
- * @since 1.0  12/08/2021 : Version Initiale 
+ * @version 1.0  12/08/2021: version initiale 
+ * @version 1.1  12/08/2021: ajout methode cbPrint 
  *
  */
 
-namespace Staff\Services;
+namespace Staff\Lib;
 
 class CliFonct
 {
@@ -24,20 +25,50 @@ class CliFonct
     const TERM_BG_BLANC = "\033[47m";
     const TERM_RESET    = "\033[0m";
 
-    public static function print(string $message, string $color = "", bool $newline = true): void
+    static function print(string $message, string $color = "", bool $newline = true): void
     {
         $new = ($newline) ? "\n" : "";
         echo  "{$new}{$color}{$message}" . self::TERM_RESET;
     }
 
-    public static function exit(string $message, int $code = 1): void
+    /**
+     * @param string $message le message à afficher
+     * @param int $code le code retour
+     */
+    static function exit(string $message, int $code = 1): void
     {
         self::print($message, self::TERM_ROUGE);
         self::print("Exit...\n", self::TERM_BLEU);
         exit($code);
     }
 
-    public static function checkArgs(array $args, array $listOpt, bool $hasArgs = true): array
+    /**
+     * Callback pour les methodes de la call Admin
+     * @param string $text le message à afficher
+     * @param int $level le type de message
+     */
+    static function cbPrint(?string $text = null, int $level = Admin::DISP_DEF)
+    {
+        switch ($level) {
+            case Admin::DISP_DANGER:
+                CliFonct::print($text, CliFonct::TERM_ROUGE);
+                break;
+            case Admin::DISP_UPDATE:
+                CliFonct::print($text, CliFonct::TERM_BG_VERT . CliFonct::TERM_BLANC);
+                break;
+            case Admin::DISP_DONE:
+                CliFonct::print($text, CliFonct::TERM_VERT);
+                break;
+            case Admin::DISP_ALERT:
+                CliFonct::print($text, CliFonct::TERM_BG_ROUGE . CliFonct::TERM_BLANC);
+                break;
+            default:
+                if ($text === null) $text = "................................";
+                CliFonct::print($text, CliFonct::TERM_BLEU);
+        }
+    }
+
+    static function checkArgs(array $args, array $listOpt, bool $hasArgs = true): array
     {
         $tabOpt  = [];
         $tabErr  = [];

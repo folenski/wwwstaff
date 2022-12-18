@@ -31,10 +31,16 @@ class Sqlite implements DriversInterface
     }
 
     /**
-     * @return string retourne le autoincrement
+     * @return string retourne l'autoincrement
      */
     function increment(): string
     {
         return "AUTOINCREMENT";
     }
+
+    function showTables(): string 
+    {
+        return "SELECT name as name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'";
+    }
+    
 }

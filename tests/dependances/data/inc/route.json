@@ -1,7 +1,7 @@
 [
   ["GET", "/", "www@index", "www_start"],
   ["GET", "/menu/[**:uri]", "www@index", "www_uri"],
-  ["GET", "/start", "www@link#folenski/views/init.php", "admin"],
+  ["GET", "/admin", "www@link#folenski/views/admin.php", "admin"],
   ["GET", "/api/wwwindex", "api@index", "index"],
   ["GET", "/api/wwwdata/[**:ref]", "api@data", "data"],
   ["POST|DELETE", "/api/auth", "api@auth", "authen"],

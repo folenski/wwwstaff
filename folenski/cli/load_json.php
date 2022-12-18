@@ -5,26 +5,22 @@
  * Programme de chargement des tables au format json en de la base de données
  * @author  folenski
  * 
- * @since   05/08/2022
- * @version 1.2.0  maj avec l'objet PAGE
- * @version 1.3.0  gestion des balises <item>
- * @version 1.4.0  utilisation de la class Config
- * @version 1.5.0  prise en compte refactoring séparation des modèles
- * @version 1.6.0  Utilisation de la class Admin
- * @version 1.7.0  Utilisation de la class Config
+ * @since  17/12/2022
+ * @version 1.5 prise en compte refactoring séparation des modèles
+ * @version 1.6 utilisation de la class Admin
+ * @version 1.7 utilisation de la class Config
+ * @version 1.8 utilisation de la table admin
  * 
  */
 
 use Staff\Databases\Database;
-use Staff\Services\Admin;
+use Staff\Lib\Admin;
 use Staff\Models\DBParam;
-use Staff\Services\CliFonct;
+use Staff\Lib\CliFonct;
 use Staff\Config\Config;
 
 $rep_root = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR;
 require "{$rep_root}vendor/autoload.php";
-require __DIR__ . "/env.php";
-
 
 /******************************************************************************************* 
  * 
@@ -54,9 +50,9 @@ if (count($ret["args"]) > 0)
 // read file's config
 $fichierIni = $rep_root . Config::REP_CONFIG . Config::FILE_INI;
 $init = DBParam::parse($fichierIni, env: $env);
-if ($init !== true) 
+if ($init !== true)
   CliFonct::exit("Parse {$fichierIni}, code error {$init}");
-Database::init(DBParam::$file_pdo, DIR_SQLITE);
+Database::init(DBParam::$file_pdo, $rep_root . Config::REP_SQLITE);
 
 CliFonct::print("Environnement      => {$env}");
 
@@ -67,34 +63,20 @@ if ($path != "")
   CliFonct::exit("L'option path n'est pas encore implementé");
 
 if (!str_contains($fichier, 'json') || !file_exists($fichier))
-  CliFonct::exit("{$fichier}: Le fichier non trouvé ou n'est pas au format json");
+  CliFonct::exit("Le fichier {$fichier} non trouvé où il n'est pas au format json");
 
 CliFonct::print("********************* Fichier {$fichier} ***********************", CliFonct::TERM_BG_BLANC .  CliFonct::TERM_NOIR);
 
-$Admin = new Admin();
-$cr = [];
-[$ret, $nbr, $lib] = $Admin->load($fichier, $optDelete, $cr);
+// $cbPrint = CliFonct::cbPrint;
 
-if ($ret != $Admin::RET_OK) {
-  CliFonct::exit($lib);
-}
-$table = $lib;
-CliFonct::print("===== Table {$table} =====", CliFonct::TERM_BLEU);
-CliFonct::print("La table {$table} => {$nbr} enr");
-
-foreach ($cr as $key => $retour) {
-  if ($retour == $Admin::RET_MAJ) {
-    $color = CliFonct::TERM_ROUGE;
-    $crlib = "{$key}: Mise à jour";
-  } elseif ($retour == $Admin::RET_OK) {
-    $color = CliFonct::TERM_BLANC;
-    $crlib = "{$key}: Ajout de l'enregistrement";
-  } else {
-    $color = CliFonct::TERM_VERT;
-    $crlib = "{$key}: Rejeté car il est déja présent";
+$Admin = new Admin(DBParam::$prefixe);
+$Admin->load(
+  $fichier,
+  $optDelete,
+  function (?string $text = null, int $lvl = Admin::DISP_DEF) {
+    CliFonct::cbPrint($text, $lvl);
   }
-  CliFonct::print($crlib, $color);
-}
+);
 
 CliFonct::print("Maj OK...", CliFonct::TERM_BG_VERT);
 

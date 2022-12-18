@@ -4,7 +4,8 @@
  * Class Table : ajout les méthodes get, put, ...
  *
  * @author  folenski
- * @since 1.0  15/07/2022 : Version Initiale 
+ * @version 1.0 15/07/2022: version initiale 
+ * @version 1.1 18/12/2022: prefixe est facultatif, ajout d'un mode debug 
  * 
  */
 
@@ -12,7 +13,7 @@ namespace Staff\Databases;
 
 use Staff\Services\Carray;
 
-class Table extends SqlCore
+final class Table extends SqlCore
 {
     const RET_OK         = 0;
     const RET_DUP        = 1;
@@ -20,11 +21,12 @@ class Table extends SqlCore
 
     private array $_desc;
     private string $_name;
-    private TableInterface $_Entite;
 
-    function __construct(public string $prefixe, TableInterface $Entite)
-    {
-        $this->_Entite = $Entite;
+    function __construct(
+        public string $prefixe,
+        private TableInterface $Entite,
+        private bool $debug = false
+    ) {
         [$this->_name, $this->_desc] = $Entite->init();
         parent::__construct(
             _nom: $this->_name,
@@ -47,7 +49,8 @@ class Table extends SqlCore
         try {
             $req = Database::query($this->toStr())->fetch();
             return ($req  === false) ? false : $req->nbr;
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            if ($this->debug) echo $e->getMessage();
             return false;
         }
     }
@@ -63,7 +66,8 @@ class Table extends SqlCore
         if ($id !== null) $this->_add_where($id);
         try {
             return Database::exec($this->toStr());
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            if ($this->debug) echo $e->getMessage();
             return false;
         }
     }
@@ -113,7 +117,8 @@ class Table extends SqlCore
             }
             if ($req === false) return [];
             return $req->fetchAll();
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            if ($this->debug) echo $e->getMessage();
             return false;
         }
     }
@@ -144,7 +149,6 @@ class Table extends SqlCore
         return [$asc, ...$fields];
     }
 
-
     /**
      * Insérer ou met à jour un enregistrement
      * @param array $data les champs à modifier ou à stocker
@@ -170,7 +174,8 @@ class Table extends SqlCore
         try {
             $req = Database::prepare($this->toStr());
             $req->execute($prep);
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            if ($this->debug) echo $e->getMessage();
             return false;
         }
         if ($req === false) return false;
@@ -187,10 +192,10 @@ class Table extends SqlCore
     function save(array $data): array
     {
         $element = "";
-        if (($dataOk = $this->_Entite->check($data)) === false)
-            throw new \Exception("Check Error : " . $this->_Entite->errors());
+        if (($dataOk = $this->Entite->check($data)) === false)
+            throw new \Exception("Check Error : " . $this->Entite->errors());
 
-        $id = $this->_Entite->keys($data);
+        $id = $this->Entite->keys($data);
         foreach ($id as $kkk => $vvv) {
             $id[$kkk] = $dataOk[$kkk];
             $element .= "{$dataOk[$kkk]}, ";
