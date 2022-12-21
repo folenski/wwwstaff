@@ -16,7 +16,7 @@ use Staff\Lib\Admin;
 use Staff\Drivers\Sqlite;
 use PHPUnit\Framework\TestCase;
 
-final class AdminTest extends TestCase
+final class StartTest extends TestCase
 {
     private string $repData =  "/dependances/data/";
 

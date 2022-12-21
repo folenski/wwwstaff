@@ -30,8 +30,15 @@ class Router
             die(DBParam::ERROR[$ret]);
         Database::init(DBParam::$file_pdo, $www . Config::REP_SQLITE);
         $load = self::load_env(DBParam::$env);
-        if ($load === false) return false;
-
+        if ($load === false) {
+            $root = $www;
+            $filefull = $root . Config::FILE_START;
+            if (file_exists($filefull)) {
+                require "$filefull";
+                return true;
+            }
+            return false;
+        }
         [$WwwCfg, $routes] = $load;
         // Initialize route
         $Router = new \AltoRouter();
@@ -59,8 +66,7 @@ class Router
             [$html, $file] = explode("#", $action);
             $filefull = "{$root}/{$file}";
             if (file_exists($filefull)) require "$filefull";
-        }
-        else Www::start($root, $Env, $param); // start php
+        } else Www::start($root, $Env, $param); // start php
     }
 
     static function api(string $root, string $action, object $Env, ?array $param): void
@@ -75,7 +81,7 @@ class Router
      */
     static function load_env(string $environnement): array|false
     {
-        $Env = new Table(DBParam::$prefixe, DBParam::get_table("environment"));
+        $Env = new Table(Entite: DBParam::get_table("environment"), prefixe: DBParam::$prefixe);
 
         if (($rows = $Env->get(["name" => $environnement])) === false ||
             count($rows) == 0

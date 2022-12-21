@@ -5,24 +5,23 @@
  * Utilisation du module LightnCandy pour générer le langage {{mustache}} 
  *
  * @author  folenski
- * @since 1.0 14/07/2022 : Version Initiale 
- * @since 1.1 05/08/2022 : Suppression de l héritage Table
+ * @version 1.0 14/07/2022: Version Initiale 
+ * @version 1.1 05/08/2022: Suppression de l héritage Table
+ * @version 1.2 18/12/2022: Refactoring de la classe
  * 
  */
 
-namespace Staff\Services;
+namespace Staff\Lib;
 
 use Staff\Databases\Table;
 use Staff\Models\Template;
 use Staff\Models\Data;
 use LightnCandy\LightnCandy;
-use phpDocumentor\Reflection\Types\Boolean;
+use Staff\Config\Config;
 use stdClass;
 
 class Render
 {
-    const PREFIXE_NAV = "@";
-
     public array $data = [];
     public array $uri = [];
     private array $_list_template;
@@ -32,39 +31,12 @@ class Render
         private string $_prefixe_uri,
         private string $_rep_out
     ) {
-        $this->compile($this->_rep_out);
+        $this->_compile($this->_rep_out);
     }
 
-    /**
-     * Compile les templates avec la lib LightnCandy (champs compile = 1)
-     * @param string $rep_out le répertoire où doivent être stocké les fichiers
-     * @return bool faux si il y a eu une erreur 
-     */
-    function compile(string $rep_out): bool
-    {
-        $Table = new Table($this->_prefixe, new Template());
-
-        $rows = $Table->get(limit: 0);
-        foreach ($rows as $val) {
-            $this->_list_template[$val->id_div] = $val;
-            if ($val->compile != 1) continue;
-            if ($val->file_php != "") {
-                $phpStr = LightnCandy::compile(
-                    $val->template,
-                    array("flags" => LightnCandy::FLAG_NOESCAPE)
-                );
-                if (file_put_contents("{$rep_out}/{$val->file_php}", "<?php {$phpStr} ?>") === false)
-                    return false;
-                if ($Table->put(["compile" => 0], ["id_div" => $val->id_div]) === false)
-                    return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Produit le rendu html en fonction des templates présents
-     * @param string $rep_out le répertoire où on doit stocker les fichiers de rendu php
      * @return array|false retourne un tableau indexé [ id_div => file_php ]
      */
     function render(): array|false
@@ -80,17 +52,19 @@ class Render
     }
 
     /**
-     * Permet de recupérer une information avec le champs ref et permet de la 
-     * classer une variable interne avec la variable $content
-     * @param string $ref référence de l'information
-     * @param string $content entrée pour le classement des données, doit être en relation 
-     * avec le template
-     * @return array|false false si il y a une erreur ou la liste des id de template
+     * R&cuperation des données pour générer les templates en mustache, la données 
+     * est recupéré par ka réf et on la classe dans un tableau interne avec la clé 
+     *  $content
+     * 
+     * @param string $ref id de la données en table 
+     * @param string $content nom de l'objet ayant les données du template. L'objet est alimenté
+     * en interne
+     * @return array|false la liste des templates
      */
     function fetch(string $ref, string $content): array|null
     {
         $list_div = [];
-        $Table = new Table($this->_prefixe, new Data());
+        $Table = new Table(Entite: new Data(), prefixe: $this->_prefixe);
 
         if (($rows = $Table->get(
             ["ref" => $ref],
@@ -115,31 +89,31 @@ class Render
 
     /**
      * Dans le cas d'un menu, nous avons besoin de mettre les uri avec la prefixe de menu et 
-     * on positonne un attribut active sur le menu qui match avec ;'uri
-     * les informations sont positonnées dans une variable interne
-     * @param array $divs la référence de l'information
-     * @param string $content 
-     * @param string $uri 
+     * on positonne un attribut active sur le menu qui match avec l'uri passée en paramétre
+     *
+     * @param array $divs les templates
+     * @param string $content le nom de l'objet ayant les données pour le template
+     * @param string $uri récupérer de l'url
+     * 
      */
     function update_uri(array $divs, string $content, string $uri): void
     {
         foreach ($divs as $div) {
             if (array_key_exists($content, $this->data[$div])) {
                 $noUri = ($uri == "") ? true : false;
-                $this->_upd_uri($this->data[$div][$content], self::PREFIXE_NAV . $uri, $noUri);
+                $this->_upd_uri($this->data[$div][$content], Config::PREFIXE_NAV . $uri, $noUri);
             }
         }
     }
 
     /**
-     * Permet de recupérer une objet ayant la réf et une meta
-     * @param string $uri 
-     * @return object|null les metadonnées extraites sur le menu 
+     * @param string $uri pour la récuperation 
+     * @return object|null Retourne l'objet donnée qui est associé à l'uri passée en paramétre
      */
     function get_metadata(string $uri): object|null
     {
-        if (array_key_exists(self::PREFIXE_NAV . $uri, $this->uri))
-            return  $this->uri[self::PREFIXE_NAV . $uri];
+        if (array_key_exists(Config::PREFIXE_NAV . $uri, $this->uri))
+            return  $this->uri[Config::PREFIXE_NAV . $uri];
         return null;
     }
 
@@ -155,6 +129,11 @@ class Render
             krsort($this->data[$div][$content]);
         }
     }
+    
+    /** ----------------------------------------------------------------------------------------------
+     *                                       P R I V E
+     *  ----------------------------------------------------------------------------------------------
+     */
 
     /**
      * Met à jour le menu avec le menu actif et un prefixe de menu
@@ -177,7 +156,7 @@ class Render
             }
             if (
                 !array_key_exists("uri", $val) ||
-                !str_starts_with($val["uri"], self::PREFIXE_NAV)
+                !str_starts_with($val["uri"], Config::PREFIXE_NAV)
             )
                 continue;
 
@@ -194,5 +173,32 @@ class Render
             }
         }
         return $active;
+    }
+
+    /**
+     * Compile les templates avec la lib LightnCandy (champs compile = 1)
+     * @param string $rep_out le répertoire où sont stockés les fichiers
+     * @return bool faux si il y a eu une erreur 
+     */
+    private function _compile(string $rep_out): bool
+    {
+        $Table = new Table(Entite: new Template(), prefixe: $this->_prefixe);
+
+        $rows = $Table->get(limit: 0);
+        foreach ($rows as $val) {
+            $this->_list_template[$val->id_div] = $val;
+            if ($val->compile != 1) continue;
+            if ($val->file_php != "") {
+                $phpStr = LightnCandy::compile(
+                    $val->template,
+                    array("flags" => LightnCandy::FLAG_NOESCAPE)
+                );
+                if (file_put_contents("{$rep_out}/{$val->file_php}", "<?php {$phpStr} ?>") === false)
+                    return false;
+                if ($Table->put(["compile" => 0], ["id_div" => $val->id_div]) === false)
+                    return false;
+            }
+        }
+        return true;
     }
 }

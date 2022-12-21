@@ -32,8 +32,8 @@ final class ApiMsg implements RestInterface
      */
     function post(array $data, array $param, object $Env): array
     {
-        $msgKo = $Env->Contact->msgKo ?? "an error was encountered";
-        $msgOk = $Env->Contact->msgKo ?? "message sent";
+        $msgKo = $Env->Contact?->msgKo ?? "an error was encountered";
+        $msgOk = $Env->Contact?->msgOk ?? "message sent";
 
         [$controle, $fails, $nom, $mail, $message, $tel, $sujet] = Carray::arrayCheck($data, [
             "nom" => ["protected" => true, "limit" => 80],

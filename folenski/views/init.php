@@ -10,6 +10,7 @@
 
 use Staff\Config\Config;
 use Staff\Databases\Table;
+use Staff\Drivers\Mysql;
 use Staff\Lib\Admin;
 use Staff\Drivers\Sqlite;
 use Staff\Models\Change;
@@ -42,14 +43,20 @@ function printHtml(?string $text = null, int $level = Admin::DISP_DEF)
 }
 
 try {
-    $Adm = new Admin(sqldrv: new Sqlite());
+    $Adm = new Admin(
+        sqldrv: match (DBParam::$db) {
+            "mysql" => new Mysql(),
+            default => new Sqlite()
+        }
+    );
     $Change = new Table(Entite: new Change(), prefixe: DBParam::$prefixe);
     $rows = $Adm->showTables();
     $nbrLu = count($rows);
     $nbrPrev = count(DBParam::TABLE);
     $baseDonnee = DBParam::$db;
+    $envName = DBParam::$env ?? "NaN";
 
-    $dir = "{$root}/" . Config::REP_DATA;
+    $dir = "{$root}" . Config::REP_DATA;
     $files = array_filter(scandir($dir), function (string $el) {
         return str_ends_with($el, ".json");
     });
@@ -77,9 +84,9 @@ try {
             <h1><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> Staff<small>init</small></h1>
         </div>
         <div class="well">
-            <?= "Environnement: {$Env->name}-{$baseDonnee} <br/>" ?>
+            <?= "Environnement: {$envName}-{$baseDonnee} <br/>" ?>
             <?= "Nombre de tables: {$nbrLu} ({$nbrPrev} déclarées) <br/>" ?>
-            <?= "Nombre de fichiers à charger: {$nbrFiles}" ?>
+            <?= "Nombre de fichiers trouvés: {$nbrFiles}" ?>
         </div>
         <div>
             <h3><span class="glyphicon glyphicon-import" aria-hidden="true"></h3>
@@ -116,6 +123,7 @@ try {
                             File modification time: <?= $dt ?>
                             <br />
                             Last data load: <?= $updatedAt ?>
+                            <?php $stat = null ?> 
                         <?php endif ?>
                     </div>
                 </div>

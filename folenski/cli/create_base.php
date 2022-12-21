@@ -6,10 +6,10 @@
  * @author  folenski
  * 
  * @since  17/12/2022
- * @version 1.4 utilisation de la class Admin
  * @version 1.5 ajout de la class Driver/sqlite
  * @version 1.6 suppression ajout de l'utilisateur
  * @version 1.7 utilisation de la table admin
+ * @version 1.8 ajout du driver Mysql
  * 
  */
 
@@ -17,6 +17,7 @@ use Staff\Databases\Database;
 use Staff\Models\DBParam;
 use Staff\Lib\CliFonct;
 use Staff\Config\Config;
+use Staff\Drivers\Mysql;
 use Staff\Drivers\Sqlite;
 use Staff\Lib\Admin;
 
@@ -56,7 +57,13 @@ CliFonct::print("");
 
 if ($optDelete) CliFonct::print("L'option drop est activée", CliFonct::TERM_VERT);
 
-$Adm = new Admin(DBParam::$prefixe, new Sqlite());
+$Adm = new Admin(
+  sqldrv: match (DBParam::$db) {
+    "mysql" => new Mysql(),
+    default => new Sqlite()
+  }
+);
+
 $Adm->createAllTables(
   $optDelete,
   function (?string $text = null, int $lvl = Admin::DISP_DEF) {

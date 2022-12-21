@@ -5,13 +5,14 @@
  *
  * @author folenski
  * @version 1.0 05/08/2022: Version initiale
- * @version 1.1 16/12/2022: add showTables
+ * @version 1.1 16/12/2022: add showTables, passage en array
  * 
  */
 
 namespace Staff\Lib;
 
 use Exception;
+use PDO;
 use Staff\Databases\Database;
 use Staff\Databases\SqlAdmin;
 use Staff\Databases\Table;
@@ -41,9 +42,9 @@ class Admin
     {
         if ($this->sqldrv == null) throw ("driver DB not set");
         try {
-            $rows = Database::query($this->sqldrv->showTables())->fetchAll();
-            return array_filter($rows, function (object $el) {
-                return str_starts_with($el->name, $this->prefixe);
+            $rows = Database::query($this->sqldrv->showTables())->fetchAll(PDO::FETCH_ASSOC);
+            return array_filter($rows, function (array $el) {
+                return str_starts_with($el[array_key_first($el)], $this->prefixe);
             });
         } catch (Exception) {
             throw ("show tables error");
@@ -145,7 +146,7 @@ class Admin
                         break;
                     default:
                         $print("[{$key}] => add", self::DISP_DONE);
-                        $stat["exist"]++;
+                        $stat["add"]++;
                         break;
                 }
             } catch (\Exception $e) {

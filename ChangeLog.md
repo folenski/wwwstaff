@@ -1,15 +1,17 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
- 
+Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un hebergement mutualisé (php)
+
 ## [Unreleased]
+
+## [1.1.0] - 2022-12-21
 
 ### Added
 
 - Class Drivers/Sqlite
-- Utilisation de tag sur les class Models : Data, Environment, Log, Message, Template, Token, Log
+- Utilisation des tags sur les class : Data, Environment, Log, Message, Template, Token, Log
 - Renommage du champs Token/revoke en Token/revoked, revoke est un mot clé sur MYSQL
-- url pour l'installation de la base et chargement des données http://localhost:8080/start
+- Url pour l'installation de la base et chargement des données http://localhost:8080/start
 
 ### Fixed
 
@@ -20,7 +22,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-Version initiale, projet commencé en 2020 afin de faciliter la production de site WEB.
-Obligation d'utiliser php
+Version initiale
 
 

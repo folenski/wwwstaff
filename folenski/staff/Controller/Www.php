@@ -13,7 +13,7 @@
 namespace Staff\Controller;
 
 use Staff\Models\DBParam;
-use Staff\Services\Render;
+use Staff\Lib\Render;
 use Staff\Config\Config;
 
 class Www
@@ -43,10 +43,10 @@ class Www
         );
         if (
             $Index === null
-            || !property_exists($Index, "start") ||
-            !property_exists($Index, "entry_file")
+            || !property_exists($Index, Config::ENV_INDEX["start"]) ||
+            !property_exists($Index, Config::ENV_INDEX["entry"])
         ) {
-            self::errorFatal("Index not found");
+            self::errorFatal("mistake index");
             return;
         }
 
@@ -55,10 +55,9 @@ class Www
             httpServer: $_SERVER["HTTP_HOST"]
         );
 
-        $www["lang"] = $Index->language ?? "en";
-        $www["revised"] = $Env->Option->revised;
-        $www["meta"] = $Index->const->meta ?? "";
-        $www["title"] = $Index->const->title ?? "";
+        $www["lang"] = $Index?->{Config::ENV_INDEX["lang"]} ?? "en";
+        $www["meta"] = $Index?->{Config::ENV_INDEX["meta"]} ?? "";
+        $www["title"] = $Index?->{Config::ENV_INDEX["title"]}  ?? "";
         if ($Env->Option->prod !== true) $www["title"] = "[{$Env->name}] {$www["title"]}";
 
         $Render = new Render(
@@ -66,35 +65,37 @@ class Www
             $Env->Option->pref_uri,
             $root . Config::REP_TMP
         );
-        if (property_exists($Index, "nav")) {
-            $divs = $Render->fetch($Index->nav, "nav");
+        if (property_exists($Index, Config::ENV_INDEX["nav"])) {
+            $divs = $Render->fetch($Index->{Config::ENV_INDEX["nav"]}, "nav");
             if ($divs === null) {
-                self::errorFatal("Error fetch menu");
+                self::errorFatal("fetch menu");
                 return;
             }
             $Render->update_uri($divs, "nav", $uri);
         }
         if ($uri != "") {
             if (($Data = $Render->get_metadata($uri)) === null) {
-                self::errorFatal("Error ref not found");
+                self::errorFatal("mistake ref nav");
                 return;
             }
             $ref = $Data->ref;
             if ($Data->meta != "") $www["meta"] = $Data->meta;
         } else {
-            $ref = $Index->start;
+            $ref = $Index->{Config::ENV_INDEX["start"]};
         }
         if (($divs = $Render->fetch($ref, "content")) === null) {
-            self::errorFatal("Error content not found");
+            self::errorFatal("mistake ref content");
             return;
         }
         $Render->sort($divs, "content");
         $render = $Render->render();
         if ($render === null) {
-            self::errorFatal("Error render www");
+            self::errorFatal("render page");
             return;
         }
-        require "{$repViews}{$Index->entry_file}";
+
+        $fileEntry= $repViews . $Index->{Config::ENV_INDEX["entry"]}; 
+        require $fileEntry;
     }
 
     /**

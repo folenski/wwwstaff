@@ -23,24 +23,20 @@
           "language": "fr",
           "uri": "fr/",
           "default": true,
-          "nav": "fr_menu",
-          "start": "fr_accueil",
+          "ref_nav": "fr_menu",
+          "ref_content": "fr_accueil",
           "entry_file": "demo.php",
-          "const": {
-            "title": "Démo en francais",
-            "meta":  "Lorem ipsum, dolor sit amet consectetur"
-          }
+          "title": "Démo en francais",
+          "meta": "Lorem ipsum, dolor sit amet consectetur"
         },
         {
           "language": "en",
           "uri": "en/",
-          "nav": "en_menu",
-          "start": "en_home",
+          "ref_nav": "en_menu",
+          "ref_content": "en_home",
           "entry_file": "demo.php",
-          "const": {
-            "title": "English demo",
-            "meta":  "Lorem ipsum"
-          }
+          "title": "English demo",
+          "meta": "Lorem ipsum"
         }
       ],
       "_j_route": "inc/route.json"
@@ -48,7 +44,7 @@
     {
       "name": "TST",
       "j_option": {
-      "user": "svcstaff",
+        "user": "svcstaff",
         "maintenance": false
       },
       "j_contact": {
