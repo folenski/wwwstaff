@@ -4,10 +4,10 @@
  * Gestion des ordres SQL de base
  * 
  * @author folenski
- * @since 08/08/2022
- * @version 1.0.0
- * @version 1.0.1 ajout d'une méthode OR
- * @version 1.1.0 ajout de l'ordre inner_join
+ * @version 1.0 ajout d'une méthode OR
+ * @version 1.1 08/08/2022: ajout de l'ordre inner_join
+ * @version 1.2 16/12/2022: fixed clause limit
+ * 
  */
 
 namespace Staff\Databases;
@@ -214,13 +214,13 @@ class SqlCore
     }
 
     /**
-     * @return String retourne la requête
+     * @return SqlCore retourne la requête
      */
     public function limit(int $nbr = 1): SqlCore
     {
         if ($nbr < 1) return $this;
         $this->from();
-        $this->_sql .= " LIMIT {$nbr}";
+        $this->_work->sql .= " LIMIT {$nbr}";
         return $this;
     }
 

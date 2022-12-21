@@ -12,48 +12,53 @@ declare(strict_types=1);
 
 use Staff\Databases\SqlAdmin;
 use PHPUnit\Framework\TestCase;
+use Staff\Drivers\Sqlite;
 use Staff\Models\Log;
+use Staff\Models\Message;
 
 final class SqlAdminTest extends TestCase
 {
-    private $descInfo = [
-        "idInfo"   => "INTEGER PRIMARY KEY",
-        "titre"    => "TEXT",
-        "meta"     => "TEXT",
-        "_index1"  => "titre, meta",
-        "_key"     => "FOREIGN KEY (titre) REFERENCES %spage(ttt)"
-    ];
-
-    public function testCreateTable(): void
+    public function testCreateTableLogSqlite(): void
     {
-        $ttest = new SqlAdmin("test_", new Log());
+        $ttest = new SqlAdmin("test_", new Sqlite(), new Log());
         $this->assertEquals(
             'test_log',
             $ttest->name
         );
 
         $this->assertEquals(
-            'CREATE TABLE test_log (id INTEGER PRIMARY KEY AUTOINCREMENT, http_code INTEGER DEFAULT 0, error_code INTEGER DEFAULT 0, component VARCHAR(256) NOT NULL, message VARCHAR(10000) NOT NULL, created_at DATETIME NOT NULL)',
+            'CREATE TABLE test_log (id  INTEGER PRIMARY KEY AUTOINCREMENT, http_code  INTEGER DEFAULT 0, error_code  INTEGER DEFAULT 0, component VARCHAR(256) NOT NULL, message VARCHAR(10000) NOT NULL, created_at  DATETIME NOT NULL)',
             $ttest->create()->table()->toStr()
         );
-
         $index = $ttest->listIndex;
-
         $this->assertSame(["_index"], $index);
         $this->assertEquals(
             'CREATE INDEX test_log_index ON test_log (created_at)',
             $ttest->create()->index($index[0])->toStr()
         );
-
         $this->assertEquals(
             'CREATE INDEX IF NOT EXISTS test_log_index ON test_log (created_at)',
             $ttest->create()->exists()->index($index[0])->toStr()
         );
     }
 
+    public function testCreateTableMessageSqlite(): void
+    {
+        $ttest = new SqlAdmin("test_", new Sqlite(), new Message());
+        $this->assertEquals(
+            'test_message',
+            $ttest->name
+        );
+
+        $this->assertEquals(
+            'CREATE TABLE test_message (id  INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(256) NOT NULL, host VARCHAR(256), hash VARCHAR(256) NOT NULL, j_msg VARCHAR(10000) NOT NULL, done  INTEGER DEFAULT 0, created_at  DATETIME NOT NULL,  FOREIGN KEY (user) REFERENCES test_user(user))',
+            $ttest->create()->table()->toStr()
+        );
+    }
+
     public function testDropTable(): void
     {
-        $table = new SqlAdmin("test_", new Log());
+        $table = new SqlAdmin("test_", new Sqlite(), new Log());
         $this->assertSame(
             'DROP TABLE test_log',
             $table->drop()->table()->toStr()

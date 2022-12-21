@@ -1,0 +1,58 @@
+<div class="mx-4">
+  <h2>Formulaire de contact</h2>
+  <form
+    id="contactForm"
+    action="/action/msg"
+    data-reveal="display"
+    method="post"
+    enctype="application/x-www-form-urlencoded"
+  >
+    <div class="mb-3">
+      <label for="contName" class="form-label">Nom</label>
+      <input
+        type="text"
+        class="form-control"
+        id="contName"
+        name="nom"
+        placeholder="Nom"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="contEmail" class="form-label">E-mail</label>
+      <input
+        type="email"
+        class="form-control"
+        id="contEmail"
+        name="mail"
+        placeholder="name@example.com"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="contSubject" class="form-label">Sujet</label>
+      <input
+        type="text"
+        class="form-control"
+        id="contSubject"
+        name="sujet"
+        placeholder="Sujet"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="contMsg" class="form-label">Message</label>
+      <textarea
+        class="form-control"
+        id="contMsg"
+        name="message"
+        rows="4"
+        data-length="255"
+        required
+      ></textarea>
+    </div>
+    <button type="submit" class="btn btn-dark">Envoyer</button>
+  </form>
+</div>

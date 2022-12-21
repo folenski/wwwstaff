@@ -9,6 +9,7 @@
  * @version 1.1.0 Utilisation de la class Carray
  * @version 1.2.0 Refactoring de code
  * @version 1.2.1 09/12/2022, Utilisation du trait + response
+ * @version 1.3.0 16/12/2022, Utilisation de l'api retour 
  * 
  */
 
@@ -37,34 +38,16 @@ final class ApiAuth implements RestInterface
                 "password" => ["type" => "string"]
             ]
         );
-        if (!$controle)
-            return [
-                "http" => self::HTTP_BAD,
-                "errorcode" => self::ERR_BAD_URI,
-                "response" => [
-                    "content" => $fails
-                ]
-            ];
+        if (!$controle) return $this->retCrlFail($fails);
 
-        //$User = new User($Rest->prefixe);
         [$retour, $token, $mail, $last] = Authen::login($user, $pass, 60);
         if ($retour != Authen::USER_OK) {
             $libelle = Authen::get_lib($retour);
-            return [
-                "http" => self::HTTP_OK,
-                "errorcode" => self::ERR_CUSTOM_APP + $retour,
-                "response" => [
-                    "content" => $libelle
-                ]
-            ];
+            return $this->retApi(errorcode: $retour, isApp: true, content: $libelle);
         }
-        return [
-            "http" => self::HTTP_OK,
-            "errorcode" => self::ERR_OK,
-            "response" => [
-                 "token" => $token, "mail" => $mail, "last_cnx" => $last
-            ]
-        ];
+        return $this->retApi(content: null, data: [
+            "token" => $token, "mail" => $mail, "last_cnx" => $last
+        ]);
     }
     /**
      * Méthode DELETE
@@ -75,29 +58,9 @@ final class ApiAuth implements RestInterface
      */
     function delete(array $data, array $param, object $Env): array
     {
-        if (!array_key_exists("token", $param))
-            return [
-                "http" => self::HTTP_AUTH_KO,
-                "errorcode" => self::ERR_NO_TOKEN,
-                "response" => [
-                    "content" => "token needed"
-                ]
-            ];
-
-        $token = $param["token"];
-
-        if (!Authen::revoke($token))
-            return [
-                "http" => self::HTTP_UNAVAIL,
-                "errorcode" => self::ERR_INTERNAL,
-                "response" => [
-                    "content" => "Internal error"
-                ]
-            ];
-        return
-            [
-                "http" => self::HTTP_OK,
-                "errorcode" => self::ERR_OK
-            ];
+        $token = (array_key_exists("token", $param)) ? $param["token"] : "";
+        if ($token == "") return $this->retTokenNeeded();
+        if (!Authen::revoke($token)) return $this->retUnAvail();
+        return $this->retApi();
     }
 }

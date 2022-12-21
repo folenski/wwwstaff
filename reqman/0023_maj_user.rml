@@ -1,6 +1,6 @@
 ################################################################################
 #             Tests sur la méthode PUT sur la class User
-# le 8/07/2022
+# le 16/12/2022: update
 ################################################################################
 
 ################################################################################
@@ -14,8 +14,7 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
     - json.token.size: . > 20 
   save:
      myToken: <<json.token>>
@@ -33,8 +32,8 @@
   body: {"password" : "Mypass123456"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### On remet le  mot de passe d'origine sans demander un nouveau token => KO
@@ -48,7 +47,8 @@
   body: {"password" : "Admin4321@"}
   tests:
     - status: 401
-    - json.http: "Unauthorized"
+    - json.errorcode: 23
+    - json.content: token not valid
 
 ################################################################################
 ### On demande un token  <<myToken>> => OK
@@ -61,8 +61,7 @@
   body: {"user" : "svcadmin", "password" : "Mypass123456"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
     - json.token.size: . > 20 
   save:
      myToken2: <<json.token>>
@@ -79,8 +78,8 @@
   body: {"password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### On demande un token : <<myToken3>> => OK
@@ -93,8 +92,7 @@
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
     - json.token.size: . > 20 
   save:
      myToken3: <<json.token>>
@@ -111,8 +109,8 @@
   body: {"mail" : "t@t.com"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done
 
 ################################################################################
 ### On remet l'email initiale => OK
@@ -126,5 +124,5 @@
   body: {"mail" : "staff@local.com"}
   tests:
     - status: 200
-    - json.http: "Ok"
-    - json.errorcode: 0
+    - json.errorcode: null
+    - json.content: done

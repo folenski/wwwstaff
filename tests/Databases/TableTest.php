@@ -6,7 +6,8 @@
  * 
  * @author  folenski
  * @since 1.0 26/07/2022 version initiale
- * @since 1.1 5/08/2022 refactoring de la class
+ * @since 1.1 05/08/2022 refactoring de la class
+ * @since 1.2 16/12/2022 test des limits
  */
 
 declare(strict_types=1);
@@ -16,6 +17,7 @@ use Staff\Models\Template;
 use Staff\Models\Data;
 use Staff\Databases\Table;
 use PHPUnit\Framework\TestCase;
+use Staff\Models\Log;
 
 final class TableTest extends TestCase
 {
@@ -31,14 +33,13 @@ final class TableTest extends TestCase
             $Table->put(compact("file_php", "id_div", "template"))
         );
 
-        $Data = new Table(PREFIXE, new Data());
+        $Data = new Table(Entite: new Data(), prefixe: PREFIXE, debug: true);
         $Data->del(["id_div" => "like __content%"]);
         $this->assertSame(
             true,
             $Data->put([
                 "id_div" => "__content",
                 "ref" => "mycontent",
-                "title" => "coucou",
                 "j_content" => "mydata"
             ])
         );
@@ -67,12 +68,11 @@ final class TableTest extends TestCase
      */
     public function testGetJoinTable(): void
     {
-        $Table = new Table(PREFIXE, new Template());
-
+        $Table = new Table(Entite: new Template(), prefixe: PREFIXE, debug: true);
         $enr = $Table->get(["id_div" => "__content"], join: $Table->join(new Data(), ["id_div"]));
         $this->assertIsArray($enr);
         $this->assertSame(1, count($enr));
-        $this->assertSame("coucou", $enr[0]->title);
+        $this->assertSame("mycontent", $enr[0]->ref);
     }
 
     /**
@@ -123,7 +123,7 @@ final class TableTest extends TestCase
     /**
      * @depends testPutTable
      */
-    public function testudpTable(): void
+    public function testupdTable(): void
     {
         $Table = new Table(PREFIXE, new Template());
 
@@ -223,5 +223,34 @@ final class TableTest extends TestCase
                 $e->getMessage()
             );
         }
+    }
+
+    /**
+     * @depends testSaveErrTable
+     */
+    public function testGetTableLimit(): void
+    {
+        $Log = new Table(PREFIXE, new Log());
+        $nbr = $Log->count();
+        for ($i = 0; $i < 10; $i++) {
+            $Log->put([
+                "component" => "test",
+                "message" => "hello c'est moi",
+                "http_code" => $i,
+                "error_code" => $i
+            ]);
+        }
+
+        $this->assertSame(
+            $nbr + 10,
+            $Log->count()
+        );
+        $rows = $Log->get(limit: 5);
+        $this->assertNotNull($rows);
+
+        $this->assertSame(
+            5,
+            count($rows)
+        );
     }
 }

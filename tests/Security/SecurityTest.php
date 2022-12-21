@@ -8,7 +8,6 @@
  */
 
 declare(strict_types=1);
-require_once  __DIR__  . "/dependances/config.php";
 
 use Staff\Security\Security;
 use PHPUnit\Framework\TestCase;
@@ -44,6 +43,13 @@ final class SecurityTest extends TestCase
         $this->assertSame(
             false,
             Security::check_pass("admi'n12345")
+        );
+    }
+    public function testPassCheckCust(): void
+    {
+        $this->assertSame(
+            true,
+            Security::check_pass("staff2@local.com")
         );
     }
 }

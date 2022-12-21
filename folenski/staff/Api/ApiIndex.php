@@ -23,7 +23,8 @@ final class ApiIndex implements RestInterface
      */
     function get(array $data, array $param, object $Env): array
     {
-        if ($Env->Option->maintenance) return ["http" => self::HTTP_OK, "errorcode" => self::ERR_OK, "response" => []];
-        return  ["http" => self::HTTP_OK, "errorcode" => self::ERR_OK, "response" => $Env->index];
+        if ($Env->Option->maintenance)
+            return  $this->retApi(content: null, data: []);
+        return $this->retApi(content: null, data: $Env->index);
     }
 }

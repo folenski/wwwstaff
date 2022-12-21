@@ -1,0 +1,23 @@
+{
+  "nom": "data",
+  "row": [
+    {
+      "ref": "fr_menu",
+      "id_div": "menu",
+      "_j_content": "inc/menu.json"
+    },
+    {
+      "ref": "en_menu",
+      "id_div": "menu",
+      "_j_content": "inc/en_menu.json"
+    },
+    {
+      "ref": "fr_accueil",
+      "id_div": "content",
+      "rank": 1,
+      "j_content": {
+        "_section": "html/fr_accueil_1.html"
+      }
+    }
+  ]
+}

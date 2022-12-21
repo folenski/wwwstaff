@@ -4,7 +4,8 @@
  * Table Token
  *
  * @author  folenski
- * @since 1.0  09/08/2022 : Version Initiale 
+ * @version 1.0 09/08/2022: Version initiale
+ * @version 1.1 10/12/2022: utilisation des tags
  * 
  */
 
@@ -12,16 +13,16 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 
-final class Token implements DBParamInterface, TableInterface
+final class Token implements TableInterface
 {
     private const _NAME = "token";
     private const _DESC = [
-        "token"        => "VARCHAR(" . self::SZ_SM_TXT . ") PRIMARY KEY",
-        "user"         => "VARCHAR(" . self::SZ_SM_TXT . ") NOT NULL",
-        "revoke"       => "INTEGER DEFAULT 0",
-        "expired_at"   => "DATETIME NOT NULL",
-        "created_at"   => "DATETIME NOT NULL",
-        "_key"         => "FOREIGN KEY (user) REFERENCES %suser(user)"
+        "token"      => "#TXT_SM PRIMARY KEY",
+        "user"       => "#TXT_SM NOT NULL",
+        "revoked"    => "INTEGER DEFAULT 0",
+        "expired_at" => "DATETIME NOT NULL",
+        "created_at" => "DATETIME NOT NULL",
+        "_key"       => "FOREIGN KEY (user) REFERENCES %suser(user)"
     ];
 
     /**

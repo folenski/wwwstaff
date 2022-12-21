@@ -4,7 +4,9 @@
  * Constantes pour la définition des champs pour la base de données
  * 
  * @author  folenski
- * @since 1.0  04/08/2022 : Version initiale 
+ * @version 1.0 04/08/2022: version initiale 
+ * @version 1.1 14/12/2022: supp interface DBParam 
+ * @version 1.2 17/12/2022: ajout de la table change, modif get_table 
  *  
  */
 
@@ -12,7 +14,7 @@ namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
 
-class DBParam implements DBParamInterface
+class DBParam
 {
     const RET_OK = 0;
     const NOT_FOUND = 2;
@@ -25,10 +27,11 @@ class DBParam implements DBParamInterface
         self::PARAM_ERROR => "Parse parameters error"
     ];
 
-    const TABLE = ["data", "environment", "template", "user", "token", "log", "message"];
+    const TABLE = ["data", "environment", "template", "user", "token", "log", "message", "change"];
 
     static string $prefixe;
     static string $env;
+    static string $db;
     static string $file_pdo;
 
     /**
@@ -52,10 +55,10 @@ class DBParam implements DBParamInterface
         if ($env !== null) {
             if (!array_key_exists($env, $ini)) return self::NOT_FOUND;
             if (($prefixe = $ini[$env]["prefixe"] ?? "") != "") $prefixe .= "_";
-
             self::$prefixe = $prefixe;
             self::$env = $env;
-            self::$file_pdo .= $ini[$env]["database"];
+            self::$db = $valeur["db"] ?? "sqlite";
+            self::$file_pdo .= $ini[$env]["pdo"];
             return true;
         }
 
@@ -66,14 +69,16 @@ class DBParam implements DBParamInterface
                 if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
                 self::$prefixe = $prefixe;
                 self::$env = $key;
-                self::$file_pdo .= $valeur["database"];
+                self::$db = $valeur["db"] ?? "sqlite";
+                self::$file_pdo .= $valeur["pdo"];
                 return true;
             }
             if (array_key_exists("default", $valeur)) {
                 if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
                 self::$prefixe = $prefixe;
                 self::$env = $key;
-                self::$file_pdo .= $valeur["database"];
+                self::$db = $valeur["db"] ?? "sqlite";
+                self::$file_pdo .= $valeur["pdo"];
             }
         }
         return isset(self::$prefixe) ? true : self::NOT_FOUND;
@@ -85,24 +90,16 @@ class DBParam implements DBParamInterface
      */
     static function get_table(string $nom): TableInterface|null
     {
-        switch ($nom) {
-            case "environment":
-                return new Environment();
-            case "template":
-                return new Template();
-            case "data":
-                return new Data();
-            case "user":
-                return new User();
-            case "token":
-                return new Token();
-            case "log":
-                return new Log();
-            case "message":
-                return new Message();
-
-            default:
-                return null;
-        }
+        return match ($nom) {
+            "environment" => new Environment(),
+            "template" => new Template(),
+            "data" => new Data(),
+            "user" => new User(),
+            "token" => new Token(),
+            "log" => new Log(),
+            "message" => new Message(),
+            "change" => new Change(),
+            default => null
+        };
     }
 }

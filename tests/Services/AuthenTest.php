@@ -4,7 +4,8 @@
  * Module de test la classe AuthenTest 
  * 
  * @author  folenski
- * @since 1.3 13/08/2022 : Refactoring 
+ * @version 1.3 13/08/2022 : Refactoring 
+ * @version 1.3 13/08/2022 : Utilisation du champs role 
  */
 
 declare(strict_types=1);
@@ -41,7 +42,7 @@ final class AuthenTest extends TestCase
         // Creation d'un compte avec une table vide
         $this->assertSame(
             Authen::USER_OK,
-            Authen::add(self::USER1, self::MAIL, self::PASS, Authen::GRP_ADMIN)
+            Authen::add(self::USER1, self::MAIL, self::PASS, Authen::ROLE_ADMIN)
         );
         // Creation d'un compte avec une table vide
         $temps = date('Y-m-d H:i:s');
@@ -55,7 +56,6 @@ final class AuthenTest extends TestCase
         $this->assertSame($temps, $last);
     }
 
-
     /**
      * test des différentes types d'erreur pour l'ajour d'un utilisateur
      * @depends testNewAddUser
@@ -64,17 +64,17 @@ final class AuthenTest extends TestCase
     {
         $this->assertSame(
             Authen::USER_EXIST,
-            Authen::add(self::USER1, "admin@test.com", self::PASS, Authen::GRP_ADMIN)
+            Authen::add(self::USER1, "admin@test.com", self::PASS, Authen::ROLE_ADMIN)
         );
         // Creation d'un compte avec un mail au mauvais format
         $this->assertSame(
             Authen::USER_MAIL_ERROR,
-            Authen::add(self::USER2, "admin@testcom", self::PASS, Authen::GRP_ADMIN)
+            Authen::add(self::USER2, "admin@testcom", self::PASS, Authen::ROLE_ADMIN)
         );
         // Creation d'un compte avec un mot de passe trop simple
         $this->assertSame(
             Authen::USER_PIN_ERROR,
-            Authen::add(self::USER2, "admin@test.com", "123456789", Authen::GRP_ADMIN)
+            Authen::add(self::USER2, "admin@test.com", "123456789", Authen::ROLE_ADMIN)
         );
     }
 
@@ -84,7 +84,7 @@ final class AuthenTest extends TestCase
     public function testRetLib(): void
     {
         $this->assertSame(
-            "L'utilisateur existe déjà",
+            "User already exists",
             Authen::get_lib(Authen::USER_EXIST)
         );
         $this->assertSame(
@@ -93,23 +93,23 @@ final class AuthenTest extends TestCase
 
         );
         $this->assertSame(
-            "L'utilisateur n'a pas été trouvé",
+            "User not found",
             Authen::get_lib(Authen::USER_NOT_FOUND)
         );
     }
 
     /**
-     *  Test de la méthode afficher un message à partir d'un code retour
+     *  Test pour generer un token
      */
-    public function testRetPerm(): void
+    public function testGenPass(): void
     {
         $this->assertSame(
-            Authen::GRP_ADMIN,
-            Authen::get_permission("admin")
+            Authen::USER_PIN_ERROR,
+            Authen::cyPass("toto")
         );
-        $this->assertSame(
-            Authen::GRP_USER,
-            Authen::get_permission("user")
+
+        $this->assertIsString(
+            Authen::cyPass("toto12345@")
         );
     }
 
@@ -140,7 +140,7 @@ final class AuthenTest extends TestCase
     {
         $this->assertSame(
             Authen::USER_OK,
-            Authen::add(self::USER2, "admin@test.com", self::PASS, Authen::GRP_ADMIN)
+            Authen::add(self::USER2, "admin@test.com", self::PASS, Authen::ROLE_ADMIN)
         );
         for ($cpt = 1; $cpt <= 3; $cpt++) {
             [$retour] = Authen::login(self::USER2, "mauvaispass", 60);

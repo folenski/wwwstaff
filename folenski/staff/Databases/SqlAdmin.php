@@ -12,8 +12,9 @@
 namespace Staff\Databases;
 
 use Exception;
+use Staff\Drivers\DriversInterface;
 
-class SqlAdmin extends SqlCore 
+class SqlAdmin extends SqlCore
 {
     private array $_index;
     private array $_field;
@@ -22,8 +23,11 @@ class SqlAdmin extends SqlCore
     /**
      * Constructeur de la class
      */
-    function __construct(private string $_prefixe, TableInterface $Table)
-    {
+    function __construct(
+        private string $_prefixe,
+        private DriversInterface $_SqlPriv,
+        TableInterface $Table
+    ) {
         [$nom, $schema] = $Table->init();
         $this->_list = [];
         foreach ($schema as $key => $value) {
@@ -31,7 +35,12 @@ class SqlAdmin extends SqlCore
                 array_push($this->_list, $key);
                 $this->_index[$key] = $value;
             } else {
-                $this->_field[$key] = $value;
+                // on regarde les tags
+                $this->_field[$key] = "";
+                $keywords = preg_split("/[\s]+/", $value);
+                foreach ($keywords as $mot) {
+                    $this->_field[$key] .= $this->_tag($mot);
+                }
             }
         }
         parent::__construct(_nom: $nom, _schema: $schema, _prefixe: $this->_prefixe);
@@ -121,5 +130,28 @@ class SqlAdmin extends SqlCore
         if ($this->_work->sql == "CREATE ")  $this->_work->exist = "IF NOT EXISTS ";
         elseif ($this->_work->sql == "DROP ")  $this->_work->exist = "IF EXISTS ";
         return $this;
+    }
+
+    /** ----------------------------------------------------------------------------------------------
+     *                                       P R I V E
+     *  ----------------------------------------------------------------------------------------------
+     */
+
+    function _tag(string $nom): string
+    {
+        switch ($nom) {
+            case "#TXT_SM":
+                return $this->_SqlPriv->typeText();
+            case "#TXT_LG":
+                return $this->_SqlPriv->typeText(false);
+            case "#JSON":
+                return  $this->_SqlPriv->typejson();
+            case "#AUTOINCR":
+                return " " . $this->_SqlPriv->increment();
+            case ",":
+                return ",";
+            default:
+                return " {$nom}";  // on retourne le tag
+        }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "nom": "template",
+  "row": [
+    {
+      "id_div": "menu",
+      "_template": "html/menu.html",
+      "compile": 1,
+      "file_php": "menu.php"
+    },
+    {
+      "id_div": "content",
+      "_template": "html/content.html",
+      "compile": 1,
+      "file_php": "content.php"
+    },
+    {
+      "id_div": "news",
+      "_template": "html/news.html",
+      "compile": 1,
+      "file_php": "news.php"
+    }
+  ]
+}

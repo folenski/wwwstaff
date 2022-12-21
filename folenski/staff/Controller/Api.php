@@ -4,8 +4,9 @@
  * Class Api : Controleur pour les API REST
  *
  * @author folenski
- * @version 1.0.1 11/08/2022: Version initiale
- * @version 1.0.2 09/12/2022: ajout de la méthode index, gestion des reponses
+ * @version 1.1 11/08/2022: version initiale
+ * @version 1.2 09/12/2022: ajout de la méthode index, gestion des reponses
+ * @version 1.3 17/12/2022: utilisation du l'opérateur match
  * 
  */
 
@@ -30,45 +31,35 @@ class Api
     static function start(string $nomApi, object $Env, array $param): void
     {
         Rest::clean($Env);
-        switch ($nomApi) {
-            case "auth":
-                $Api = new ApiAuth();
-                break;
-            case "message":
-                $Api = new ApiMsg();
-                break;
-            case "user":
-                $Api = new ApiUser();
-                break;
-            case "log":
-                $Api = new ApiLog();
-                break;
-            case "index":
-                $Api = new ApiIndex();
-                break;
-            case "data":
-                $Api = new ApiData();
-                break;
-            default:
-                Rest::reponse([
-                    "http" => Rest::HTTP_UNAVAIL,
-                    "errorcode" => ApiAuth::ERR_INTERNAL,
-                    "response" => [
-                        "content" => "internal error"
-                    ]
-                ]);
-                return;
-        }
+
+        $Api = match ($nomApi) {
+            "auth" => new ApiAuth(),
+            "message" => new ApiMsg(),
+            "user" => new ApiUser(),
+            "log" => new ApiLog(),
+            "index" => new ApiIndex(),
+            "data" => new ApiData(),
+            default => null
+        };
+
         Rest::header('*'); // Headers requis
+
+        if ($Api === null) {
+            Rest::reponse([
+                "http" => Rest::HTTP_UNAVAIL,
+                "errorcode" => ApiAuth::ERR_INTERNAL,
+                "response" => ["content" => "internal error"]
+            ]);
+        }
+
         $methode = $_SERVER["REQUEST_METHOD"];
-        if (array_key_exists("HTTP_AUTHORIZATION", $_SERVER)) {
-            if (($auth = Rest::bearer($_SERVER["HTTP_AUTHORIZATION"])) === false) {
+        $headerAuth = (array_key_exists("HTTP_AUTHORIZATION", $_SERVER)) ? $_SERVER["HTTP_AUTHORIZATION"] : false;
+        if ($headerAuth !== false) {
+            if (($auth = Rest::bearer($headerAuth)) === false) {
                 Rest::reponse([
                     "http" => Rest::HTTP_AUTH_KO,
                     "errorcode" => $Api::ERR_BAD_TOKEN,
-                    "response" => [
-                        "content" => "token not valid"
-                    ]
+                    "response" => ["content" => "token not valid"]
                 ]);
                 return;
             }
@@ -80,29 +71,14 @@ class Api
             $donnees = (array)json_decode(file_get_contents("php://input"));
             if ($donnees === null) $donnees = new \stdClass();
         }
-        switch ($methode) {
-            case "GET":
-                $ret = $Api->get($donnees, $param, $Env);
-                break;
-            case "POST":
-                $ret = $Api->post($donnees, $param, $Env);
-                break;
-            case "PUT":
-                $ret = $Api->put($donnees, $param, $Env);
-                break;
-            case "DELETE":
-                $ret = $Api->delete($donnees, $param, $Env);
-                break;
-            default:
-                Rest::reponse([
-                    "http" => Rest::HTTP_DENIED,
-                    "errorcode" => $Api::ERR_INTERNAL,
-                    "response" => [
-                        "content" => "{$methode} denied"
-                    ]
-                ]);
-                return;
-        }
+
+        $ret = match ($methode) {
+            "GET" => $Api->get($donnees, $param, $Env),
+            "POST" => $Api->post($donnees, $param, $Env),
+            "PUT" => $Api->put($donnees, $param, $Env),
+            "DELETE" => $Api->delete($donnees, $param, $Env),
+            default => ["http" => Rest::HTTP_DENIED, "errorcode" => $Api::ERR_INTERNAL, "response" => ["content" => "{$methode} denied"]]
+        };
         Rest::reponse($ret, $nomApi, $Env->Option->log);
     }
 }

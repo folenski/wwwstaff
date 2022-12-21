@@ -1,0 +1,80 @@
+{
+  "nom": "environment",
+  "row": [
+    {
+      "name": "DEV",
+      "j_option": {
+        "log": true,
+        "prod": false,
+        "user": "svcstaff",
+        "maintenance": false,
+        "pref_uri": "/menu/"
+      },
+      "j_contact": {
+        "mail": "sample@mail.com",
+        "msgMax": 2000,
+        "sendMail": false,
+        "msgOk": "Message envoyé, merci",
+        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+      },
+      "j_index": [
+        {
+          "language": "fr",
+          "uri": "fr/",
+          "default": true,
+          "ref_nav": "fr_menu",
+          "ref_content": "fr_accueil",
+          "entry_file": "demo.php",
+          "title": "Démo en francais",
+          "meta": "Lorem ipsum, dolor sit amet consectetur"
+        },
+        {
+          "language": "en",
+          "uri": "en/",
+          "ref_nav": "en_menu",
+          "ref_content": "en_home",
+          "entry_file": "demo.php",
+          "title": "English demo",
+          "meta": "Lorem ipsum"
+        }
+      ],
+      "_j_route": "inc/route.json"
+    },
+    {
+      "name": "TST",
+      "j_option": {
+        "user": "svcstaff",
+        "maintenance": false
+      },
+      "j_contact": {
+        "mail": "sample@mail.com",
+        "msgMax": 2000,
+        "sendMail": false,
+        "msgOk": "Message envoyé, merci",
+        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+      },
+      "_j_index": "inc/index.json",
+      "_j_route": "inc/route.json"
+    },
+    {
+      "name": "PRD",
+      "j_option": {
+        "maintenance": false,
+        "user": "svcstaff"
+      },
+      "j_contact": {
+        "mail": "sample@mail.com",
+        "msgMax": 2000,
+        "purge": 45,
+        "sendMail": false,
+        "msgOk": "Message envoyé, merci",
+        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p> <br/>Cordialement,<br/><br/>- Admin - "
+      },
+      "_j_index": "inc/index.json",
+      "_j_route": "inc/route.json"
+    }
+  ]
+}

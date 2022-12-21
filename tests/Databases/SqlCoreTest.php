@@ -182,6 +182,18 @@ final class SqlCoreTest extends TestCase
             'SELECT * FROM info INNER JOIN info2 ON info2.idInfo=info.idInfo AND info2.meta=info.meta WHERE info.idInfo=10',
             $Table->toStr()
         );
-        
+    }
+
+    /**
+     * 
+     */
+    public function testLimitTable(): void
+    {
+        $Table = new SqlCore("info", $this->descInfo);
+
+        $this->assertSame(
+            "SELECT * FROM info LIMIT 5",
+            $Table->select("*")->limit(5)->toStr()
+        );
     }
 }
