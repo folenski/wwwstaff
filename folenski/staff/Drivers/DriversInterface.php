@@ -15,12 +15,13 @@ interface DriversInterface
 
     const SZ_SM_TXT = "256";
     const SZ_LG_TXT = "10000";
-    const SZ_JSON = "10000";
+    const SZ_JSON = "15000";
+    const SZ_SM_JSON = "4000";
 
     /**
      * @return string retourne le type json
      */
-    function typejson(): string;
+    function typejson(bool $small = true): string;
 
     /**
      * @return string retourne le type txt

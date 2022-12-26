@@ -87,6 +87,7 @@ class Www
             self::errorFatal("mistake ref content");
             return;
         }
+        $www["ref"] = $ref;
         $Render->sort($divs, "content");
         $render = $Render->render();
         if ($render === null) {

@@ -6,23 +6,24 @@
  * @author  folenski
  * @version 1.0  4/08/2022: version Initiale 
  * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.2 26/12/2022: utilisation des types small pour mysql
  * 
  */
 
 namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
-use Staff\Services\Carray;
+use Staff\Lib\Carray;
 
 final class Environment implements TableInterface
 {
     private const _NAME = "environment";
     private const _DESC = [
         "name"       => "VARCHAR(3) PRIMARY KEY",
-        "j_option"   => "#JSON NOT NULL",
-        "j_contact"  => "#JSON",
-        "j_index"    => "#JSON NOT NULL",
-        "j_route"    => "#JSON NOT NULL",
+        "j_option"   => "#JSON_SM NOT NULL",
+        "j_contact"  => "#JSON_SM",
+        "j_index"    => "#JSON_SM NOT NULL",
+        "j_route"    => "#JSON_SM NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];

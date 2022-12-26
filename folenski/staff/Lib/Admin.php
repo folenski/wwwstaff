@@ -175,6 +175,7 @@ class Admin
             if (substr($key, 0, 1) == "_") {
                 $fichier = "{$rep}/{$val}";
                 $newkey = substr($key, 1);
+                if (!file_exists($fichier)) return false;
                 if (($newval = file_get_contents($fichier)) === false) {
                     $this->_error = $fichier;
                     return false;

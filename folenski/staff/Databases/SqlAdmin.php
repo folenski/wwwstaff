@@ -144,8 +144,10 @@ class SqlAdmin extends SqlCore
                 return $this->_SqlPriv->typeText();
             case "#TXT_LG":
                 return $this->_SqlPriv->typeText(false);
-            case "#JSON":
+            case "#JSON_SM":
                 return  $this->_SqlPriv->typejson();
+            case "#JSON":
+                return  $this->_SqlPriv->typejson(false);
             case "#AUTOINCR":
                 return " " . $this->_SqlPriv->increment();
             case ",":

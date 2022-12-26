@@ -14,15 +14,18 @@
  * 
  */
 
-namespace Staff\Services;
+namespace Staff\Lib;
 
+use Exception;
 use Staff\Databases\Table;
 use Staff\Databases\TableInterface;
+use Staff\Models\BlackList;
 use Staff\Models\DBParam;
 use Staff\Models\Environment;
 use Staff\Models\Message;
 use Staff\Models\Token;
 use Staff\Models\Log;
+use Staff\Security\Authen;
 
 class Rest
 {
@@ -115,7 +118,7 @@ class Rest
     static function log(string $component, string $message, int $http_code = 200, int $error_code = 0, bool $log = false): bool
     {
         if ($error_code == 0 && $log == false) return true;
-        $Log = new Table(DBParam::$prefixe, DBParam::get_table("log"));
+        $Log = new Table(Entite: DBParam::get_table("log"), prefixe: DBParam::$prefixe);
         return $Log->put(compact("component", "message", "http_code", "error_code"));
     }
 
@@ -168,15 +171,44 @@ class Rest
     }
 
     /**
-     * Permet de déterminer si le message est un span
-     * @param Table $Msg 
-     * @param array $fields les champs pour le controle
+     * Permet de déterminer si le message est un spam
+     * @param string $mail mail du message
+     * @param string $msg message 
      * @return bool vrai si un spam
      */
-    static function spam(Table $Msg, array $fields): bool
+    static function spam(string $mail, string $msg): bool
     {
+        $BlackList = new Table(Entite: new BlackList(), prefixe: DBParam::$prefixe);
+
+        $rows = $BlackList->get(["active" => 1], limit: 0);
+        if ($rows === false) return false;
+
+        foreach ($rows as $val) {
+            $rules = json_decode($val->rules);
+            $mailsBL = $rules->mails ?? [];
+            $patternBL = $rules->patterns ?? [];
+            if (in_array($mail, $mailsBL)) return true;
+
+            foreach ($patternBL as $pattern) {
+                if (str_starts_with($pattern, "/")) {
+                    if (preg_match($pattern, $msg) !== 0) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Permet de voir si il y a trop de messages par adresse ip
+     * @param string $hash de l'adresse ip
+     * @return bool vrai si il y a trop de messages sur une adresse ip
+     */
+    static function stopMsg(string $hash): bool
+    {
+        $Msg = new Table(Entite: new Message(), prefixe: DBParam::$prefixe);
         $delai = date("Y-m-d", strtotime("- 2 days"));
-        $nbr = $Msg->count(["hash" => $fields["hash"], "created_at" => "> {$delai}"]);
+        $nbr = $Msg->count(["hash" => $hash, "created_at" => "> {$delai}"]);
         if ($nbr === null || $nbr > 3) return true;
         return false;
     }

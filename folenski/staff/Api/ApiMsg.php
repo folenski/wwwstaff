@@ -5,8 +5,8 @@
  * 
  * @author folenski
  * @version 1.0.0 Version initialie
- * @version 1.2.0 12/08/2022, Refactoring
  * @version 1.2.1 09/12/2022, utilisation d'un trait
+ * @version 1.2.2 21/12/2022, alimentation du champs spam
  *
  */
 
@@ -15,8 +15,8 @@ namespace Staff\Api;
 use Staff\Models\Message;
 use Staff\Models\DBParam;
 use Staff\Databases\Table;
-use Staff\Services\Rest;
-use Staff\Services\Carray;
+use Staff\Lib\Rest;
+use Staff\Lib\Carray;
 
 final class ApiMsg implements RestInterface
 {
@@ -34,7 +34,7 @@ final class ApiMsg implements RestInterface
     {
         $msgKo = $Env->Contact?->msgKo ?? "an error was encountered";
         $msgOk = $Env->Contact?->msgOk ?? "message sent";
-
+        
         [$controle, $fails, $nom, $mail, $message, $tel, $sujet] = Carray::arrayCheck($data, [
             "nom" => ["protected" => true, "limit" => 80],
             "mail" => ["protected" => true, "limit" => 200],
@@ -54,9 +54,11 @@ final class ApiMsg implements RestInterface
         $fields = compact("user", "hash", "host", "j_msg");
 
         $Msg = new Table(DBParam::$prefixe, new Message());
-        if (Rest::spam($Msg, $fields))
-            return $this->retApi(content: null, data: ["msg" => $msgOk, "extra" => "sp"]);
-
+        if (Rest::spam($mail, $message) || Rest::stopMsg($hash)) {
+            $fields["spam"] = 1;
+            $Msg->put($fields);
+            return $this->retApi(content: null, data: ["msg" => $msgOk]);
+        }
         if (!$Msg->put($fields)) return $this->retUnavail();
 
         if ($Env->Contact->sendMail) {

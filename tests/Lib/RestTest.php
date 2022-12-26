@@ -10,13 +10,12 @@
 declare(strict_types=1);
 require_once  dirname(__DIR__)  . "/dependances/config.php";
 
-use Staff\Services\Rest;
-use Staff\Services\Authen;
+use Staff\Lib\Rest;
+use Staff\Security\Authen;
 use Staff\Databases\Table;
 use Staff\Models\DBParam;
 use PHPUnit\Framework\TestCase;
 use Staff\Models\Environment;
-use Staff\Models\Log;
 
 final class RestTest extends TestCase
 {
@@ -85,7 +84,7 @@ final class RestTest extends TestCase
     /**
      * @depends testAutorisation
      */
-    public function testSpam(): void
+    public function teststopMsg(): void
     {
         $Msg = new Table(DBParam::$prefixe, DBParam::get_table("message"));
         $Msg->del();
@@ -98,16 +97,43 @@ final class RestTest extends TestCase
         for ($i = 0; $i <= 3; $i++) {
             $this->assertSame(
                 false,
-                Rest::spam($Msg, $fff)
+                Rest::stopMsg($fff["hash"])
             );
             $Msg->put($fff);
         }
 
         $this->assertSame(
             true,
-            Rest::spam($Msg, $fff)
+            Rest::stopMsg($fff["hash"])
         );
     }
+
+    /**
+     * @depends testAutorisation
+     */
+    public function testSpam(): void
+    {
+        $this->assertSame(
+            false,
+            Rest::Spam("normal@mail.xxx", "hello c'est moi")
+        );
+
+        $this->assertSame(
+            true,
+            Rest::Spam("staff@spam.xxx", "hello c'est moi")
+        );
+
+        $this->assertSame(
+            false,
+            Rest::Spam("staff@spam.xx", "hello c'est moi")
+        );
+
+        $this->assertSame(
+            true,
+            Rest::Spam("normal@mail.xxx", "hello c'est moi your SEO’s working. la la la ")
+        );
+    }
+
 
     /**
      * @depends testAutorisation

@@ -1,11 +1,10 @@
 <?php
 
 /**
- * Table Template
+ * Table black_list, table pour luttre contre le spam
  *
  * @author  folenski
- * @version 1.0  4/08/2022 : Version initiale 
- * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.0  22/12/2022: version initiale 
  * 
  */
 
@@ -14,15 +13,13 @@ namespace Staff\Models;
 use Staff\Databases\TableInterface;
 use Staff\Lib\Carray;
 
-final class Template implements TableInterface
+final class BlackList implements TableInterface
 {
-    private const _NAME = "template";
+    private const _NAME = "black_list";
     private const _DESC = [
-        "id_div"     => "#TXT_SM PRIMARY KEY",
-        "template"   => "#TXT_LG NOT NULL",
-        "file_php"   => "#TXT_SM",
-        "order_by"   => "INTEGER DEFAULT 0",    
-        "compile"    => "INTEGER DEFAULT 0",
+        "name"       => "#TXT_SM PRIMARY KEY",
+        "rules"      => "#JSON",
+        "active"     => "INTEGER DEFAULT 1",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];
@@ -42,19 +39,17 @@ final class Template implements TableInterface
      */
     function check(array $fields): array|false
     {
-        [$ret, $fail, $id_div, $template, $file_php, $compile, $order_by] = Carray::arrayCheck($fields, [
-            "id_div"  => ["protected" => true, "type" => "string"],
-            "template" => ["type" => "string"],
-            "file_php" => ["type" => "string"],
-            "compile" => ["mandatory" => false, "type" => "integer", "default" => 0],
-            "order_by" => ["mandatory" => false, "type" => "integer", "default" => 0]
+        [$ret, $fail, $name, $rules, $active] = Carray::arrayCheck($fields, [
+            "name" => ["type" => "string"],
+            "rules" => ["json" => true],
+            "active" => ["mandatory" => false, "default" => 1]
         ]);
         if (!$ret) {
             $this->_error = $fail;
             return false;
         }
         unset($this->_error);
-        return compact("id_div", "template", "file_php", "compile", "order_by");
+        return compact("name", "rules", "active");
     }
 
     /**
@@ -62,7 +57,7 @@ final class Template implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error: false;
+        return (isset($this->_error)) ? $this->_error : false;
     }
 
     /**
@@ -70,6 +65,6 @@ final class Template implements TableInterface
      */
     function keys(): array
     {
-        return ["id_div" => "?"];
+        return ["name" => "?"];
     }
 }

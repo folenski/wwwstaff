@@ -15,9 +15,9 @@ require_once  dirname(__DIR__)  . "/dependances/config.php";
 
 use Staff\Models\Template;
 use Staff\Models\Data;
+use Staff\Models\Log;
 use Staff\Databases\Table;
 use PHPUnit\Framework\TestCase;
-use Staff\Models\Log;
 
 final class TableTest extends TestCase
 {

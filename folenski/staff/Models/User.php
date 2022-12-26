@@ -12,8 +12,8 @@
 namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
-use Staff\Services\Carray;
-use Staff\Services\Authen;
+use Staff\Lib\Carray;
+use Staff\Security\Authen;
 
 final class User implements TableInterface
 {

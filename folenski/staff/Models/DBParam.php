@@ -27,7 +27,7 @@ class DBParam
         self::PARAM_ERROR => "Parse parameters error"
     ];
 
-    const TABLE = ["data", "environment", "template", "user", "token", "log", "message", "change"];
+    const TABLE = ["data", "environment", "template", "user", "token", "log", "message", "change", "black_list"];
 
     static string $prefixe;
     static string $env;
@@ -99,6 +99,7 @@ class DBParam
             "log" => new Log(),
             "message" => new Message(),
             "change" => new Change(),
+            "black_list" => new BlackList(),
             default => null
         };
     }

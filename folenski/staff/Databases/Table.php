@@ -11,7 +11,7 @@
 
 namespace Staff\Databases;
 
-use Staff\Services\Carray;
+use Staff\Lib\Carray;
 
 final class Table extends SqlCore
 {
@@ -169,7 +169,7 @@ final class Table extends SqlCore
             $prep = $data;
         } else {
             $this->update($data, true)->where($id);
-            $prep = [...$data, ...$id];
+            $prep = array_merge($data, $id); // bug ovh
         }
         try {
             $req = Database::prepare($this->toStr());

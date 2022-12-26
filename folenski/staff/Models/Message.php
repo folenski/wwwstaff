@@ -21,6 +21,7 @@ final class Message implements TableInterface
         "user"       => "#TXT_SM NOT NULL",
         "host"       => "#TXT_SM",
         "hash"       => "#TXT_SM NOT NULL",
+        "spam"       => "INTEGER DEFAULT 0",
         "j_msg"      => "#JSON NOT NULL",
         "done"       => "INTEGER DEFAULT 0",
         "created_at" => "DATETIME NOT NULL",

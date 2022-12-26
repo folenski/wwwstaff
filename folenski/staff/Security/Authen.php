@@ -12,13 +12,12 @@
  * 
  */
 
-namespace Staff\Services;
+namespace Staff\Security;
 
 use Staff\Databases\Table;
 use Staff\Models\DBParam;
 use Staff\Models\User;
 use Staff\Models\Token;
-use Staff\Security\Security;
 
 class Authen
 {

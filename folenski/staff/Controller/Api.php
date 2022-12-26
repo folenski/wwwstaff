@@ -18,7 +18,7 @@ use Staff\Api\ApiData;
 use Staff\Api\ApiIndex;
 use Staff\Api\ApiUser;
 use Staff\Api\ApiLog;
-use Staff\Services\Rest;
+use Staff\Lib\Rest;
 
 class Api
 {

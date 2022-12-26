@@ -56,5 +56,9 @@ final class StartTest extends TestCase
             $Adm->load("{$Rep}data.json", true, function (...$arr) {
             })
         );
+        $this->assertIsArray(
+            $Adm->load("{$Rep}spam.json", true, function (...$arr) {
+            })
+        );
     }
 }

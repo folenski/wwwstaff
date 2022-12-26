@@ -4,6 +4,16 @@ Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un he
 
 ## [Unreleased]
 
+### Added
+
+- Ajout d'un filtre contre le spam
+- Ajout d'une nouvelle table back_list afin de stoker les règles spam
+
+### Fixed
+
+- Suppression clé étrangère entre data et template
+- table put , le merge de tableau a été re ecrit
+
 ## [1.1.0] - 2022-12-21
 
 ### Added

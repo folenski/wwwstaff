@@ -10,7 +10,7 @@
 namespace Staff\Config;
 
 final class Config {
-    const VERSION = 2;
+    const VERSION = 3;
 
     const REP_CONFIG = "/backend/config/";
     const REP_VIEWS = "/backend/views/";

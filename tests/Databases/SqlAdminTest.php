@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 use Staff\Databases\SqlAdmin;
 use PHPUnit\Framework\TestCase;
+use Staff\Drivers\Mysql;
 use Staff\Drivers\Sqlite;
+use Staff\Models\Environment;
 use Staff\Models\Log;
 use Staff\Models\Message;
 
@@ -42,6 +44,20 @@ final class SqlAdminTest extends TestCase
         );
     }
 
+    public function testCreateTableEnvMysql(): void
+    {
+        $ttest = new SqlAdmin("car_", new Mysql(), new Environment());
+        $this->assertEquals(
+            'car_environment',
+            $ttest->name
+        );
+
+        $this->assertEquals(
+            'CREATE TABLE car_environment (name  VARCHAR(3) PRIMARY KEY, j_option VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, j_contact VARCHAR(4000) COLLATE utf8_unicode_ci, j_index VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, j_route VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, created_at  DATETIME NOT NULL, updated_at  DATETIME NOT NULL)',
+            $ttest->create()->table()->toStr()
+        );
+    }
+
     public function testCreateTableMessageSqlite(): void
     {
         $ttest = new SqlAdmin("test_", new Sqlite(), new Message());
@@ -51,7 +67,7 @@ final class SqlAdminTest extends TestCase
         );
 
         $this->assertEquals(
-            'CREATE TABLE test_message (id  INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(256) NOT NULL, host VARCHAR(256), hash VARCHAR(256) NOT NULL, j_msg VARCHAR(10000) NOT NULL, done  INTEGER DEFAULT 0, created_at  DATETIME NOT NULL,  FOREIGN KEY (user) REFERENCES test_user(user))',
+            'CREATE TABLE test_message (id  INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(256) NOT NULL, host VARCHAR(256), hash VARCHAR(256) NOT NULL, spam  INTEGER DEFAULT 0, j_msg VARCHAR(15000) NOT NULL, done  INTEGER DEFAULT 0, created_at  DATETIME NOT NULL,  FOREIGN KEY (user) REFERENCES test_user(user))',
             $ttest->create()->table()->toStr()
         );
     }

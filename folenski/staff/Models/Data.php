@@ -4,16 +4,17 @@
  * Table Data
  *
  * @author  folenski
- * @version 1.0  4/08/2022: version Initiale 
+ * 
  * @version 1.0.1 4/12/2022: supp du champs "title"
  * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.2 21/12/2022: ajout d'un index sur la ref
  * 
  */
 
 namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
-use Staff\Services\Carray;
+use Staff\Lib\Carray;
 
 final class Data  implements TableInterface
 {
@@ -26,7 +27,8 @@ final class Data  implements TableInterface
         "id_div"     => "#TXT_SM NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
-        "_key"        => "FOREIGN KEY (id_div) REFERENCES %stemplate(id_div)"
+        "_index"     => "ref"
+
     ];
 
     /**
