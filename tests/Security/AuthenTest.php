@@ -11,7 +11,7 @@
 declare(strict_types=1);
 require_once  dirname(__DIR__)  . "/dependances/config.php";
 
-use Staff\Services\Authen;
+use Staff\Security\Authen;
 use PHPUnit\Framework\TestCase;
 
 final class AuthenTest extends TestCase

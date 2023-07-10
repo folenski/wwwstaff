@@ -16,8 +16,9 @@ class Mysql implements DriversInterface
     /**
      * @return string retourne le type json
      */
-    function typeJson(): string
+    function typeJson(bool $small = true): string
     {
+        if ($small) return "VARCHAR(" . self::SZ_SM_JSON . ") COLLATE utf8_unicode_ci";
         return "VARCHAR(" . self::SZ_JSON . ") COLLATE utf8_unicode_ci";
     }
 

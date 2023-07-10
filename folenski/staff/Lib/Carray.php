@@ -8,7 +8,7 @@
  * @version 1.0.1 11/12/2022, ajout option JSON_UNESCAPED_UNICODE pour le russe
  */
 
-namespace Staff\Services;
+namespace Staff\Lib;
 
 class Carray 
 {

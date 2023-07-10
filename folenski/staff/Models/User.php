@@ -6,14 +6,15 @@
  * @author  folenski
  * @version 1.0  4/08/2022: version initiale 
  * @version 1.1 10/12/2022: utilisation des tags, corr bug sur methode save
+ * @version 1.2 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
 namespace Staff\Models;
 
 use Staff\Databases\TableInterface;
-use Staff\Services\Carray;
-use Staff\Services\Authen;
+use Staff\Lib\Carray;
+use Staff\Security\Authen;
 
 final class User implements TableInterface
 {
@@ -27,6 +28,7 @@ final class User implements TableInterface
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -62,7 +64,7 @@ final class User implements TableInterface
             $this->_error = "[!password]";
             return false;
         }
-        unset($this->_error);
+        $this->_error = false;
         return compact("user", "mail", "password", "role");
     }
 
@@ -71,7 +73,7 @@ final class User implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error : false;
+        return  $this->_error;
     }
 
     /**

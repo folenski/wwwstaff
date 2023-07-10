@@ -11,7 +11,7 @@
 
 namespace Staff\Api;
 
-use Staff\Services\Carray;
+use Staff\Lib\Carray;
 use Staff\Databases\Table;
 use Staff\Models\DBParam;
 use Staff\Models\Log;

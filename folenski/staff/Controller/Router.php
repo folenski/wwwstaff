@@ -6,6 +6,7 @@
  * @author folenski
  * @version  1.0 09/08/2022 : Version initiale
  * @version  1.1 09/12/2022 : maj routage
+ * @version  1.2 10/01/2023 : maj suppression champs j_contact
  * 
  */
 
@@ -93,7 +94,8 @@ class Router
         $WwwCfg->name = $environnement;
         $WwwCfg->Option = (object)json_decode($enrlu->j_option) ?? new stdClass();
         $WwwCfg->index = (array)json_decode($enrlu->j_index);
-        $WwwCfg->Contact = (object)json_decode($enrlu->j_contact);
+        //$WwwCfg->Contact = (object)json_decode($enrlu->j_contact);
+        $WwwCfg->Contact = $WwwCfg->Option->contact  ?? new stdClass();
         $route = (array)json_decode($enrlu->j_route);
 
         // mise à jour des valeurs par défaut

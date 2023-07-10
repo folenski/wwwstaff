@@ -4,6 +4,19 @@ Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un he
 
 ## [Unreleased]
 
+### Added
+
+- Ajout d'un filtre contre le spam
+- Ajout d'une nouvelle table back_list afin de stocker les règles spam
+- Suppression du champs j_contact dans la table environment
+- Suppression des warning php 8.2, syntaxes dépreciées ... 
+
+### Fixed
+
+- Remove the foreign key on data table, this key linked tables data and template
+- Method put in table class, bug about a merge of arrays 
+- Script load_json.php, add an error if the file don't exist 
+
 ## [1.1.0] - 2022-12-21
 
 ### Added

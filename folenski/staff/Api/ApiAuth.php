@@ -15,8 +15,8 @@
 
 namespace Staff\Api;
 
-use Staff\Services\Authen;
-use Staff\Services\Carray;
+use Staff\Security\Authen;
+use Staff\Lib\Carray;
 
 final class ApiAuth implements RestInterface
 {

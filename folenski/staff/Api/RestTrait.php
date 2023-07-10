@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Trait pour repondre si les méthodes http GET, POST, PUT, DELETE ne sont pas implementées 
+ * Trait utilisé par les API spécialisées  
  * 
  * @author  folenski
  * @version 1.0 10/12/2022: version initiale 
+ * @version 1.1 10/07/2023: ajout d'un paramétre à la méthode retUnAvail
  *  
  */
 
@@ -47,13 +48,13 @@ trait RestTrait
     /**
      * @return array retourne la valeur quand il y a un problème de ressource type SQL
      */
-    function retUnAvail(): array
+    function retUnAvail(string $msg = "internal error"): array
     {
         return [
             "http" => RestInterface::HTTP_UNAVAIL,
             "errorcode" => RestInterface::ERR_INTERNAL,
             "response" => [
-                "content" => "internal error"
+                "content" => $msg
             ]
         ];
     }

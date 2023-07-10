@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Staff\Services\Carray;
+use Staff\Lib\Carray;
 use PHPUnit\Framework\TestCase;
 
 final class CarrayTest extends TestCase

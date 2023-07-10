@@ -1,0 +1,12 @@
+{
+  "nom": "black_list",
+  "row": [
+    {
+      "name": "generic-1",
+      "rules": {
+        "mails": ["spam@xxxx.com"],
+        "patterns": [ "/your SEO/", "/view your ranking/" ] 
+      }
+    }
+  ]
+}

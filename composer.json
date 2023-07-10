@@ -1,6 +1,6 @@
 {
-    "name": "folenski/wwwstaff",
-    "description": "Build website and api REST",
+    "name": "folenski/staff",
+    "description": "Framework to build website",
     "type": "library",
     "authors": [
         {
