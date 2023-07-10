@@ -7,6 +7,7 @@
  * @version 1.0 09/08/2022: Version Initiale 
  * @version 1.1 10/12/2022: Ajout champ error_code , supp level
  * @version 1.2 10/12/2022: utilisation des tags
+ * @version 1.3 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -26,6 +27,7 @@ final class Log implements TableInterface
         "created_at" => "DATETIME NOT NULL",
         "_index"     => "created_at"
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -51,7 +53,7 @@ final class Log implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error : false;
+        return $this->_error;
     }
 
     /**

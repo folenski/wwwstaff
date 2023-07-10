@@ -8,6 +8,7 @@
  * @version 1.0.1 4/12/2022: supp du champs "title"
  * @version 1.1 10/12/2022: utilisation des tags
  * @version 1.2 21/12/2022: ajout d'un index sur la ref
+ * @version 1.3 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -30,6 +31,7 @@ final class Data  implements TableInterface
         "_index"     => "ref"
 
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -56,7 +58,7 @@ final class Data  implements TableInterface
             $this->_error = $fail;
             return null;
         }
-        unset($this->_error);
+        $this->_error = false;
         return compact("id_div", "rank", "ref", "j_content");
     }
 
@@ -65,7 +67,7 @@ final class Data  implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error: false;
+        return $this->_error;
     }
 
     /**

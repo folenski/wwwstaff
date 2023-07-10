@@ -9,7 +9,8 @@
  * @since   20/01/2021
  * @version 1.0.1 Version initiale
  * @version 1.1.0 Utilisation de la variable $base_init & $rep_DB poir eviter l'adhérence au fichier config.ini
- * @version 1.1.1 ajout de la propriete $driver   
+ * @version 1.1.1 ajout de la propriete $driver
+ * @version 1.1.2 Deprecated Features use "$var"/"{$var}"
  * 
  */
 
@@ -53,7 +54,7 @@ class Database
             $dsn .= self::$dirBDD . $parse["db_sqlite"];
         } else {
             foreach ($parse["dsn"] as $k => $v) {
-                $dsn .= "${k}=${v};";
+                $dsn .= "{$k}={$v};";
             }
         }
 

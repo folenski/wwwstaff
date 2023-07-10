@@ -6,6 +6,7 @@
  * @author  folenski
  * @version 1.0 09/08/2022 : Version Initiale 
  * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.2 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -28,6 +29,7 @@ final class Message implements TableInterface
         "_key"       => "FOREIGN KEY (user) REFERENCES %suser(user)",
         "_index"     => "hash"
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -53,7 +55,7 @@ final class Message implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error : false;
+        return $this->_error;
     }
 
     /**

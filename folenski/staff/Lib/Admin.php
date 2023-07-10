@@ -6,7 +6,9 @@
  * @author folenski
  * @version 1.0 05/08/2022: Version initiale
  * @version 1.1 16/12/2022: add showTables, passage en array
- * 
+ * @version 1.2 27/12/2022: fixed _parseJsonData return value
+ * @version 1.3 09/07/2023: propriété _error ajoutée pour supprimer un warning
+ *  
  */
 
 namespace Staff\Lib;
@@ -26,6 +28,8 @@ class Admin
     const DISP_UPDATE = 4;
     const DISP_ALERT  = 2;
     const DISP_DANGER = 3;
+
+    private string|bool $_error = false;
 
     function __construct(
         private ?string $prefixe = null,
@@ -175,7 +179,10 @@ class Admin
             if (substr($key, 0, 1) == "_") {
                 $fichier = "{$rep}/{$val}";
                 $newkey = substr($key, 1);
-                if (!file_exists($fichier)) return false;
+                if (!file_exists($fichier)) {
+                    $this->_error = "file {$fichier} don't exist";
+                    return false;
+                }
                 if (($newval = file_get_contents($fichier)) === false) {
                     $this->_error = $fichier;
                     return false;
@@ -183,7 +190,7 @@ class Admin
                 unset($json->{$key});
                 $json->{$newkey} = $newval;
             } elseif (gettype($val) == "object") {
-                if ($this->_parseJsonData($json->$key, $rep) == null) return null;
+                if ($this->_parseJsonData($json->$key, $rep) === false) return false;
             }
         }
         return true;

@@ -6,6 +6,7 @@
  * @author  folenski
  * @version 1.0 09/08/2022: Version initiale
  * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.2 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -24,6 +25,7 @@ final class Token implements TableInterface
         "created_at" => "DATETIME NOT NULL",
         "_key"       => "FOREIGN KEY (user) REFERENCES %suser(user)"
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -49,7 +51,7 @@ final class Token implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error : false;
+        return $this->_error;
     }
 
     /**

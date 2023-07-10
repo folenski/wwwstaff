@@ -8,15 +8,15 @@
         "prod": false,
         "user": "svcstaff",
         "maintenance": false,
-        "pref_uri": "/menu/"
-      },
-      "j_contact": {
-        "mail": "sample@mail.com",
-        "msgMax": 2000,
-        "sendMail": false,
-        "msgOk": "Message envoyé, merci",
-        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+        "pref_uri": "/menu/",
+        "contact": {
+          "mail": "sample@mail.com",
+          "msgMax": 2000,
+          "sendMail": false,
+          "msgOk": "Message envoyé, merci",
+          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+        }
       },
       "j_index": [
         {
@@ -45,15 +45,15 @@
       "name": "TST",
       "j_option": {
         "user": "svcstaff",
-        "maintenance": false
-      },
-      "j_contact": {
-        "mail": "sample@mail.com",
-        "msgMax": 2000,
-        "sendMail": false,
-        "msgOk": "Message envoyé, merci",
-        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+        "maintenance": false,
+        "contact": {
+          "mail": "sample@mail.com",
+          "msgMax": 2000,
+          "sendMail": false,
+          "msgOk": "Message envoyé, merci",
+          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+        }
       },
       "_j_index": "inc/index.json",
       "_j_route": "inc/route.json"
@@ -62,16 +62,16 @@
       "name": "PRD",
       "j_option": {
         "maintenance": false,
-        "user": "svcstaff"
-      },
-      "j_contact": {
-        "mail": "sample@mail.com",
-        "msgMax": 2000,
-        "purge": 45,
-        "sendMail": false,
-        "msgOk": "Message envoyé, merci",
-        "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-        "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p> <br/>Cordialement,<br/><br/>- Admin - "
+        "user": "svcstaff",
+        "contact": {
+          "mail": "sample@mail.com",
+          "msgMax": 2000,
+          "purge": 45,
+          "sendMail": false,
+          "msgOk": "Message envoyé, merci",
+          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
+          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p> <br/>Cordialement,<br/><br/>- Admin - "
+        }
       },
       "_j_index": "inc/index.json",
       "_j_route": "inc/route.json"

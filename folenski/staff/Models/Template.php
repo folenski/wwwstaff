@@ -6,6 +6,7 @@
  * @author  folenski
  * @version 1.0  4/08/2022 : Version initiale 
  * @version 1.1 10/12/2022: utilisation des tags
+ * @version 1.2 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -21,11 +22,12 @@ final class Template implements TableInterface
         "id_div"     => "#TXT_SM PRIMARY KEY",
         "template"   => "#TXT_LG NOT NULL",
         "file_php"   => "#TXT_SM",
-        "order_by"   => "INTEGER DEFAULT 0",    
+        "order_by"   => "INTEGER DEFAULT 0",
         "compile"    => "INTEGER DEFAULT 0",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -53,7 +55,7 @@ final class Template implements TableInterface
             $this->_error = $fail;
             return false;
         }
-        unset($this->_error);
+        $this->_error = false;
         return compact("id_div", "template", "file_php", "compile", "order_by");
     }
 
@@ -62,7 +64,7 @@ final class Template implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error: false;
+        return $this->_error;
     }
 
     /**

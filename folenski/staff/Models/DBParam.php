@@ -27,7 +27,7 @@ class DBParam
         self::PARAM_ERROR => "Parse parameters error"
     ];
 
-    const TABLE = ["data", "environment", "template", "user", "token", "log", "message", "change", "black_list"];
+    const TABLE = ["environment", "template", "user", "data", "token", "log", "message", "change", "black_list"];
 
     static string $prefixe;
     static string $env;

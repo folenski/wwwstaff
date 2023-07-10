@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Class Api : Controleur pour les API REST
+ * Object Api : Point d'entrée pour les appels REST
  *
  * @author folenski
  * @version 1.1 11/08/2022: version initiale
  * @version 1.2 09/12/2022: ajout de la méthode index, gestion des reponses
  * @version 1.3 17/12/2022: utilisation du l'opérateur match
+ * @version 1.4 10/07/2023: ajoute d'une trace plus explicite quand il y a un mauvais paramétrage
  * 
  */
 
@@ -48,7 +49,7 @@ class Api
             Rest::reponse([
                 "http" => Rest::HTTP_UNAVAIL,
                 "errorcode" => ApiAuth::ERR_INTERNAL,
-                "response" => ["content" => "internal error"]
+                "response" => ["content" => "unknown endpoint -{$nomApi}-, check routing "]
             ]);
         }
 

@@ -8,7 +8,7 @@
  * @version 1.1.0  revision du code
  * @version 1.2.0  Prise en compte évol modèle de données
  * @version 1.3.0 26/07/2022: Prise en compte class Table
- * @version 1.3.1 15/12/2022: fixed champs role
+ * @version 1.3.1 15/12/2022: fixed champs role, remove property $_user
  * 
  */
 
@@ -49,7 +49,6 @@ class Authen
 
     public function __construct(public int $delai = 90)
     {
-        $this->_User = new Table(DBParam::$prefixe, DBParam::get_table("user"));
     }
 
     /**

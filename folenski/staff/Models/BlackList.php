@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Table black_list, table pour luttre contre le spam
+ * Table black_list, table pour lutte contre le spam
  *
  * @author  folenski
- * @version 1.0  22/12/2022: version initiale 
+ * @version 1.0 22/12/2022: version initiale 
+ * @version 1.1 09/07/2023: propriété _error ajoutée pour supprimer un warning
  * 
  */
 
@@ -23,6 +24,7 @@ final class BlackList implements TableInterface
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];
+    private string|bool $_error = false;
 
     /**
      * @return array retourne le nom et la description de la table
@@ -48,7 +50,7 @@ final class BlackList implements TableInterface
             $this->_error = $fail;
             return false;
         }
-        unset($this->_error);
+        $this->_error = false;
         return compact("name", "rules", "active");
     }
 
@@ -57,7 +59,7 @@ final class BlackList implements TableInterface
      */
     function errors(): false|string
     {
-        return (isset($this->_error)) ? $this->_error : false;
+        return  $this->_error;
     }
 
     /**

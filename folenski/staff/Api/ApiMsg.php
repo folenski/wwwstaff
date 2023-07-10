@@ -6,7 +6,7 @@
  * @author folenski
  * @version 1.0.0 Version initialie
  * @version 1.2.1 09/12/2022, utilisation d'un trait
- * @version 1.2.2 21/12/2022, alimentation du champs spam
+ * @version 1.2.2 21/12/2022, alimentation du champs spam, log enrichi lors qu'il y a une erreur d'insertion
  *
  */
 
@@ -59,7 +59,7 @@ final class ApiMsg implements RestInterface
             $Msg->put($fields);
             return $this->retApi(content: null, data: ["msg" => $msgOk]);
         }
-        if (!$Msg->put($fields)) return $this->retUnavail();
+        if (!$Msg->put($fields)) return $this->retUnavail("fail insert message to {$user}");
 
         if ($Env->Contact->sendMail) {
             $message = preg_replace(
