@@ -5,6 +5,15 @@ Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un he
 ## [Unreleased]
 
 ### Added
+- Use Swagger to provide information about the REST API : message.
+- Add new properties to the option object (table environment), see our wiki for more details.
+- refactoring code to Www class and Render Class
+
+### Fixed
+
+## [1.1.0] - 2023-07-10
+
+### Added
 
 - Ajout d'un filtre contre le spam
 - Ajout d'une nouvelle table back_list afin de stocker les règles spam

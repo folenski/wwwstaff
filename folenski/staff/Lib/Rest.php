@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Class Api, fourni une liste de méthode pour les accès API 
+ * Class Api, fournit une liste de méthodes pour les accès API 
  * 
  * @author  folenski
- * @since 1.3.2 10/12/2022 
+ * @since 1.3.2 13/07/2023 
  * @version 1.0.0 Version initiale
  * @version 1.1.0  revision du code
  * @version 1.2.0  Prise en compte évol modèle de données
  * @version 1.3.0  Prise en compte class Table
  * @version 1.3.1  on filtre le champs http
- * @version 1.3.2  modif meth log, response : gestion du champs errorcode 
+ * @version 1.3.2  modif méthode log, response : gestion du champs errorcode 
+ * @version 1.3.3  modif méthode clean pris en compte du refactoring de l'objet option 
  * 
  */
 
 namespace Staff\Lib;
 
-use Exception;
 use Staff\Databases\Table;
 use Staff\Databases\TableInterface;
 use Staff\Models\BlackList;
@@ -130,20 +130,16 @@ class Rest
     {
         $date = date("Y-m-d");
         $last  = $Env->Option->clean_at ?? $date;
-        $delai = $Env->Option->clean_delai = $Env->Option->clean_delai ?? 7;
+        $delai = $Env->Option->clean_limit;
         $previous = date("Y-m-d", strtotime("{$last} + {$delai} days"));
         if ($date <= $previous) return;
         $new = date("Y-m-d", strtotime("{$date} + {$delai} days"));
 
-        /*  Table message  */
-        $delai_msg = $Env->Option->message_delai = $Env->Option->message_delai ?? 60;
-        self::_clean_table(new Message(), $delai_msg);
-        /*  Table log  */
-        $delai_log = $Env->Option->log_delai = $Env->Option->log_delai ?? 30;
-        self::_clean_table(new Log(), $delai_log);
-        /*  Table Token  */
-        $delai_tok = $Env->Option->token_delai = $Env->Option->token_delai ?? 30;
-        self::_clean_table(new Token(), $delai_tok);
+        $purgeTables = [new Message(), new Log(), new Token()];
+
+        foreach ($purgeTables  as $Table) {
+            self::_clean_table($Table, $Env->Option->purge);
+        }
 
         $Environment = new Table(DBParam::$prefixe, new Environment());
         $Env->Option->clean_at = $new;

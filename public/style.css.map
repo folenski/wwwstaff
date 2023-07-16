@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../app/src/style.scss"],
-  "sourcesContent": ["// *  CSS \n// * 15/12/2022\n//********************************************************************\n\nbody {\n  background-color: aliceblue;\n}\n\nfooter {\n    & hr {\n        width: 20%;\n    }\n}"],
-  "mappings": "AAIA,KACE,yBAIE,UACI",
-  "names": []
-}

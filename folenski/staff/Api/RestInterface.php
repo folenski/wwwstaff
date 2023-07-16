@@ -6,6 +6,7 @@
  * @author  folenski
  * @since 1.0  06/07/2022: Version initiale 
  * @since 1.1  10/12/2022: add error code: ERR_OK, ERR_NOT_FOUND, ERR_SQL, ERR_BAD_URI
+ * @since 1.2  12/12/2023: add HTTP_CREATED
  *  
  */
 
@@ -15,6 +16,7 @@ interface RestInterface
 {
     /*Les principaux codes retour HTTP */
     const HTTP_OK      = 200;
+    const HTTP_CREATED = 201;
     const HTTP_BAD     = 400;
     const HTTP_AUTH_KO = 401;
     const HTTP_DENIED  = 403;
@@ -34,37 +36,37 @@ interface RestInterface
 
     /**
      * Méthode GET
-     * @param array $data tableau les parametres passés par l'url 
+     * @param array $data tableau avec les paramétres passés dans l'url 
      * @param array $param paramétre du routeur 
-     * @param object $Env object avec les options du site
-     * @return array reponse à emettre
+     * @param object $Env objet avec les options du site
+     * @return array contenant la réponse à émettre
      */
     function get(array $data, array $param, object $Env): array;
 
     /**
      * Méthode POST
-     * @param array $data tableau avec les informations du body 
+     * @param array $data tableau alimenté à partir du body 
      * @param array $param paramétre du routeur 
-     * @param object $Env object avec les options du site
-     * @return array reponse à emettre
+     * @param object $Env objet avec les options du site
+     * @return array contenant la réponse à émettre
      */
     function post(array $data, array $param, object $Env): array;
 
     /**
      * Méthode PUT
-     * @param array $data tableau avec les informations du body 
+     * @param array $data tableau alimenté à partir du body 
      * @param array $param paramétre du routeur 
-     * @param object $Env object avec les options du site
-     * @return array reponse à emettre
+     * @param object $Env objet avec les options du site
+     * @return array contenant la réponse à émettre
      */
     function put(array $data, array $param, object $Env): array;
 
     /**
      * Méthode DELETE
+     * @param array $data tableau alimenté à partir du body 
      * @param array $param paramétre du routeur 
-     * @param array $data tableau avec les informations du body 
-     * @param object $Env object avec les options du site
-     * @return array reponse à emettre
+     * @param object $Env objet avec les options du site
+     * @return array contenant la réponse à émettre
      */
     function delete(array $data, array $param, object $Env): array;
 }

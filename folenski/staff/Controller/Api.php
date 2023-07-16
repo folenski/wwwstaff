@@ -1,13 +1,12 @@
 <?php
 
 /**
- * Object Api : Point d'entrée pour les appels REST
+ * Point d'entrée pour les appels REST
  *
  * @author folenski
  * @version 1.1 11/08/2022: version initiale
- * @version 1.2 09/12/2022: ajout de la méthode index, gestion des reponses
- * @version 1.3 17/12/2022: utilisation du l'opérateur match
- * @version 1.4 10/07/2023: ajoute d'une trace plus explicite quand il y a un mauvais paramétrage
+ * @version 1.4 10/07/2023: ajout d'une trace plus explicite quand il y a un mauvais paramétrage
+ * @version 1.5 11/07/2023, Mise en place des annotations pour générer le swagger
  * 
  */
 
@@ -24,8 +23,17 @@ use Staff\Lib\Rest;
 class Api
 {
     /**
-     * Controleur pour le site WEB
-     * @param string $nomApi le nom de l'appli
+     * @OA\Info(version="1.0", title="Staff API", description="REST API framework Staff")
+     * @OA\Server(url="https://example.localhost", description="URL")
+     * @OA\SecurityScheme(type="http", scheme="bearer", securityScheme="bearerAuth")
+     * @OA\Schema(schema="GenericError", 
+     *    @OA\Property(property="errorcode", type="integer", nullable=true), 
+     *    @OA\Property(property="content", type="string"),
+     * )
+     * 
+     * Contrôleur d'API, la partie spécifique se trouve dans le répertoire Staff/Api
+     * 
+     * @param string $nomApi le nom de de API
      * @param object $Env les paramétres d'environnement du site
      * @param array $param les paramétres lus par le routeur
      */

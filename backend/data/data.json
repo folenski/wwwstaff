@@ -4,7 +4,7 @@
     {
       "ref": "fr_menu",
       "id_div": "menu",
-      "_j_content": "inc/menu.json"
+      "_j_content": "inc/fr_menu.json"
     },
     {
       "ref": "en_menu",

@@ -44,7 +44,7 @@ class Authen
         self::USER_PIN_ERROR => "The password is incorrect",
         self::USER_EXIST => "User already exists",
         self::USER_NOT_FOUND => "User not found",
-        self::USER_NOT_AUTHORIZE => "User does not have permission for this operation"
+        self::USER_NOT_AUTHORIZE => "You do not have any permission for this operation"
     ];
 
     public function __construct(public int $delai = 90)

@@ -53,7 +53,7 @@ final class SqlAdminTest extends TestCase
         );
 
         $this->assertEquals(
-            'CREATE TABLE car_environment (name  VARCHAR(3) PRIMARY KEY, j_option VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, j_index VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, j_route VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, created_at  DATETIME NOT NULL, updated_at  DATETIME NOT NULL)',
+            'CREATE TABLE car_environment (name  VARCHAR(3) PRIMARY KEY, j_option VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, j_index VARCHAR(4000) COLLATE utf8_unicode_ci NOT NULL, created_at  DATETIME NOT NULL, updated_at  DATETIME NOT NULL)',
             $ttest->create()->table()->toStr()
         );
     }

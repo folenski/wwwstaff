@@ -1,228 +1,161 @@
 /**
- * Class pour gérer un contact
- *
- * 06/01/2022 - Version initiale
- * 12/01/2022 - La recuperation des champs est maintenant dynamique et gestion de la direction
- *              de la div de retour
- * 13/07/2022 - écriture en TS
+ * Objet pour la gestion un formulaire contact
+ * Pour l'utiliser il est nécessaire d'utiliser la méthode bind 
+ * Contact.bind(...)
+ * 
+ * @since 06/01/2022 - Version initiale
+ * @since 13/07/2022 - écriture en TS
+ * @since 13/07/2023 - interface overlayParam
  */
 
-interface ContactParam {
-  idform: string;
-  url?: string;
-  errorMsg?: string;
-  overlay?: {
-    from: string;
-    class: string[];
-  };
-  btn?: {
-    lib: string;
-    class: string[];
-  };
+interface overlayParam {
+  effect: "top" | "right" | "left" | "bottom";
+  className: string[];
+  btn: { name: string; class: string[] };
 }
 
-class Contact {
-  private _element!: HTMLFormElement;
-  private _Param!: ContactParam;
+type FnSubmit = (form: HTMLFormElement) => Promise<string>;
 
-  private _ParamDefault: ContactParam = {
-    idform: "none",
-    url: "/api/msg",
-    errorMsg: "An error was encountered<br/>Please try again later",
-    overlay: { from: "bottom", class: ["form-overlay"] },
-    btn: { lib: "Ok", class: ["btn"] },
+class Contact {
+  private _form: HTMLFormElement;
+  private _param: overlayParam;
+  private _submit!: FnSubmit;
+
+  private _overlay!: {
+    div: HTMLDivElement;
+    content: HTMLDivElement;
+    txt: HTMLSpanElement;
+    btn: HTMLButtonElement;
+    toggle: boolean;
   };
 
-  private _overlay!: HTMLDivElement;
-  private _overlayContent!: HTMLDivElement;
-  private _overlayTxt!: HTMLSpanElement;
-  private _transition = false;
+  constructor(form: HTMLFormElement, submit: FnSubmit, Param: overlayParam) {
+    this._form = form;
+    this._submit = submit;
+    this._param = Param ;
 
-  constructor(element: HTMLFormElement, Param: ContactParam) {
-    this._element = element;
-    this._Param = { ...this._ParamDefault, ...Param };
+    this.CreateOverlay();
+    this._form.addEventListener("submit", this.submitForm);
+    this.addOverlay2Form();
+  }
 
-    this.createOverlay();
-    this.initOverlay();
+  // creation de l'overlay
+  CreateOverlay() {
+    this._overlay = {
+      div: document.createElement("div"),
+      content: document.createElement("div"),
+      txt: document.createElement("span"),
+      btn: document.createElement("button"),
+      toggle: false
+    };
+    this._overlay.div.appendChild(this._overlay.content);
+    this._overlay.content.appendChild(this._overlay.txt);
+    this._overlay.content.appendChild(document.createElement("br"));
+    this._overlay.content.appendChild(this._overlay.btn);
+    this._overlay.btn.innerHTML = this._param.btn.name;
+    this._overlay.btn.addEventListener("click", this.handleButton);
 
-    this._overlay.addEventListener("transitionend", this.transitionendOverlay);
-    this._element.addEventListener("submit", this.submitForm);
+    // Stylisation de l'ovelay
+    for (const cls of this._param.className)
+      this._overlay.div.classList.add(cls);
+
+    for (const cls of this._param.btn.class)
+      this._overlay.btn.classList.add(cls);
+
+    this._overlay.div.style.cssText =
+      "position:absolute; \
+       display:none; opacity:0; \
+       transition:height 1s ease-out, width 0.8s, opacity 0.2s ease-out";
+
+    this._overlay.content.style.cssText =
+      "position:absolute; \
+     opacity:0; \
+     top:30%; left:50%; \
+     transform:translate(-50%, -50%)";
+
+    switch (this._param.effect) {
+      case "top":
+        this._overlay.div.style.height = "0px";
+        this._overlay.div.style.width = "100%";
+        this._overlay.div.style.top = "0";
+        break;
+      case "left":
+        this._overlay.div.style.width = "0px";
+        this._overlay.div.style.height = "100%";
+        this._overlay.div.style.left = "0";
+        this._overlay.div.style.top = "0";
+        break;
+      case "right":
+        this._overlay.div.style.width = "0px";
+        this._overlay.div.style.height = "100%";
+        this._overlay.div.style.right = "0";
+        this._overlay.div.style.top = "0";
+        break;
+      case "bottom":
+        this._overlay.div.style.height = "0px";
+        this._overlay.div.style.width = "100%";
+        this._overlay.div.style.bottom = "0";
+    }
   }
 
   /**
-   * Création de l'overlay pour le retour du fetch
+   * On attache l'overlay au formulaire
    */
-  createOverlay() {
-    this._overlay = document.createElement("div");
-    this._overlay.style.display = "none";
-    this._overlay.style.opacity = "0";
-
-    const parent = this._element.parentElement;
-    if (parent) parent.appendChild(this._overlay);
-
-    // on ajoute les classes
-    if (this._Param.overlay)
-      this._Param.overlay.class.forEach((cl) =>
-        this._overlay.classList.add(cl)
-      );
-
-    this._overlayContent = document.createElement("div");
-    this._overlay.appendChild(this._overlayContent);
-
-    this._overlayTxt = document.createElement("span");
-    this._overlayContent.appendChild(this._overlayTxt);
-    this._overlayContent.appendChild(document.createElement("br"));
-
-    // Gestion du bouton retour
-    if (this._Param.btn) {
-      const btnBack = document.createElement("button");
-      btnBack.innerHTML = this._Param.btn.lib;
-      this._Param.btn.class.forEach((cl) => btnBack.classList.add(cl));
-      btnBack.addEventListener("click", this.handleBack);
-      this._overlayContent.appendChild(btnBack);
-    }
+  addOverlay2Form() {
+    const parent = this._form.parentNode;
+    if (!parent) return;
+    parent.removeChild(this._form);
+    const divRelative = document.createElement("div");
+    divRelative.style.position = "relative";
+    parent.appendChild(divRelative);
+    divRelative.appendChild(this._form);
+    divRelative.appendChild(this._overlay.div);
   }
 
-  initOverlay() {
-    if (!this._Param.overlay) return;
-
-    this._overlayContent.style.opacity = "0";
-    this._transition = true;
-
-    switch (this._Param.overlay.from) {
+  toggleEffect() {
+    this._overlay.toggle = !this._overlay.toggle;
+    switch (this._param.effect) {
       case "top":
-        this._overlay.style.height = "0";
-        this._overlay.style.width = "100%";
-        this._overlay.style.top = "0";
+      case "bottom":
+        if (this._overlay.toggle) this._overlay.div.style.height = "100%";
+        else this._overlay.div.style.height = "0px";
         break;
-
-      case "right":
-        this._overlay.style.height = "100%";
-        this._overlay.style.width = "0";
-        this._overlay.style.top = "0";
-        this._overlay.style.right = "0";
-        break;
-
       case "left":
-        this._overlay.style.height = "100%";
-        this._overlay.style.width = "0";
-        this._overlay.style.top = "0";
-        this._overlay.style.left = "0";
-        break;
-
-      default:
-        // bottom
-        this._overlay.style.height = "0";
-        this._overlay.style.width = "100%";
-        this._overlay.style.bottom = "0";
-        break;
-    }
-  }
-
-  openOverlay() {
-    if (!this._Param.overlay) return;
-
-    this._overlay.style.opacity = "1";
-    this._overlayContent.style.opacity = "1";
-
-    //    this._transition = true;
-    switch (this._Param.overlay.from) {
-      case "top":
-        this._overlay.style.height = "100%";
-        break;
       case "right":
-      case "left":
-        this._overlay.style.width = "100%";
-        break;
-      default:
-        // bottom
-        this._overlay.style.height = "100%";
+        if (this._overlay.toggle) this._overlay.div.style.width = "100%";
+        else this._overlay.div.style.width = "0px";
         break;
     }
   }
 
   submitForm = async (evt: Event) => {
     evt.preventDefault();
-    if (!this._Param.url) return;
-    let dataForm = {};
-    Array.from(this._element).forEach((el) => {
-      if (
-        !(el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement)
-      )
-        return;
-
-      switch (el.name) {
-        case "nom":
-          dataForm = { ...dataForm, nom: el.value };
-          break;
-        case "tel":
-          dataForm = { ...dataForm, tel: el.value };
-          break;
-        case "mail":
-          dataForm = { ...dataForm, mail: el.value };
-          break;
-        case "sujet":
-          dataForm = { ...dataForm, sujet: el.value };
-          break;
-        case "message":
-          dataForm = { ...dataForm, message: el.value };
-          break;
-        default:
-          break;
-      }
-    });
-
-    let msg = this._Param.errorMsg;
-    this._overlay.style.display = "block";
-
-    const response = await fetch(this._Param.url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(dataForm),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      msg = result.msg;
-    } else {
-      console.error("Contact: Error response -  ", response);
-    }
-
-    if (msg) {
-      this._overlayTxt.innerHTML = msg;
-      this.openOverlay();
-    }
+    const msg = await this._submit(this._form);
+    this.displayOverlay(msg);
   };
 
-  transitionendOverlay = () => {
-    if (!this._transition) return;
-    this._transition = false;
+  displayOverlay(msg: string) {
+    this._overlay.div.style.display = "block";
+    this._overlay.div.style.opacity = "1";
+    this._form.style.opacity = "0";
+    this._overlay.txt.innerHTML = msg;
 
-    if (this._overlayContent.style.opacity === "0") {
-      this._overlay.style.opacity = "0";
-    }
+    setTimeout(() => (this._overlay.content.style.opacity = "1"), 200);
+    setTimeout(() => this.toggleEffect(), 50);
   }
 
-  handleBack = (evt: Event) => {
+  handleButton = (evt: Event) => {
     evt.preventDefault();
-    this._element.reset();
-    this.initOverlay();
-    //this._overlay.style.height = "0";
-    this._overlay.addEventListener("transitionend", this.handleBackEnd);
+    this._form.reset();
+    this._overlay.content.style.opacity = "0";
+    this._form.style.opacity = "1";
+    this.toggleEffect();
+    setTimeout(() => (this._overlay.div.style.display = "none"), 800);
   };
 
-  handleBackEnd = () => {
-    this._overlay.style.display = "none";
-    this._overlay.removeEventListener("transitionend", this.handleBackEnd);
-  };
-
-  static async bind(param: ContactParam) {
-    const el = document.getElementById(param.idform);
-    if (el instanceof HTMLFormElement) {
-      return new Contact(el, param);
-    }
+  static async bind(id: string, submit: FnSubmit, overlay: overlayParam) {
+    const el = document.getElementById(id);
+    if (el instanceof HTMLFormElement) return new Contact(el, submit, overlay);
   }
 }
 

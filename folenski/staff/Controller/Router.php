@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Class Router : Permet d'initialiser le site de démarrer le site
+ * Class Router : Initialise l'environnement et appelle les contrôleurs en fonction du contexte
  *
  * @author folenski
- * @version  1.0 09/08/2022 : Version initiale
- * @version  1.1 09/12/2022 : maj routage
- * @version  1.2 10/01/2023 : maj suppression champs j_contact
+ * @version  1.0 09/08/2022: Version initiales
+ * @version  1.1 09/12/2022: maj routage
+ * @version  1.2 10/01/2023: maj suppression champs j_contact
+ * @version  1.3 12/07/2023: refonte du routage
  * 
  */
 
@@ -15,40 +16,44 @@ namespace Staff\Controller;
 use Staff\Models\DBParam;
 use Staff\Databases\Database;
 use Staff\Databases\Table;
+use Staff\Lib\Render;
 use Staff\Config\Config;
 use stdClass;
 
 class Router
 {
     /**
-     * Compile les templates avec la lib LightnCandy (champs compile = 1)
-     * @param string $rep_out, le répertoire ou seront les fichiers
-     * @return bool faux si il y a eu une erreur 
+     * [[Point d'entrée]], initialise l'environnement et appelle les contrôleurs. Si la base de données
+     * n'a pas été initialisée, créér les tables et charge les données via des fichiers json
+     * 
+     * @param string $www le répertoire racine du projet
+     * @return bool retourne false en cas d'erreur 
      */
     static function start(string $www): bool
     {
+        $www .= "/";
         if (($ret = DBParam::parse(file: $www . Config::REP_CONFIG . Config::FILE_INI, server: $_SERVER["SERVER_NAME"])) !== true)
             die(DBParam::ERROR[$ret]);
+
         Database::init(DBParam::$file_pdo, $www . Config::REP_SQLITE);
-        $load = self::load_env(DBParam::$env);
+
+        $load = self::_load(DBParam::$env);
         if ($load === false) {
-            $root = $www;
-            $filefull = $root . Config::FILE_START;
-            if (file_exists($filefull)) {
-                require "$filefull";
-                return true;
-            }
-            return false;
+            self::link(root: $www, action: Config::VIEWS_INIT);
+            return true;
         }
+
         [$WwwCfg, $routes] = $load;
-        // Initialize route
+        Www::debug("> Number of route are generated...", count($routes), $WwwCfg->Option->debug);
+
         $Router = new \AltoRouter();
         foreach ($routes as $val)
             $Router->map(...$val);
 
-        /* Match the current request */
         $match = $Router->match();
         if (is_array($match)) {
+            Www::debug("> current match ...", $match["target"], $WwwCfg->Option->debug);
+
             if (str_contains($match["target"], "@")) {
                 [$controller, $action]  = explode('@', $match["target"]);
                 if (!is_callable(["self",  $controller])) return false;
@@ -60,27 +65,68 @@ class Router
         return false;
     }
 
+    /**
+     * Appelle le contrôleur pour la génération des pages web
+     * @param string $root le répertoire racine du projet
+     * @param string $action determinée par la route active
+     * @param object $Env contient les paramétrages contenus dans la table environment 
+     * @param ?array $param les paramétres peuvent être des sections de l'url déclarées dans les routes
+     */
     static function www(string $root, string $action, object $Env, ?array $param): void
     {
-        // html#start.html
-        if (str_starts_with($action, "link")) {
-            [$html, $file] = explode("#", $action);
-            $filefull = "{$root}/{$file}";
-            if (file_exists($filefull)) require "$filefull";
-        } else Www::start($root, $Env, $param); // start php
+        if ($Env->Option?->maintenance === true) {
+            self::link(root: $root, action: Config::VIEWS_UNDER);
+        } else {
+            $Render = new Render($root . Config::REP_TMP, Config::PREFIXE_NAV, $Env->Option->pref_uri);
+            $www = Www::start($action, $Env, $param, $Render);
+
+            if ($www !== false) {
+                $render = $Render->render();
+                if ($render === null) {
+                    Www::error_fatal("rendering html");
+                } else {
+                    Www::debug("> views selected ...", $www["view"], $Env->Option->debug);
+                    $fileEntry = $root . Config::REP_VIEWS . $www["view"];
+                    require $fileEntry;
+                }
+            }
+        }
     }
 
+    /**
+     * Renvoie vers le lien contenu dans la variable action
+     * @param string $root le répertoire racine du projet
+     * @param string $action determinée par la route active
+     * @param object $Env contient les paramétrages contenus dans la table environment 
+     * @param ?array $param les paramétres peuvent être des sections de l'url déclarées dans les routes
+     */
+    static function link(string $root, string $action, ?object $Env = null, ?array $param = null): void
+    {
+        $file = "{$root}{$action}";
+        if (!file_exists($file))
+            echo ("file not exist {$file}");
+        else
+            require "$file";
+    }
+
+    /**
+     * Active le contrôleur pour les API REST du site
+     * @param string $root le répertoire racine du projet
+     * @param string $action determinée par la route active
+     * @param object $Env contient les paramétrages contenus dans la table environment 
+     * @param ?array $param les paramétres peuvent être des sections de l'url déclarées dans les routes
+     */
     static function api(string $root, string $action, object $Env, ?array $param): void
     {
         Api::start($action, $Env, $param);
     }
 
     /**
-     * Permet de charger l'environnement
-     * @param string $environnement 
-     * @return array|false l'enregistrement de l'environnement
+     * Lit la table environment en fonction du contexte determiné dans le fichier config.ini
+     * @param string $environnement determiné en fonction de l'url principalement
+     * @return array|false retourne un tableau [ options, routes] ou false si la base est vide
      */
-    static function load_env(string $environnement): array|false
+    private static function _load(string $environnement): array|false
     {
         $Env = new Table(Entite: DBParam::get_table("environment"), prefixe: DBParam::$prefixe);
 
@@ -94,15 +140,58 @@ class Router
         $WwwCfg->name = $environnement;
         $WwwCfg->Option = (object)json_decode($enrlu->j_option) ?? new stdClass();
         $WwwCfg->index = (array)json_decode($enrlu->j_index);
-        //$WwwCfg->Contact = (object)json_decode($enrlu->j_contact);
-        $WwwCfg->Contact = $WwwCfg->Option->contact  ?? new stdClass();
-        $route = (array)json_decode($enrlu->j_route);
-
-        // mise à jour des valeurs par défaut
         $WwwCfg->Option->prod = $WwwCfg->Option->prod ?? false;
         $WwwCfg->Option->log = $WwwCfg->Option->log ?? false;
+        $WwwCfg->Option->debug = $WwwCfg->Option->debug ?? false;
         $WwwCfg->Option->pref_uri  = $WwwCfg->Option->pref_uri ?? "/menu/";
+        $WwwCfg->Option->clean_limit = $WwwCfg->Option->clean_limit ?? 7;
+        $WwwCfg->Option->purge = $WwwCfg->Option->purge ?? 30;
         $WwwCfg->Option->revised  = date("d/m/Y", strtotime("{$enrlu->updated_at}"));
-        return [$WwwCfg, $route];
+
+        $routes = self::_get_routes($WwwCfg->Option);
+        if (isset(($WwwCfg->Option->custom_link)) && (gettype($WwwCfg->Option->custom_link) == "array")) {
+            if (count($WwwCfg->Option->custom_link) == 4)
+                array_push($routes, $WwwCfg->Option->custom_link);
+        }
+
+        return [$WwwCfg, $routes];
+    }
+
+    /**
+     * @param object $Option afin d'avoir le tableau "routes" qui contient les routes demandées
+     * @return array retourne un tableau avec les routes internes
+     */
+    private static function _get_routes(object $Option): array
+    {
+        $routes = [];
+        if (isset(($Option->routes)) && (gettype($Option->routes) == "array")) {
+            foreach ($Option->routes as $rte_in) {
+                switch ($rte_in) {
+                    case "www":
+                        array_push($routes, Config::ROUTE_WWW_START);
+                        $add_route = Config::ROUTE_WWW_PROGRESS;
+                        $add_route[1] =  "{$Option->pref_uri}{$add_route[1]}";
+                        array_push($routes, $add_route);
+                        break;
+                    case "message":
+                        array_push($routes, Config::ROUTE_API_MSG);
+                        break;
+                    case "reload":
+                        $add_route = Config::ROUTE_RELOAD;
+                        $add_route[2] .= Config::VIEWS_INIT;
+                        array_push($routes, $add_route);
+                        break;
+                    case "admin":
+                        $routes = array_merge($routes, Config::ROUTE_API_ADMIN);
+                        break;
+                    case "rest":
+                        array_push($routes, Config::ROUTE_API_ENV);
+                        array_push($routes, Config::ROUTE_API_DATA);
+                        break;
+                    default:
+                }
+            }
+        }
+        return $routes;
     }
 }

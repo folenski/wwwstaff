@@ -13,9 +13,9 @@
     content-type: application/json
   body: {"nom" : "test", "tel" : 81499999, "mail" : "test0009@y.fr", "message" : "hello it s me"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.msg.size: . > 5
+    - json.content: "Ok"
 
 ################################################################################
 ### Message avec une erreur sur le format de l'email => KO
@@ -29,7 +29,7 @@
   tests:
     - status: 200
     - json.errorcode: 151
-    - json.msg.size: . > 5
+    - json.content: "invalid mail"
 
 
 ################################################################################

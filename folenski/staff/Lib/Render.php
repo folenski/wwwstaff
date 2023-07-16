@@ -13,6 +13,7 @@
 
 namespace Staff\Lib;
 
+use Staff\Models\DBParam;
 use Staff\Databases\Table;
 use Staff\Models\Template;
 use Staff\Models\Data;
@@ -23,20 +24,25 @@ use stdClass;
 class Render
 {
     public array $data = [];
-    public array $uri = [];
     private array $_list_template;
+    private string $_prefixe;
 
+    /**
+     * @param string $_internal_pref le prefixe interne utilisé dans la table data
+     * @param string $_external_pref le prefixe qui devra remplacer le prefixe interne
+     * @param string $_rep_out le répertoire où seront stockés les templates compilés
+     */
     function __construct(
-        private string $_prefixe,
-        private string $_prefixe_uri,
-        private string $_rep_out
+        private string $_rep_out,
+        private string $_internal_pref = "@",
+        private string $_external_pref = "",
     ) {
+        $this->_prefixe = DBParam::$prefixe;
         $this->_compile($this->_rep_out);
     }
 
-
     /**
-     * Produit le rendu html en fonction des templates présents
+     * Produit le rendu html en fonction des templates présentes
      * @return array|false retourne un tableau indexé [ id_div => file_php ]
      */
     function render(): array|false
@@ -45,6 +51,7 @@ class Render
         foreach ($this->data as $id_div => $val) {
             if (!array_key_exists($id_div, $this->_list_template))
                 throw new \Exception("Key id_div {$id_div} not found");
+                
             $renderer = include("{$this->_rep_out}/{$this->_list_template[$id_div]->file_php}");
             $render_out[$id_div] = $renderer($this->data[$id_div]);
         }
@@ -52,16 +59,13 @@ class Render
     }
 
     /**
-     * R&cuperation des données pour générer les templates en mustache, la données 
-     * est recupéré par ka réf et on la classe dans un tableau interne avec la clé 
-     *  $content
+     * Mise en forme des données afin d'y appliquer plus tard un template.  
      * 
-     * @param string $ref id de la données en table 
-     * @param string $content nom de l'objet ayant les données du template. L'objet est alimenté
-     * en interne
-     * @return array|false la liste des templates
+     * @param string $ref clé pour accèder la table "data" 
+     * @param string $storekey clé pour le tableau interne où seront stockées les données
+     * @return array|false tableau avec la liste des id de templates
      */
-    function fetch(string $ref, string $content): array|null
+    function fetch_data(string $ref, string $storekey): array
     {
         $list_div = [];
         $Table = new Table(Entite: new Data(), prefixe: $this->_prefixe);
@@ -70,17 +74,17 @@ class Render
             ["ref" => $ref],
             limit: 0,
             order: $Table->orderBy(["id_div", "rank", "updated_at"], true)
-        )) === false) return false;
+        )) === false) return [];
 
         foreach ($rows as $Row) {
             $div = $Row->id_div;
             if (($decode = json_decode($Row->j_content, true)) === null) return null;
             if (array_key_first($decode) === 0) {
-                $this->data[$div][$content] = $decode;
+                $this->data[$div][$storekey] = $decode;
             } else {
-                if (!isset($this->data[$div][$content]))
-                    $this->data[$div][$content] = [];
-                array_push($this->data[$div][$content], $decode);
+                if (!isset($this->data[$div][$storekey]))
+                    $this->data[$div][$storekey] = [];
+                array_push($this->data[$div][$storekey], $decode);
             }
             array_push($list_div, $div);
         }
@@ -88,33 +92,46 @@ class Render
     }
 
     /**
-     * Dans le cas d'un menu, nous avons besoin de mettre les uri avec la prefixe de menu et 
-     * on positonne un attribut active sur le menu qui match avec l'uri passée en paramétre
-     *
-     * @param array $divs les templates
-     * @param string $content le nom de l'objet ayant les données pour le template
-     * @param string $uri récupérer de l'url
+     * Remplace le prefixe interne par le prefixe externe dans les liens
+     * @param string $divkey clé sur de la template
+     * @param string $storekey clé pour le tableau interne où seront stockées les données
      * 
      */
-    function update_uri(array $divs, string $content, string $uri): void
+    function update_prefixe(string $divkey, string $storekey): void
     {
-        foreach ($divs as $div) {
-            if (array_key_exists($content, $this->data[$div])) {
-                $noUri = ($uri == "") ? true : false;
-                $this->_upd_uri($this->data[$div][$content], Config::PREFIXE_NAV . $uri, $noUri);
-            }
-        }
+        if (!array_key_exists($divkey, $this->data)) return;
+        if (!array_key_exists($storekey, $this->data[$divkey])) return;
+        $this->_upd_prefixe($this->data[$divkey][$storekey], $this->_internal_pref, $this->_external_pref);
     }
 
     /**
-     * @param string $uri pour la récuperation 
-     * @return object|null Retourne l'objet donnée qui est associé à l'uri passée en paramétre
+     * Rend actif le premier élément (ajout de la propriété active) du menu et retourne cet élément
+     * @param string $divkey clé de la template
+     * @param string $storekey clé pour le tableau interne où seront stockées les données
+     * @return object|false retourne l'élément du menu active
      */
-    function get_metadata(string $uri): object|null
+    function set_active_first(string $divkey, string $storekey): object|false
     {
-        if (array_key_exists(Config::PREFIXE_NAV . $uri, $this->uri))
-            return  $this->uri[Config::PREFIXE_NAV . $uri];
-        return null;
+        if (!array_key_exists($divkey, $this->data)) return false;
+        if (!array_key_exists($storekey, $this->data[$divkey])) return false;
+
+        $key_nav = $this->data[$divkey][$storekey];
+        $this->data[$divkey][$storekey][array_key_first($key_nav)]["active"] = true;
+        return (object)$this->data[$divkey][$storekey][array_key_first($key_nav)];
+    }
+
+    /**
+     * Rend l'élément actif qui répond à la condition $uri = element->uri
+     * @param string $divkey clé de la template
+     * @param string $storekey clé pour le tableau interne où seront stockées les données
+     * @param string $uri l'élément à recherche
+     * @return object|false retourne l'élément du menu active
+     */
+    function set_active_uri(string $divkey, string $storekey, string $uri): object|false
+    {
+        if (!array_key_exists($divkey, $this->data)) return false;
+        if (!array_key_exists($storekey, $this->data[$divkey])) return false;
+        return $this->_set_active_uri($this->data[$divkey][$storekey], $uri);
     }
 
     /**
@@ -129,56 +146,59 @@ class Render
             krsort($this->data[$div][$content]);
         }
     }
-    
+
     /** ----------------------------------------------------------------------------------------------
      *                                       P R I V E
      *  ----------------------------------------------------------------------------------------------
      */
 
     /**
-     * Met à jour le menu avec le menu actif et un prefixe de menu
-     * @param array $rows menu
-     * @param string $uri
-     * @param bool $noUri
-     * @return bool si le menu actif a été trouvé
+     * Met à jour les prefixes internes contenus dans les données passées en paramétre 
+     * @param array $data
+     * @param string $in_pref
+     * @param string $out_pref
      */
-    private function _upd_uri(array &$rows, string $uri, bool $noUri = false): bool
+    private function _upd_prefixe(array &$data, string $in_pref, string $out_pref): void
     {
-        $active = false;
-        $first = true;
-        foreach ($rows as $key => $val) {
-            if ($first &&  $noUri) $rows[$key]["active"] = true;
-            $first = false;
-
-            if (array_key_exists("dropdown", $val)) {
-                if ($this->_upd_uri($rows[$key]["dropdown"], $uri))
-                    $rows[$key]["active"] = true;
-            }
-            if (
-                !array_key_exists("uri", $val) ||
-                !str_starts_with($val["uri"], Config::PREFIXE_NAV)
-            )
-                continue;
-
-            if ($val["uri"] == $uri)
-                $rows[$key]["active"] = $active = true;
-            $rows[$key]["uri"] = $this->_prefixe_uri . substr($val["uri"], 1);
-            if (!array_key_exists($val["uri"], $this->uri)) {
-                $this->uri[$val["uri"]] = new stdClass();
-                $this->uri[$val["uri"]]->ref = $val["ref"] ?? "";
-                $this->uri[$val["uri"]]->meta = $val["meta"] ?? "";
-            } else {
-                if ($this->uri[$val["uri"]]->meta == "")
-                    $this->uri[$val["uri"]]->meta = $val["meta"] ?? "";
-            }
+        $lenght = strlen($in_pref);
+        foreach ($data as $key => $val) {
+            if (array_key_exists("dropdown", $val))
+                $this->_upd_prefixe($data[$key]["dropdown"], $in_pref, $out_pref);
+            elseif (array_key_exists("uri", $val) && str_starts_with($val["uri"], $in_pref))
+                $data[$key]["uri"] = $out_pref . substr($val["uri"], $lenght);
         }
-        return $active;
     }
 
     /**
-     * Compile les templates avec la lib LightnCandy (champs compile = 1)
+     * Recherche dans le tableau l'élément actif, => il est déterminé lorsque $uri = element.uri
+     * l'élément peut avoir une propriété drownload pour indiquer qu'il comporte un sous menu qui doit être parcouru
+     * @param array $data : les éléments
+     * @param string $uri à rechercher
+     * @return false|object retourne l'élément actif si il a été trouvé
+     */
+    private function _set_active_uri(array &$data, string $uri): false|object
+    {
+        foreach ($data as $key => $val) {
+            if (array_key_exists("dropdown", $val)) {
+                $item_sel = $this->_set_active_uri($data[$key]["dropdown"], $uri);
+                if ($item_sel === false) continue;
+                $data[$key]["active"] = true;
+                return $item_sel;
+            }
+            if (array_key_exists("uri", $val) && array_key_exists("ref", $val)) {
+                if (str_contains($val["uri"], $uri)) {
+                    $data[$key]["active"] = true;
+                    return (object)$data[$key];
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Compile tous les templates en utilisant LightnCandy (si le champs 'compile' = 1)
      * @param string $rep_out le répertoire où sont stockés les fichiers
-     * @return bool faux si il y a eu une erreur 
+     * @return bool faux en cas d'erreur
      */
     private function _compile(string $rep_out): bool
     {

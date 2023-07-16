@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: 'Staff API'
+  description: 'REST API framework Staff'
+  version: '1.0'
+servers:
+  -
+    url: 'https://example.localhost'
+    description: URL
+paths:
+  /api/msg:
+    post:
+      tags:
+        - 'Contact Form'
+      description: 'Post a message that can be use in a contact form'
+      operationId: PostMsg
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - nom
+                - mail
+                - message
+              properties:
+                nom:
+                  type: string
+                  example: 'Jessica Smith'
+                mail:
+                  type: string
+                  example: jessica@smith.org
+                message:
+                  type: string
+                  example: 'hello, I would like ...'
+                tel:
+                  type: string
+                sujet:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'OK but an error was encountered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'Message posted, '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'Invalid body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+  /api/user:
+    post:
+      tags:
+        - 'Add a new user'
+      description: 'Post to add a new user'
+      operationId: PostUser
+      requestBody:
+        description: "The 'group' property can have the values 'admin' or 'user' (defaults to 'user'), and the 'password' property must have at least 8 characters"
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - user
+                - password
+                - mail
+              properties:
+                user:
+                  type: string
+                  example: jessica
+                password:
+                  type: string
+                  example: 12345Pass@
+                mail:
+                  type: string
+                  example: 'hello, I would like ...'
+                group:
+                  type: string
+                  example: user
+              type: object
+      responses:
+        '200':
+          description: 'OK but an error was encountered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'User created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'Invalid body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+      security:
+        -
+          bearerAuth: []
+components:
+  schemas:
+    GenericError:
+      properties:
+        errorcode:
+          type: integer
+          nullable: true
+        content:
+          type: string
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

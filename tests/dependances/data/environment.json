@@ -5,17 +5,19 @@
       "name": "DEV",
       "j_option": {
         "log": true,
-        "prod": false,
-        "user": "svcstaff",
+        "debug": true,
         "maintenance": false,
         "pref_uri": "/menu/",
+        "prod": false,
+        "clean_limit": 1,
+        "purge": 7,
+        "routes": ["www", "message", "admin", "reload"],
+        "custom_link": [],
         "contact": {
+          "user": "svcadmin",
           "mail": "sample@mail.com",
-          "msgMax": 2000,
-          "sendMail": false,
-          "msgOk": "Message envoyé, merci",
-          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+          "send_mail": false,
+          "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
         }
       },
       "j_index": [
@@ -48,37 +50,44 @@
     {
       "name": "TST",
       "j_option": {
-        "user": "svcstaff",
+        "log": true,
+        "debug": true,
         "maintenance": false,
+        "pref_uri": "/menu/",
+        "prod": false,
+        "clean_limit": 1,
+        "purge": 7,
+        "routes": ["www", "message", "admin", "reload"],
+        "custom_link": [],
         "contact": {
+          "user": "svcadmin",
           "mail": "sample@mail.com",
-          "msgMax": 2000,
-          "sendMail": false,
-          "msgOk": "Message envoyé, merci",
-          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
+          "send_mail": false,
+          "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
         }
       },
-      "_j_index": "inc/index.json",
-      "_j_route": "inc/route.json"
+      "_j_index": "inc/index.json"
     },
     {
       "name": "PRD",
       "j_option": {
+        "log": true,
+        "debug": true,
         "maintenance": false,
-        "user": "svcstaff",
+        "pref_uri": "/menu/",
+        "prod": false,
+        "clean_limit": 1,
+        "purge": 7,
+        "routes": ["www", "message", "admin", "reload"],
+        "custom_link": [],
         "contact": {
+          "user": "svcadmin",
           "mail": "sample@mail.com",
-          "msgMax": 2000,
-          "purge": 45,
-          "sendMail": false,
-          "msgOk": "Message envoyé, merci",
-          "msgKo": "Une erreur a été rencontrée<br/>Merci d&apos;essayer plus tard",
-          "message": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p> <br/>Cordialement,<br/><br/>- Admin - "
+          "send_mail": false,
+          "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
         }
       },
-      "_j_index": "inc/index.json",
-      "_j_route": "inc/route.json"
+      "_j_index": "inc/index.json"
     }
   ]
 }

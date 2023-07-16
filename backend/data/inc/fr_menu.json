@@ -8,7 +8,7 @@
     "uri": "#",
     "dropdown": [
       { "name": "Lorem", "uri": "@fr/more/18", "ref": "lorem" },
-      { "name": "Lien externe...", "uri": "https://www.daldomarte.com" }
+      { "name": "Lien externe vers google", "uri": "https://www.google.com" }
     ]
   },
   { "name": "Contact", "uri": "@fr/contact", "ref": "contact" },

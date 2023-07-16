@@ -8,3 +8,4 @@
 /reqman/reqman.html
 /.vscode/
 .prettierrc
+package-lock.json
