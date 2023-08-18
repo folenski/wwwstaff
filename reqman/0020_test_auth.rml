@@ -14,9 +14,9 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.mail: "staff@local.com"
+    - json.mail: staff@local.com 
     - json.token.size: . > 20 
   save:
      myToken: <<json.token>>
@@ -32,6 +32,7 @@
   tests:
     - status: 200
     - json.errorcode: null
+    - json.message: "done"
 
 ################################################################################
 ###  Deconnexion avec le token <<myToken>> => KO
@@ -40,11 +41,11 @@
     - Deconnexion avec le meme token, ne doit pas fonctionner  
   headers:
     content-type: application/json
-    Authorization:  Bearer  <<myToken>>
+    Authorization:  Bearer <<myToken>>
   tests:
     - status: 401
     - json.errorcode: 23
-    - json.content: token not valid
+    - json.message: bad credentials
 
 ################################################################################
 ###  Connection au compte admin avec un mauvais mot de passe => KO  
@@ -56,7 +57,7 @@
   body: {"user" : "svcadmin", "password" : "mauvaispass"}
   tests:
     - status: 200
-    - json.errorcode: 134 
-    - json.content: "The password is wrong"
+    - json.errorcode: 131 
+    - json.message: User or password is incorrect
 
 

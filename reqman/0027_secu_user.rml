@@ -6,16 +6,16 @@
 ################################################################################
 ### Mise à jour mot de passe sans token => KO
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - Mise à jour mot de passe sans token
   headers:
     content-type: application/json
   body: {"password" : "Mypass123456"}
   tests:
-    - status: 400
-    - json.errorcode: 23
-    - json.content: token needed
+    - status: 401
+    - json.errorcode: 20
+    - json.message: bad credentials
 
 ################################################################################
 ### Creation d'un compte sans token => KO
@@ -27,23 +27,22 @@
     content-type: application/json
   body: {"user": "tstadm", "mail": "t2@local.com", "password": "Pass123456", "group": "admin"}
   tests:
-    - status: 400 
-    - json.errorcode: 23
-    - json.content: token needed
+    - status: 401 
+    - json.errorcode: 20
+    - json.message: bad credentials
 
 ################################################################################
 ### Suppression de l'utilisateur tstadm sans token => KO
 
-- DELETE: /api/user
+- DELETE: /api/user/testadm
   doc: |
     - Suppression de l'utilisateur tstadm sans token
   headers:
     content-type: application/json
-  body: {"user": "testadm"}
   tests:
-    - status: 400
-    - json.errorcode: 23
-    - json.content: token needed
+    - status: 401
+    - json.errorcode: 20
+    - json.message: bad credentials
 
 ################################################################################
 ### 
@@ -61,7 +60,7 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.mail: "staff@local.com"
     - json.token.size: . > 20 
   save:
@@ -79,14 +78,14 @@
   tests:
     - status: 200
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
 ################################################################################
 ### Maj de mail avec un mauvais token => KO
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
-    - Changement l'email avec mauvaus token d'autorisation
+    - Changement l'email avec mauvais token d'autorisation
   headers:
     content-type: application/json
     Authorization:  Bearer <<myToken>>
@@ -94,7 +93,7 @@
   tests:
     - status: 401
     - json.errorcode: 23
-    - json.content: token not valid
+    - json.message: bad credentials
 
 ################################################################################
 ### 
@@ -112,7 +111,7 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
     - json.mail: "staff@local.com"
     - json.token.size: . > 20 
@@ -129,7 +128,7 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
     - json.token.size: . > 20 
   save:
@@ -139,7 +138,7 @@
 ### Maj de mot de passe avec un mauvais token => KO
 ### changement de logique , les tokens ne sont plus revoqués
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - Changement l'email avec mauvais token d'autorisation
   headers:
@@ -147,6 +146,6 @@
     Authorization:  Bearer <<myToken2>>
   body: {"mail" : "staff@local.com"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.content: done
+    - json.message: done

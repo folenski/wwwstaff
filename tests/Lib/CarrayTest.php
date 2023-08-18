@@ -131,6 +131,7 @@ final class CarrayTest extends TestCase
             Carray::arrayCheck($data, $pattern)
         );
     }
+
     public function testCheckArrayJson(): void
     {
         $pattern = [
@@ -191,5 +192,19 @@ final class CarrayTest extends TestCase
             false,
             Carray::arrayCompare(compact("joption", "jroute"), (array)$target)
         );
+    }
+
+    /**
+     * Analyse d'une anomalie rencontrée lors de mes tests 
+     * Api ne fusionne pas les clés et alimente 2 tableaux
+     */
+    public function testCheckCustom1(): void
+    {
+        $param = unserialize("a:2:{i:0;a:1:{s:4:\"name\";s:7:\"testadm\";}s:13:\"authorization\";a:3:{s:5:\"token\";s:88:\"OGRjNTgxZjgyNTZmYTM3NzYyMDM1YTIwMzJkZDMwMTI1M2IzMDQzZTIyMDM4OTNiM2U1MmI3MWM4NTRhN2M0ZQ==\";s:4:\"user\";s:8:\"svcadmin\";s:4:\"role\";i:2;}}");
+        [$controle, $fails, $name] = Carray::arrayCheck(
+            $param[0],
+            ["name" => ["mandatory" => true, "type" => "string", "protected" => true, "limit" => 50]]
+        );
+        $this->assertTrue($controle);
     }
 }

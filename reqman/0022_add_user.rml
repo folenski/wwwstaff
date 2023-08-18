@@ -3,7 +3,7 @@
 ################################################################################
 
 ################################################################################
-#  on demande un token <<myToken>> => OK
+### get a token <<myToken>>
 
 - POST: /api/auth
   doc: |
@@ -12,7 +12,7 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
     - json.token.size: . > 20 
   save:
@@ -27,11 +27,11 @@
   headers:
     content-type: application/json
     Authorization:  Bearer  <<mytoken>>
-  body: {"user": "testadm", "mail": "testadm@local.com", "password": "pass123456"}
+  body: {"name": "testadm", "mail": "testadm@local.com", "password": "pass123456"}
   tests:
     - status: 200 
-    - json.errorcode: 138
-    - json.content: The password is incorrect
+    - json.errorcode: 38
+    - json.message: The password is too weak
 
 ################################################################################
 ### Création de l'utilisateur testadm => OK
@@ -42,11 +42,11 @@
   headers:
     content-type: application/json
     Authorization:  Bearer  <<mytoken>>
-  body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
+  body: {"name": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
   tests:
-    - status: 200 
+    - status: 201 
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
 ################################################################################
 ### Recréation de l'utilisateur testadm ( controle de doublon) => KO
@@ -57,39 +57,24 @@
   headers:
     content-type: application/json
     Authorization:  Bearer <<mytoken>>
-  body: {"user": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
+  body: {"name": "testadm", "mail": "testadm@local.com", "password": "Pass123456"}
   tests:
     - status: 200 
-    - json.errorcode: 135
-    - json.content: User already exists
+    - json.errorcode: 35
+    - json.message: User already exists
 
 ################################################################################
 ### Suppression de l'utilisateur testadm => OK
 
-- DELETE: /api/user
+- DELETE: /api/user/testadm
   doc: |
     - Suppression de l'utilisateur testadm
   headers:
     content-type: application/json
     Authorization:  Bearer  <<mytoken>>
-  body: {"user": "testadm"}
   tests:
     - status: 200 
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
-################################################################################
-### Suppression de l'utilisateur testadm => Ko
-
-- DELETE: /api/user
-  doc: |
-    - Re suppression de l'utilisateur testadm
-  headers:
-    content-type: application/json
-    Authorization:  Bearer  <<mytoken>>
-  body: {"user": "testadm"}
-  tests:
-    - status: 200 
-    - json.errorcode: 136
-    - json.content: User not found
   

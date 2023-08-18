@@ -1,0 +1,26 @@
+[
+  {
+    "name": "admin",
+    "mail": "admin@local.lan",
+    "password": "admin",
+    "admin": true,
+    "last": "2022-08-18T22:28:26.000",
+    "token": "ODExYzFkNzZmNDc4MjkzNmEyZWQwY2E5ZDM4N2JhMmZhNWE0MTU2MTAxNmQ4ZGFkOTk4OTUzNWRmMjZjOTMwYg=="
+  },
+  {
+    "name": "test",
+    "mail": "test@local.lan",
+    "password": "admin",
+    "admin": false,
+    "last": "2022-08-17T22:28:26.000",
+    "token": "NjI5MmJmZTgxYzc3MWU4NjNiNTgyOTQ1YjQwOTE1NDM5ZjEwNjEwOGRhN2Y4YWM1ZjczMjIzNGY2MDYzYTliMA=="
+  },
+  {
+    "name": "test2",
+    "mail": "test2@local.lan",
+    "password": "test",
+    "admin": false,
+    "last": "2022-08-17T22:28:26.000",
+    "token": "ZGVmOGNiYzdhNTZlYmU5ZjlhYjM5NzhjMmFiZjA2NzlhMjE2OTI5NTMzYmQ2YTkyZTQ2ZGJlZTU4ZGVhMWY1MA=="
+  }
+]

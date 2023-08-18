@@ -5,13 +5,13 @@
       "name": "DEV",
       "j_option": {
         "log": true,
-        "debug": true,
+        "debug": false,
         "maintenance": false,
         "pref_uri": "/menu/",
         "prod": false,
         "clean_limit": 1,
         "purge": 7,
-        "routes": ["www", "message", "admin", "reload"],
+        "routes": ["www", "message", "admin", "reload", "rest"],
         "custom_link": [],
         "contact": {
           "user": "svcadmin",

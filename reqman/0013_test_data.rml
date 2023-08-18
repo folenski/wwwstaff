@@ -1,6 +1,6 @@
 ################################################################################
 #  Test de l'API data
-#  maj 9/12/2022
+#  maj 15/08/2023
 ################################################################################
 
 ################################################################################
@@ -13,9 +13,9 @@
     content-type: application/json
   tests:
     - status: 200
-    - json.ref: fr_menu
-    - json.data.0.name: Accueil
-    - json.data.1.ref: news
+    - json.0.ref: fr_menu
+    - json.0.id_div: menu
+    - json.0.data.size: . > 1
 
 ################################################################################
 ### Recuperation du menu fr_menu
@@ -27,8 +27,7 @@
     content-type: application/json
   tests:
     - status: 200
-    - json.errorcode: 2
-    - json.data.size: 0
+    - json.size: 0
 
 ################################################################################
 ### Recuperation du menu fr_menu

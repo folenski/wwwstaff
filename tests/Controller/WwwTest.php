@@ -13,7 +13,6 @@ require_once  dirname(__DIR__)  . "/dependances/config.php";
 use Staff\Controller\Www;
 use Staff\Lib\Render;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 final class WwwTest extends TestCase
 {

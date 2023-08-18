@@ -12,6 +12,7 @@
  * @version 1.3.1  on filtre le champs http
  * @version 1.3.2  modif méthode log, response : gestion du champs errorcode 
  * @version 1.3.3  modif méthode clean pris en compte du refactoring de l'objet option 
+ * @version 1.3.4  suppression de la valeur du token dans la table log 
  * 
  */
 
@@ -64,23 +65,25 @@ class Rest
     }
 
     /** 
-     * Genere la reponse et écrit le message dans la table Log
-     * @param array  $data, données à renvoyer en json
-     * @param string $composant  le nom du composant 
-     * @param bool $log le nom du composant 
-     * @return bool vrai si le message a été envoyé
-     * @ array $ret [int erreur, string message, int retour http(facultatif)]
+     * Affiche la réponse et la consigne dans la table Log
+     * @param array $data les données à convertir en json et à renvoyer
+     * @param string $composant  
+     * @param bool $log vrai si on doit logger le message
+     * @return bool vrai si la réponse a été affichée
      */
     static function reponse(array $data, string $composant = "COMMUN", bool $log = false): bool
     {
         $http = (array_key_exists("http", $data)) ? $data["http"] : self::HTTP_OK;
         $error = (array_key_exists("errorcode", $data)) ? $data["errorcode"] : 0;
-        $response = (array_key_exists("response", $data)) ? $data["response"] : [];
+        $responseLog = $response = (array_key_exists("response", $data)) ? $data["response"] : [];
+        if (array_key_exists("token", $responseLog)) {
+            $responseLog["token"] = "***";
+        }
         self::log(
             component: $composant,
             http_code: $http,
             error_code: $error,
-            message: json_encode($response),
+            message: json_encode($responseLog),
             log: $log
         );
         if ($error != 0) $response["errorcode"] = $error;

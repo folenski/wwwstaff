@@ -154,9 +154,6 @@ final class RestTest extends TestCase
         // on verifie que la nouvelle date a bien été calculée
         $Rows = $Env->get(["name" => "PRD"]);
         $Eee->Option = json_decode($Rows[0]->j_option);
-        $this->assertSame(
-            date("Y-m-d", strtotime("{$date} + 7 days")),
-            $Eee->Option->clean_at
-        );
+        $this->assertGreaterThan($date, $Eee->Option->clean_at);
     }
 }

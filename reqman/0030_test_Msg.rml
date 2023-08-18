@@ -1,0 +1,67 @@
+################################################################################
+#             Test API Msg
+# le 16/12/2022 maj
+################################################################################
+
+################################################################################
+- POST: /api/auth
+  doc: |
+    - On demande un token <<myToken>>
+  headers:
+    content-type: application/json
+  body: {"user" : "svcadmin", "password" : "Admin4321@"}
+  tests:
+    - status: 201
+    - json.errorcode: null
+    - json.token.size: . > 20 
+  save:
+     myToken: <<json.token>>
+
+################################################################################
+- GET: /api/msg?limit=5
+  doc: |
+    - Lecture de 5 Messages
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 200
+    - json.size: 5 
+
+################################################################################
+- GET: /api/msg?limit=1
+  doc: |
+    - Lecture d'un Message pour recuperer un ID
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 200 
+    - json.size: 1 
+  save:
+     myID: <<json.0.id>>
+
+################################################################################
+- PUT: /api/msg/<<myID>>
+  doc: |
+    - Mise à jour d'un Message avec l'attribut read
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  body: {"read" : true}
+  tests:
+    - status: 201
+    - json.errorcode: null
+    - json.message: done
+
+################################################################################
+- DELETE: /api/msg/<<myID>>
+  doc: |
+    - Suppression d'un Message ayant l'ID capturé
+  headers:
+    content-type: application/json
+    Authorization:  Bearer  <<myToken>>
+  tests:
+    - status: 200
+    - json.errorcode: null
+    - json.message: done

@@ -4,8 +4,8 @@
  * Module de test la classe AuthenTest 
  * 
  * @author  folenski
- * @version 1.3 13/08/2022 : Refactoring 
- * @version 1.3 13/08/2022 : Utilisation du champs role 
+ * @version 1.3 13/08/2022: Utilisation du champs role 
+ * @version 1.4 09/08/2023: Test si le token est bien révoqué
  */
 
 declare(strict_types=1);
@@ -93,7 +93,7 @@ final class AuthenTest extends TestCase
 
         );
         $this->assertSame(
-            "User not found",
+            "User or password is incorrect",
             Authen::get_lib(Authen::USER_NOT_FOUND)
         );
     }
@@ -130,6 +130,22 @@ final class AuthenTest extends TestCase
             "svc",
             $ret["user"]
         );
+    }
+
+    /** 
+     * Vérifie si un token est bien révoqué
+     * @depends testLogin
+     */
+    public function testTokenRevoke(): void
+    {
+        [$retour, $token] = Authen::login(USER_SVC, USER_SVC_PASS, 60);
+        $this->assertSame(
+            Authen::USER_OK,
+            $retour
+        );
+        $this->assertSame(88, strlen($token));   // 88 est la taille du token
+        $this->assertNotFalse(Authen::revoke($token));
+        $this->assertFalse(Authen::is_valid($token));
     }
 
     /** 

@@ -78,8 +78,7 @@ final class Table extends SqlCore
      * @param array|null $id champs pour la recherche
      * @param int $limit si positionné à 0 pas de limite
      * @param array|null $join pour une jointure avec une autre table
-     * @param array|null $order liste des champs pour ordonner les résultats
-     * @param bool $asc vrai si on tri du plus petit ou plus grand
+     * @param array|null $order à utiliser avec la fonction orderby
      * @return array rows|false
      */
     public function get(
@@ -150,10 +149,10 @@ final class Table extends SqlCore
     }
 
     /**
-     * Insérer ou met à jour un enregistrement
-     * @param array $data les champs à modifier ou à stocker
-     * @param array|null $id champs pour la recherche si positionée alors c'est une mise à jour
-     * @return bool  
+     * Insère ou met à jour un ou des enregistrements
+     * @param array $data les champs à mettre à jour ou à insérer
+     * @param array|null $id si il est positionné alors c'est une mise à jour 
+     * @return bool  si vrai si l'opération s'est déroulée sans erreur SQL.
      */
     function put(array $data, ?array $id = null): bool
     {
