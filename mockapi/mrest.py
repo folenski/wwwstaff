@@ -7,6 +7,8 @@ date: 05/08/2023
 
 from flask import Flask
 from flask_restful import Api
+from flask_restful.utils import cors
+from resources.ping import Ping
 from resources.auth import Auth
 from resources.user import User
 from resources.message import Message
@@ -16,8 +18,10 @@ from Environment import Environment
 
 app = Flask(__name__)
 api = Api(app)
+api.decorators=[cors.crossdomain(origin='*', headers='Authorization, Content-Type')]
 
 print(">>>> Initialisation des ressources Mock REST")
+api.add_resource(Ping, "/api/ping")
 api.add_resource(Auth, "/api/auth")
 api.add_resource(User, "/api/user", "/api/user/<user>")
 api.add_resource(Log, "/api/log")

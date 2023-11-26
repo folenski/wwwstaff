@@ -179,6 +179,6 @@ trait RestTrait
      */
     function convDate(string $date): string
     {
-        return str_replace(" ", "T", $date) . ".000Z";
+        return str_replace(" ", "T", $date) . ".000";
     }
 }

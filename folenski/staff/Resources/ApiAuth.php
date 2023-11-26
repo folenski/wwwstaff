@@ -40,7 +40,8 @@ final class ApiAuth implements RestInterface
      *     @OA\JsonContent(
      *         @OA\Property(property="token", type="string"),
      *         @OA\Property(property="mail", type="string"),
-     *         @OA\Property(property="last", type="string", format="date-time" ),
+     *         @OA\Property(property="last", type="string", format="date-time"),
+     *         @OA\Property(property="until", type="string", format="date-time"),
      *     )),
      *     @OA\Response(response=200, description="An error was encountered", @OA\JsonContent(ref="#/components/schemas/GenericError")),
      *     @OA\Response(response=400, description="Invalid body", @OA\JsonContent(ref="#/components/schemas/controlsFailed")),
@@ -60,13 +61,13 @@ final class ApiAuth implements RestInterface
         );
         if (!$controle) return $this->controlsFailed($fails);
 
-        [$retour, $token, $mail, $last] = Authen::login($user, $pass, 60);
+        [$retour, $token, $mail, $last, $valid] = Authen::login($user, $pass, 60);
         if ($retour != Authen::USER_OK) {
             $libelle = Authen::get_lib($retour);
             return $this->retOk(errorcode: 131, message: $libelle);
         }
         return $this->retOk(data: [
-            "token" => $token, "mail" => $mail, "last" => $this->convDate($last)
+            "token" => $token, "mail" => $mail, "last" => $this->convDate($last), "until" => $this->convDate($valid)
         ]);
     }
 

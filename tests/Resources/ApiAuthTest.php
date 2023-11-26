@@ -44,6 +44,10 @@ final class ApiAuthTest extends TestCase
             "last",
             $ret["response"]
         );
+        $this->assertArrayHasKey(
+            "until",
+            $ret["response"]
+        );
         $this->assertSame(
             USER_SVC_MAIL,
             $ret["response"]["mail"]

@@ -32,6 +32,7 @@ final class Config
     const ROUTE_API_ENV = ["GET", "/api/wwwindex", "api@index", "apiindex"];
     const ROUTE_API_DATA =  ["GET", "/api/wwwdata/[**:ref]", "api@data", "apidata"];
     const ROUTE_API_ADMIN = [
+        ["GET", "/api/ping", "api@ping", "apiping"],
         ["POST|DELETE", "/api/auth", "api@auth", "apiauth"],
         ["GET|POST", "/api/user", "api@user", "apiuser"],
         ["GET", "/api/msg", "api@message", "apimsg_2"],

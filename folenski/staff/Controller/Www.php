@@ -50,12 +50,14 @@ class Www
                 host: $_SERVER["HTTP_HOST"]
             );
         }
+        $www["pref_uri"] = $Env->Option->pref_uri ?? "";
         $www["lang"] = $Index?->{Config::ENV_INDEX["lang"]} ?? "en";
         $www["meta"] = $Index?->{Config::ENV_INDEX["meta"]} ?? "";
         $www["title"] = $Index?->{Config::ENV_INDEX["title"]}  ?? "";
         if ($Env->Option->prod !== true) $www["title"] = "[{$Env->name}] {$www["title"]}";
 
         if (property_exists($Index, Config::ENV_INDEX["nav"])) {
+            $www["nav"] = $Index->{Config::ENV_INDEX["nav"]};
             $id_templates_nav = $Render->fetch_data($Index->{Config::ENV_INDEX["nav"]}, "nav");
             if (count($id_templates_nav) != 1) return self::error_fatal("oups something wrong, check props nav");
 
@@ -69,7 +71,12 @@ class Www
             if (property_exists($nav_sel, "meta"))  $www["meta"] = $nav_sel->meta;
 
             $Render->update_prefixe($id_templates_nav[0], "nav");
-            $content_ref = $nav_sel->ref;
+            if (property_exists($nav_sel, "ref"))
+                $content_ref = $nav_sel->ref;
+            else
+                $content_ref = $Index->{Config::ENV_INDEX["start"]};
+        } else {
+            $content_ref = $Index?->{Config::ENV_INDEX["start"]};
         }
 
         $divs = $Render->fetch_data($content_ref, "content");
@@ -125,7 +132,7 @@ class Www
         //var_dump($indexs, $uri);
         if ($uri === "") return false;
         $filtrer_uri = array_filter($indexs, function ($Val) {
-            return $Val?->uri !== "";
+            return property_exists($Val, "uri") && $Val->uri !== "";
         });
         if (count($filtrer_uri) == 1) return $filtrer_uri[array_key_first($filtrer_uri)];
         foreach ($filtrer_uri as $Val) {

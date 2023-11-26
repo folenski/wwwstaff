@@ -34,11 +34,11 @@ final class ApiData implements RestInterface
      *        @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response=200, description="Data object",
-     *        @OA\JsonContent(
+     *        @OA\JsonContent(type="array", @OA\Items(
      *           @OA\Property(property="ref", type="string", example="menu"),
      *           @OA\Property(property="id_div", type="string", example="tpl_menu"),
      *           @OA\Property(property="data", type="string", example="..." ),
-     *         ),
+     *         )),
      *     ),
      *     @OA\Response(response=400, description="Parameter missing", @OA\JsonContent(ref="#/components/schemas/controlsFailed")),
      *     @OA\Response(response=503, description="Internal error", @OA\JsonContent(ref="#/components/schemas/resourcesUnavail")),

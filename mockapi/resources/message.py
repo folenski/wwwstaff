@@ -61,3 +61,6 @@ class Message(Resource):
             MESSAGES.pop(rm_idx)
 
         return {"message": "done"}, 200
+    
+    def options(self):
+        return {"allow": "AUTH"}, 200

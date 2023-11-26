@@ -40,6 +40,7 @@ paths:
                   token: { type: string }
                   mail: { type: string }
                   last: { type: string, format: date-time }
+                  until: { type: string, format: date-time }
                 type: object
         '200':
           description: 'An error was encountered'
@@ -106,11 +107,10 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  ref: { type: string, example: menu }
-                  id_div: { type: string, example: tpl_menu }
-                  data: { type: string, example: ... }
-                type: object
+                type: array
+                items:
+                  properties: { ref: { type: string, example: menu }, id_div: { type: string, example: tpl_menu }, data: { type: string, example: ... } }
+                  type: object
         '400':
           description: 'Parameter missing'
           content:
@@ -351,6 +351,21 @@ paths:
       security:
         -
           bearerAuth: []
+  /api/ping:
+    get:
+      tags:
+        - 'Test website'
+      description: 'Test if the website is alive'
+      operationId: GetPing
+      responses:
+        '200':
+          description: 'Values are online | maintenance '
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: online }
+                type: object
   '/api/user/{user}':
     get:
       tags:

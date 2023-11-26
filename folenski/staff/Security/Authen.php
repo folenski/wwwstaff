@@ -9,6 +9,7 @@
  * @version 1.2.0  Prise en compte évol modèle de données
  * @version 1.3.0 26/07/2022: Prise en compte class Table
  * @version 1.3.1 15/12/2022: fixed the field 'role', remove the property $_user
+ * @version 1.3.2 25/08/2023: method login, return also validity period of token
  * 
  */
 
@@ -143,13 +144,13 @@ class Authen
      * Login de l'utilisateur et génére le token d'autorisation
      * @param string $user 
      * @param string $pass le mot de passe en clair
-     * @return array [int code_retour, string $token, string $mail, string $lastcnx]
+     * @return array [int code_retour, string token, string mail, string lastcnx, string validitytoken]
      * Les codes retours possibles : 
      * RET_OK|RET_ERROR|USER_MAIL_ERROR|USER_NOT_FOUND|USER_NOT_AUTHORIZE|USER_BAD_PIN|USER_LOCK
      */
     static function login(string $user, string $pass, int $delai = 60): array
     {
-        $dataVoid = ["", "", ""];
+        $dataVoid = ["", "", "", ""];
         $User = new Table(DBParam::$prefixe, new User());
 
         $rows = $User->get(["user" => $user]);
@@ -183,7 +184,7 @@ class Authen
         ]))
             return [self::USER_ERROR, ...$dataVoid];
 
-        return [self::USER_OK, $genTok, $Myuser->mail, $lastCnx]; // success
+        return [self::USER_OK, $genTok, $Myuser->mail, $lastCnx, $timeDelai]; // success
     }
 
     /**

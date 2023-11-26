@@ -13,6 +13,7 @@
 
 namespace Staff\Controller;
 
+use Staff\Resources\ApiPing;
 use Staff\Resources\ApiMsg;
 use Staff\Resources\ApiAuth;
 use Staff\Resources\ApiData;
@@ -38,6 +39,7 @@ class Api
         Rest::clean($Env);
 
         $Api = match ($nomApi) {
+            "ping" => new ApiPing(),
             "auth" => new ApiAuth(),
             "message" => new ApiMsg(),
             "user" => new ApiUser(),

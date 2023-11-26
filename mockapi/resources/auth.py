@@ -3,6 +3,7 @@ Class Auth
 Permet de gerer l'authentification d'un utilisateur
 
 date: 05/08/2023
+- Mise à jour de la propriété valid
 """
 
 from flask_restful import Resource, reqparse
@@ -24,8 +25,8 @@ class Auth(Resource):
 
         user = Data.find_user(self.users, args["user"])
         if user is not None and args["password"] == user["password"]:
-            return {"token": user["token"], "mail": user["mail"],
-                    "last": user["last"]}, 201
+            return {"token": user["token"], "mail": user["mail"], "last": user["last"],
+                    "until": user["until"]}, 201
         return {"errorcode": 44, "message": "user or password is not valid"}, 200
 
     def put(self): return {}, 404
@@ -35,3 +36,6 @@ class Auth(Resource):
             return {"message": "done"}, 200
         else:
             return {"message": "bad token"}, 401
+    
+    def options(self):
+        return {"allow": "AUTH"}, 200
