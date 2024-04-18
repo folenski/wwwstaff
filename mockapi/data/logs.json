@@ -1,0 +1,434 @@
+[
+    {
+        "id": 133,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:57:23.000Z"
+    },
+    {
+        "id": 134,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:57:23.000Z"
+    },
+    {
+        "id": 135,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:57:23.000Z"
+    },
+    {
+        "id": 136,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":33,\"content\":\"L'utilisateur est verrouill\u00e9\"}",
+        "created_at": "2022-08-18 19:57:24.000Z"
+    },
+    {
+        "id": 137,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":33,\"content\":\"L'utilisateur est verrouill\u00e9\"}",
+        "created_at": "2022-08-18 19:57:24.000Z"
+    },
+    {
+        "id": 138,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":33,\"content\":\"L'utilisateur est verrouill\u00e9\"}",
+        "created_at": "2022-08-18 19:57:24.000Z"
+    },
+    {
+        "id": 139,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:59:26.000Z"
+    },
+    {
+        "id": 140,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:59:26.000Z"
+    },
+    {
+        "id": 141,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 19:59:26.000Z"
+    },
+    {
+        "id": 142,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 19:59:26.000Z"
+    },
+    {
+        "id": 143,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 19:59:26.000Z"
+    },
+    {
+        "id": 144,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 19:59:27.000Z"
+    },
+    {
+        "id": 145,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:06:40.000Z"
+    },
+    {
+        "id": 146,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:06:40.000Z"
+    },
+    {
+        "id": 147,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:06:40.000Z"
+    },
+    {
+        "id": 148,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 20:06:40.000Z"
+    },
+    {
+        "id": 149,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:28:44.000Z"
+    },
+    {
+        "id": 150,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:28:44.000Z"
+    },
+    {
+        "id": 151,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:28:44.000Z"
+    },
+    {
+        "id": 152,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"YTYyMmNlNmM1NzYzN2MyM2FmYTg4Y2NhYzk2NTM3MTU0MWU1NDc2ZDcxYzJhYmEzMDQxZmNjOGYyYmVkZTBjOA==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 22:28:26\"}",
+        "created_at": "2022-08-18 20:28:44.000Z"
+    },
+    {
+        "id": 153,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 154,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 155,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 156,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"NDNiNmQ4MWE4Yjc1MjU4MmY4MTI3ZWM0ZmNhMWZmMWJlY2YzNTUzNTJiNGY0MWY3YTYwOTNlNTcyNDM1ZjA4Zg==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:28:44\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 157,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 158,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "COMMUN",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token not valid\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 159,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"YWYyMmQ2ZWQ4N2Q5MzFjZjc3ZmNhYmYyMGM5NTY4OGQ4MWY4ODQ0ZWVjNTIxYTU3OWRlNzJkMGEwZmI2NDg3Zg==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:51\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 160,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"NzU1ZjlmNjc0NGVjN2NlOWU5YjY1YmY0MDVmMTdmYTQ4NmIwNTY3Y2JiNjY0ZDFiZTU0MDgzMzQxN2VjZWQ1Yw==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:51\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 161,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 20:33:51.000Z"
+    },
+    {
+        "id": 162,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 163,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 164,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "user",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 165,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"MDcxN2VjODc3ODg1OTAyOTExOTlmOTEwZDBiNjNiYzUxYjVkM2ZkZGYwMjI1Njg4OGE1ZjZlZTM4MTYyOWI1YQ==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:51\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 166,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 167,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "COMMUN",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token not valid\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 168,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"OTQ1OGUzNTk1MjZlNzMwZTQwMjQ5MzFlYzA2OGM0MDcyMTY2ZmZkNzkyNTNkYmNhMzQ1NDViMTZjOTE2NTdiNA==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:54\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 169,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"ZmRkYTE4NGY3MzVhN2Q2ZjA0MjFhOWEwZjg2NjNlNTg3MWE0YmEwZTZhZGI0N2VmMzA2MzdiZmMyMTEyNjY1OQ==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:54\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 170,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":34,\"content\":\"Le mot de passe est erron\u00e9\"}",
+        "created_at": "2022-08-18 20:33:54.000Z"
+    },
+    {
+        "id": 171,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"Y2Q4MTE1N2Q1MGI3ZjVhMTFhNzgxNWFjNDc5YTMwYmQ0NzM3MGViNGRlNGE0ZGUwMDBlOWJjNzQyMDY5ZGFhNA==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:33:54\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 172,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "auth",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"password\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 173,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "user",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"mail\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 174,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":31,\"content\":\"Une erreur a \u00e9t\u00e9 rencontr\u00e9e\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 175,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":31,\"content\":\"Une erreur a \u00e9t\u00e9 rencontr\u00e9e\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 176,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "user",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"user\"}",
+        "created_at": "2022-08-18 20:34:11.000Z"
+    },
+    {
+        "id": 177,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"NDk0ODJjNGM4MDVkZmJiYTg2ZGFhZDA2NzRiZjk3YWFiYTlkMDVjZWE5MGU4ODU3ZGRkOWE0ZTZkZGU5NGQ4Mg==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:34:11\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 178,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "auth",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"password\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 179,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "user",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"mail\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 180,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":31,\"content\":\"Une erreur a \u00e9t\u00e9 rencontr\u00e9e\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 181,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "user",
+        "message": "{\"http\":\"Ok\",\"errorcode\":31,\"content\":\"Une erreur a \u00e9t\u00e9 rencontr\u00e9e\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 182,
+        "error_code": 3,
+        "http_code": 400,
+        "component": "user",
+        "message": "{\"http\":\"Bad Request\",\"content\":\"user\"}",
+        "created_at": "2022-08-18 20:34:50.000Z"
+    },
+    {
+        "id": 183,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"Y2Y0MGQ5OTM1Yjc2YzQ5N2QzZTNhZTZlMGEwZjRlOWVjMDk2Nzc0YTA2NjVmOTUwOTAwYmFlNWVlNjhhYTAzMg==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:34:50\"}",
+        "created_at": "2022-08-18 20:35:03.000Z"
+    },
+    {
+        "id": 184,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "log",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:35:03.000Z"
+    },
+    {
+        "id": 185,
+        "error_code": 3,
+        "http_code": 401,
+        "component": "log",
+        "message": "{\"http\":\"Unauthorized\",\"content\":\"token needed\"}",
+        "created_at": "2022-08-18 20:35:03.000Z"
+    },
+    {
+        "id": 186,
+        "error_code": 0,
+        "http_code": 200,
+        "component": "auth",
+        "message": "{\"http\":\"Ok\",\"errorcode\":0,\"token\":\"NGYwMjc1NDg0ZjhkZTg4Y2Q0YTk5ODhkNjc5YmYzYTZjN2UzNjYzZjk1NDcxYzM5YTkyZjFiZjRlZGJjMmNjZA==\",\"mail\":\"staff@local.com\",\"last_cnx\":\"2022-08-18 20:35:03\"}",
+        "created_at": "2022-08-18 20:39:10.000Z"
+    }
+]

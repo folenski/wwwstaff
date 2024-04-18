@@ -4,7 +4,13 @@
     {
       "user": "svc",
       "password": "svc@12345678",
-      "mail": "no@no.lan",
+      "mail": "svc@no.lan",
+      "role": 1
+    },
+    {
+      "user": "admin",
+      "password": "admin@12345678",
+      "mail": "admin@no.lan",
       "role": 2
     }
   ]

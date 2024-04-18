@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "name": "Sam Teck",
+        "tel": "+01.9999.99999",
+        "mail": "samtest0009@y.fr",
+        "subject": "",
+        "message": "Sea amet ullamcorper eirmod. Duis liber lorem enim elit et et elit et. Et invidunt duis.",
+        "read": false,
+        "date": "2022-07-25T19:32:45.000Z"
+    },
+    {
+        "id": 2,
+        "name": "May Too",
+        "tel": "+7.814.99999",
+        "mail": "maytoo@yaacom.com",
+        "subject": "",
+        "message": "Ipsum zzril sit lorem gubergren et sadipscing gubergren et nonumy aliquyam kasd ea ex",
+        "read": false,
+        "date": "2022-07-25T19:43:02.000Z"
+    },
+    {
+        "id": 3,
+        "name": "John Doe",
+        "tel": "+33.6.81.49.99.99",
+        "mail": "doe@my-company.com",
+        "subject": "erat duis feugiat",
+        "message": "Dolor accusam voluptua magna iriure erat duis feugiat nonumy dolore autem justo at zzril justo no ipsum et accumsan. Sit elitr invidunt tempor elit sed consetetur dignissim erat gubergren dolore erat lorem et ut duo assum. Et clita at",
+        "read": false,
+        "date": "2022-07-26T19:16:10.000Z"
+    },
+    {
+        "id": 4,
+        "name": "Folenski",
+        "tel": "",
+        "mail": "folenski@yahoo.fr",
+        "subject": "",
+        "message": "Sea iusto sea sed nonumy tempor ut accumsan accusam. Invidunt justo dolor consequat veniam sed diam gubergren lorem lorem consetetur. Augue gubergren ut lorem volutpat ut amet. Amet stet at. Facilisis feugiat ea sed magna amet",
+        "read": true,
+        "date": "2022-07-29T15:51:26.000Z"
+    },
+    {
+        "id": 5,
+        "name": "Jack Moree",
+        "tel": "+01.814.999.599",
+        "mail": "jackmoree@gmail.com",
+        "subject": "",
+        "message": "Soluta dolore vero id dolor kasd praesent aliquip eos sea sanctus lorem et lorem. Odio dolore tempor kasd no. Sed dolore justo est et at dolor magna. Eos in eos vulputate diam magna kasd. Magna gubergren aliquam eos tempor eu nulla lorem duo. Et lorem vero clita dolore sit nostrud amet. Et ipsum elit ipsum accusam aliquam clita invidunt stet at dolor stet takimata no. Et sit lobortis iriure accusam sed kasd. Ipsum ad tempor sed aliquyam kasd. Facer at at duo nonumy eirmod justo nam ut justo in clita ea eos tempor dolore.",
+        "read": false,
+        "date": "2022-07-29T15:52:14.000Z"
+    },
+    {
+        "id": 6,
+        "name": "Adam",
+        "tel": "+48.888.888.666.666.555",
+        "mail": "adam.smith@wee.com",
+        "subject": "Feugiat tation dolore",
+        "message": "Feugiat tation dolore dolor dolores. Kasd erat ipsum eu et sed dolor eos at sit ipsum laoreet ut et dignissim accusam lorem. Ipsum sea doming dolores sit enim kasd et stet clita nulla laoreet.",
+        "read": false,
+        "date": "2022-07-29T15:52:14.000Z"
+    }
+]

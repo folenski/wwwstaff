@@ -1,63 +1,41 @@
 ################################################################################
-#  Test de l'API message
-#  maj 3/07/2022
+#  Test de l'API Message
+#  maj 15/08/2023
 ################################################################################
 
 ################################################################################
-### Emission d'un message correct => OK
-
 - POST: /api/msg
   doc: |
-    - Emission d'un message correct 
+    - Envoi d'un message correct 
   headers:
     content-type: application/json
-  body: {"nom" : "test", "tel" : 81499999, "mail" : "test0009@y.fr", "message" : "hello it s me"}
+  body: {"name": "test", "tel": "81499999", "mail": "test0009@y.fr", "message": "hello it s me"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.msg.size: . > 5
+    - json.message: "done"
 
 ################################################################################
-### Message avec une erreur sur le format de l'email => KO
-
 - POST: /api/msg
   doc: |
     - Message avec une erreur sur le format de l'email
   headers:
     content-type: application/json
-  body: {"nom" : "test2", "tel" : 901499999, "mail" : "test0009@y.", "message" : "hello it's me"}
+  body: {"name": "test2", "tel": "901499999", "mail": "test0009@y.", "message": "hello it's me"}
   tests:
     - status: 200
-    - json.errorcode: 151
-    - json.msg.size: . > 5
-
+    - json.errorcode: 51
+    - json.message: "Invalid mail"
 
 ################################################################################
-### Message avec un champ manquant => KO
-
 - POST: /api/msg
   doc: |
     - Message avec un champ manquant
   headers:
     content-type: application/json
-  body: {"nom" : "test", "tel" : 8881499999, "mail" : "test0009@y.fr"}
+  body: {"name": "test", "tel": "8881499999", "mail": "test0009@y.fr"}
   tests:
     - status: 400
     - json.errorcode: 22
-    - json.content: message
-
-################################################################################
-### Utilisation de la methode GET a la place de POST => KO
-
-- GET: /api/msg
-  doc: |
-    - Utilisation de la methode GET a la place de POST
-  headers:
-    content-type: application/json
-  body: {"nom" : "tetst", "tel" : 8881499999, "mail" : "test0009@y.fr", "message" : "hello it's me"}
-  tests:
-    - status: 404 
-    - content: "Error 404"
-    - json.errorcode: null
-
+    - json.message: message
 

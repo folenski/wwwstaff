@@ -5,8 +5,8 @@
  *
  * @author  folenski
  * @version 1.0 21/07/2022: Version initiale  
- * @version 1.2 07/08/2022: test du service Render
  * @version 1.3 21/12/2022: ajout de tests
+ * @version 1.4 15/07/2023: ajout de tests suite à refactoring de la class
  * 
  */
 
@@ -24,39 +24,105 @@ final class RenderTest extends TestCase
     public function testFetch(): void
     {
         $rep = dirname(__DIR__) .  "/dependances/tmp/";
-        $Rend = new Render(PREFIXE, "", $rep);
+        $Rend = new Render(_rep_out: $rep);
 
         $this->assertSame(
             ["menu"],
-            $Rend->fetch("fr_menu", "nav")
+            $Rend->fetch_data("fr_menu", "nav")
+        );
+
+        $this->assertSame(
+            [],
+            $Rend->fetch_data("noexist", "nav")
         );
 
         $this->assertSame(
             ["content"],
-            $Rend->fetch("fr_accueil", "content")
+            $Rend->fetch_data("fr_accueil", "content")
         );
     }
 
     /** 
      *  @depends testFetch
      */
-    public function testRecupMenu(): void
+    public function testSelectByUri(): void
     {
         $rep = dirname(__DIR__) .  "/dependances/tmp/";
-        $Rend = new Render(PREFIXE, "", $rep);
+        $Rend = new Render(_rep_out: $rep);
 
         $this->assertSame(
             ["menu"],
-            $Rend->fetch("fr_menu", "nav")
+            $Rend->fetch_data("fr_menu", "nav")
         );
 
-        $Rend->update_uri(["menu"], "nav", "fr/contact");
+        $Obj = $Rend->set_active_uri("menu", "nav", "fr/contact");
+        $this->assertIsObject($Obj);
+        //var_dump($Obj);
+        $this->assertSame(
+            true,
+            $Obj->active
+        );
 
-        $obj =$Rend->get_metadata("fr/contact");
+        $Obj = $Rend->set_active_uri("menu", "nav", "noexist");
+        $this->assertSame(
+            false,
+            $Obj
+        );
+    }
+
+    /** 
+     *  @depends testFetch
+     */
+    public function testSelectFirst(): void
+    {
+        $rep = dirname(__DIR__) .  "/dependances/tmp/";
+        $Rend = new Render(_rep_out: $rep);
 
         $this->assertSame(
-            "contact",
-            $obj->ref
+            ["menu"],
+            $Rend->fetch_data("fr_menu", "nav")
+        );
+
+        $Obj = $Rend->set_active_first("menu", "nav");
+        $this->assertIsObject($Obj);
+        $this->assertSame(
+            true,
+            $Obj->active
+        );
+
+        $Obj = $Rend->set_active_first("menu2", "nav");
+        $this->assertSame(
+            False,
+            $Obj
+        );
+    }
+
+    /** 
+     *  @depends testSelectByUri
+     */
+    public function testUpdatePref(): void
+    {
+        $Rend = new Render(_rep_out: "", _external_pref: "/mymy/");
+
+        $template = $Rend->fetch_data("fr_menu", "nav");
+        $this->assertSame(
+            1,
+            count($template)
+        );
+
+        $Rend->update_prefixe($template[0], "nav");
+        $sel = $Rend->set_active_first($template[0], "nav");
+        $this->assertIsObject($sel);
+        $this->assertStringStartsWith(
+            "/mymy/",
+            $sel->uri
+        );
+
+        $sel = $Rend->set_active_uri($template[0], "nav", "fr/more/18");
+        $this->assertIsObject($sel);
+        $this->assertStringStartsWith(
+            "/mymy/",
+            $sel->uri
         );
     }
 }

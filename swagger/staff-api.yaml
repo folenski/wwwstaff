@@ -1,0 +1,651 @@
+openapi: 3.0.0
+info:
+  title: 'Staff API'
+  description: 'REST API framework Staff'
+  version: '1.0'
+servers:
+  -
+    url: 'https://example.localhost'
+    description: URL
+paths:
+  /api/auth:
+    post:
+      tags:
+        - Authentication
+      description: 'This service provides a security token'
+      operationId: PostAuth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - user
+                - password
+              properties:
+                user:
+                  type: string
+                  example: jessica
+                password:
+                  type: string
+                  example: 12345Pass@
+              type: object
+      responses:
+        '201':
+          description: 'User is granted and his token is created'
+          content:
+            application/json:
+              schema:
+                properties:
+                  token: { type: string }
+                  mail: { type: string }
+                  last: { type: string, format: date-time }
+                  until: { type: string, format: date-time }
+                type: object
+        '200':
+          description: 'An error was encountered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'Invalid body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/controlsFailed'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+    delete:
+      tags:
+        - Authentication
+      description: 'This service revokes the security token'
+      operationId: DeleteAuth
+      responses:
+        '200':
+          description: 'The disconnection is done'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericOk'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+      security:
+        -
+          bearerAuth: []
+  '/api/wwwdata/{ref}':
+    get:
+      tags:
+        - 'Get data'
+      description: 'Get a data'
+      operationId: GetData
+      parameters:
+        -
+          name: ref
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Data object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: { ref: { type: string, example: menu }, id_div: { type: string, example: tpl_menu }, data: { type: string, example: ... } }
+                  type: object
+        '400':
+          description: 'Parameter missing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/controlsFailed'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+  /api/wwwindex:
+    get:
+      tags:
+        - 'Get indexes'
+      description: 'Return all indexes'
+      operationId: GetIndex
+      responses:
+        '200':
+          description: 'Array of index object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  required: [language, uri, ref_content, title, meta]
+                  properties: { language: { type: string, example: uk }, uri: { type: string, example: root/ }, default: { type: boolean }, ref_nav: { type: string, example: menu_uk }, ref_content: { type: string, example: home }, entry_file: { type: string, example: index.php }, title: { type: string, example: 'Blog about my life' }, meta: { type: string, example: 'blog updated every week' } }
+                  type: object
+  /api/log:
+    get:
+      tags:
+        - 'Get Logs'
+      description: 'Return a array of log'
+      operationId: GetLog
+      responses:
+        '200':
+          description: 'Log object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: { id: { type: integer }, http_code: { type: integer, example: 200 }, error_code: { type: integer, example: 0 }, component: { type: string, example: auth }, message: { type: string, example: '{content=hello}' }, created_at: { type: string, format: date-time } }
+                  type: object
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+      security:
+        -
+          bearerAuth: []
+  /api/msg:
+    get:
+      tags:
+        - 'Manage Messages'
+      description: 'Return the messages posted from the website'
+      operationId: GetMsg
+      responses:
+        '200':
+          description: 'Array of message object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties: { id: { type: integer }, name: { type: string, example: 'john doe' }, mail: { type: string, example: john@gmail.com }, message: { type: string, example: hi... }, tel: { type: string, example: '+014455' }, subject: { type: string, example: contact }, read: { type: boolean }, date: { type: string, format: date-time } }
+                  type: object
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+      security:
+        -
+          bearerAuth: []
+    post:
+      tags:
+        - 'Contact Form'
+      description: 'Post a message that can be use by a contact form'
+      operationId: PostMsg
+      requestBody:
+        description: 'Message object'
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - mail
+                - message
+              properties:
+                name:
+                  type: string
+                  example: 'Jessica Smith'
+                mail:
+                  type: string
+                  example: jessica@smith.org
+                message:
+                  type: string
+                  example: 'hello, I would like ...'
+                tel:
+                  type: string
+                  example: '+01.485566'
+                subject:
+                  type: string
+                  example: contact
+              type: object
+      responses:
+        '200':
+          description: 'An error was encountered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'Message posted, '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'Invalid body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+  '/api/msg/{id}':
+    put:
+      tags:
+        - 'Manage Messages'
+      description: "Update the property 'read'"
+      operationId: PutMsg
+      parameters:
+        -
+          name: id
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                read:
+                  type: boolean
+              type: object
+      responses:
+        '200':
+          description: 'Update failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'Update done'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'ID parameter is missing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '503':
+          description: 'internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+      security:
+        -
+          bearerAuth: []
+    delete:
+      tags:
+        - 'Manage Messages'
+      description: 'Remove a message'
+      operationId: DelMsg
+      parameters:
+        -
+          name: id
+          in: path
+          description: ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'The message is removed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '400':
+          description: 'The ID parameter is missing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+      security:
+        -
+          bearerAuth: []
+  /api/ping:
+    get:
+      tags:
+        - 'Test website'
+      description: 'Test if the website is alive'
+      operationId: GetPing
+      responses:
+        '200':
+          description: 'Values are online | maintenance '
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: online }
+                type: object
+  '/api/user/{user}':
+    get:
+      tags:
+        - 'Manage Users'
+      description: 'Return a array of user'
+      operationId: GetUser
+      parameters:
+        -
+          name: user
+          in: path
+          description: Name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'User object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetApiUser'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+      security:
+        -
+          bearerAuth: []
+    put:
+      tags:
+        - 'Manage Users'
+      description: 'Update a user'
+      operationId: PutUser
+      parameters:
+        -
+          name: user
+          in: path
+          description: User
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: 'Update password or mail'
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                  example: 12345Pass@
+                mail:
+                  type: string
+                  example: 'hello, I would like ...'
+              type: object
+      responses:
+        '200':
+          description: 'Update failed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'Update done'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericOk'
+        '400':
+          description: 'The user parameter is missing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/controlsFailed'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+      security:
+        -
+          bearerAuth: []
+    delete:
+      tags:
+        - 'Manage Users'
+      description: 'Remove a user'
+      operationId: DelUser
+      parameters:
+        -
+          name: user
+          in: path
+          description: User
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'The user is removed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericOk'
+        '400':
+          description: 'The user parameter is missing'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/controlsFailed'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+      security:
+        -
+          bearerAuth: []
+  /api/user:
+    get:
+      tags:
+        - 'Manage Users'
+      description: 'List a user or users'
+      operationId: GetUsers
+      responses:
+        '200':
+          description: 'User object'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetApiUser'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+      security:
+        -
+          bearerAuth: []
+    post:
+      tags:
+        - 'Manage Users'
+      description: 'Add a new user'
+      operationId: PostUser
+      requestBody:
+        description: "The 'group' property must have either 'admin' or 'user', the 'password' property must have at least 8 characters"
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - password
+                - mail
+              properties:
+                name:
+                  type: string
+                  example: jessica
+                password:
+                  type: string
+                  example: 12345Pass@
+                mail:
+                  type: string
+                  example: 'hello, I would like ...'
+                group:
+                  type: string
+                  example: 'admin or user'
+              type: object
+      responses:
+        '200':
+          description: 'An error was encountered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericError'
+        '201':
+          description: 'User is created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericOk'
+        '400':
+          description: 'Invalid body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/controlsFailed'
+        '401':
+          description: 'Security error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized'
+        '503':
+          description: 'Internal error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resourcesUnavail'
+      security:
+        -
+          bearerAuth: []
+components:
+  schemas:
+    GetApiUser:
+      properties:
+        name:
+          type: string
+          example: john
+        mail:
+          type: string
+          example: john@gmail.com
+        admin:
+          type: boolean
+        last:
+          type: string
+          format: date-time
+      type: object
+    resourcesUnavail:
+      properties:
+        errorcode:
+          type: integer
+          example: 13
+        message:
+          type: string
+          example: 'internal error'
+      type: object
+    unauthorized:
+      properties:
+        errorcode:
+          type: integer
+          example: 20
+        message:
+          type: string
+          example: 'bad credentials'
+      type: object
+    controlsFailed:
+      properties:
+        errorcode:
+          type: integer
+          example: 21
+        message:
+          type: string
+          example: 'fields missing'
+      type: object
+    GenericOk:
+      properties:
+        message:
+          type: string
+          example: done
+      type: object
+    GenericError:
+      properties:
+        errorcode:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: 'an error was encountered'
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

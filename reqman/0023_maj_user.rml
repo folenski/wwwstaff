@@ -1,6 +1,6 @@
 ################################################################################
 #             Tests sur la méthode PUT sur la class User
-# le 16/12/2022: update
+# maj 16/08/2023: maj
 ################################################################################
 
 ################################################################################
@@ -13,7 +13,7 @@
     content-type: application/json
   body: {"user" : "svcadmin", "password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
     - json.token.size: . > 20 
   save:
@@ -23,7 +23,7 @@
 ################################################################################
 ### Maj à jour du mot de passe => OK
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - Changement du mot de passe du compte admin
   headers:
@@ -31,14 +31,15 @@
     Authorization:  Bearer <<myToken>>
   body: {"password" : "Mypass123456"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
 ################################################################################
-### On remet le  mot de passe d'origine sans demander un nouveau token => KO
+### On remet le  mot de passe d'origine sans demander un nouveau token => OK
+### Je ne revoque plus le token lors du changement de mot de passe
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - On remet le mot de passe afin de rendre rejouable les tests  mais sans nouveau token
   headers:
@@ -46,83 +47,53 @@
     Authorization:  Bearer <<myToken>>
   body: {"password" : "Admin4321@"}
   tests:
-    - status: 401
-    - json.errorcode: 23
-    - json.content: token not valid
-
-################################################################################
-### On demande un token  <<myToken>> => OK
-
-- POST: /api/auth
-  doc: |
-    - Demande d'un nouveau un token d'autorisation apres changement de mot de passe
-  headers:
-    content-type: application/json
-  body: {"user" : "svcadmin", "password" : "Mypass123456"}
-  tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.token.size: . > 20 
-  save:
-     myToken2: <<json.token>>
+    - json.message: done
+
 
 ################################################################################
 ### On remet le  mot de passe d'origine  => OK
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - On remet le mot de passe afin de rendre rejouable les tests
   headers:
     content-type: application/json
-    Authorization:  Bearer <<myToken2>>
+    Authorization:  Bearer <<myToken>>
   body: {"password" : "Admin4321@"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
-################################################################################
-### On demande un token : <<myToken3>> => OK
-
-- POST: /api/auth
-  doc: |
-    - Demande d'un nouveau un token d'autorisation apres changement de mot de passe
-  headers:
-    content-type: application/json
-  body: {"user" : "svcadmin", "password" : "Admin4321@"}
-  tests:
-    - status: 200
-    - json.errorcode: null
-    - json.token.size: . > 20 
-  save:
-     myToken3: <<json.token>>
 
 ################################################################################
 ### On met a jour l'email  => OK
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - On change le mail
   headers:
     content-type: application/json
-    Authorization:  Bearer <<myToken3>>
-  body: {"mail" : "t@t.com"}
+    Authorization:  Bearer <<myToken>>
+  body: {"mail" : "t@trt.com"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.content: done
+    - json.message: done
 
 ################################################################################
 ### On remet l'email initiale => OK
 
-- PUT: /api/user
+- PUT: /api/user/svcadmin
   doc: |
     - On remet l'email initial
   headers:
     content-type: application/json
-    Authorization:  Bearer <<myToken3>>
+    Authorization:  Bearer <<myToken>>
   body: {"mail" : "staff@local.com"}
   tests:
-    - status: 200
+    - status: 201
     - json.errorcode: null
-    - json.content: done
+    - json.message: done

@@ -7,6 +7,7 @@
  * @version 1.0 04/08/2022: version initiale 
  * @version 1.1 14/12/2022: supp interface DBParam 
  * @version 1.2 17/12/2022: ajout de la table change, modif get_table 
+ * @version 1.3 17/04/2024: gestion du json pour le fichier d'environnement
  *  
  */
 
@@ -35,12 +36,11 @@ class DBParam
     static string $file_pdo;
 
     /**
-     * Permet d'analyser le fichier de configuration du site
+     * Analyse le fichier de configuration du site, les formats ini ou json sont autorisés
      *   
-     * @param string $file le fichier de config du projet
-     * @param string|null $env l'environnement ( acces via cli) 
-     * @param string|null $server le hosts (accès via ihm)
-     *  "server, doit être alimenté par la super variable $_SERVER["SERVER_NAME"]
+     * @param string $file fichier de config du projet
+     * @param string|null $env l'environnement (accès via le cli) 
+     * @param string|null $server doit être alimenté à partir de la variable $_SERVER["SERVER_NAME"]
      * @return array [environnement, prefixe, fichier database]
      */
     static function parse(string $file, ?string $env = null, ?string $server = null): bool|int
@@ -48,9 +48,11 @@ class DBParam
         if ($env === null && $server === null) return self::PARAM_ERROR;
 
         self::$file_pdo = dirname($file) . "/";
-
-        $ini = parse_ini_file($file, true);
-        if ($ini === false) return self::PARSE_ERROR;
+        if (substr($file, -3) === 'ini')
+            $ini = parse_ini_file($file, true);
+        else
+            $ini = json_decode(file_get_contents($file), true);
+        if ($ini === null || $ini === false) return self::PARSE_ERROR;
 
         if ($env !== null) {
             if (!array_key_exists($env, $ini)) return self::NOT_FOUND;

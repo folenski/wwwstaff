@@ -4,8 +4,7 @@
   "description": "tests for folenski/wwwstaff",
   "main": "public/app.js",
   "scripts": {
-    "build": "node scripts/dev.js",
-    "sass_dev": "sass app/sass/style.scss:public/css/style.css --watch"
+    "build": "node app/scripts/dev.js"
   },
   "repository": {
     "type": "git",
@@ -25,9 +24,8 @@
     "fski-reveal": "^1.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.16.4",
-    "esbuild-sass-plugin": "^2.4.3",
-    "eslint": "^8.19.0",
+    "esbuild": "^0.18.11",
+    "esbuild-sass-plugin": "^2.10.0",
     "node-watch": "^0.7.3"
   }
 }

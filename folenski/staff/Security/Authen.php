@@ -8,7 +8,8 @@
  * @version 1.1.0  revision du code
  * @version 1.2.0  Prise en compte évol modèle de données
  * @version 1.3.0 26/07/2022: Prise en compte class Table
- * @version 1.3.1 15/12/2022: fixed champs role, remove property $_user
+ * @version 1.3.1 15/12/2022: fixed the field 'role', remove the property $_user
+ * @version 1.3.2 25/08/2023: method login, return also validity period of token
  * 
  */
 
@@ -40,11 +41,11 @@ class Authen
         self::USER_ERROR => "An error was encountered",
         self::USER_MAIL_ERROR => "The email is incorrect",
         self::USER_LOCK => "User is locked",
-        self::USER_BAD_PIN => "The password is wrong",
-        self::USER_PIN_ERROR => "The password is incorrect",
+        self::USER_BAD_PIN => "User or password is incorrect",
+        self::USER_PIN_ERROR => "The password is too weak",
         self::USER_EXIST => "User already exists",
-        self::USER_NOT_FOUND => "User not found",
-        self::USER_NOT_AUTHORIZE => "User does not have permission for this operation"
+        self::USER_NOT_FOUND => "User or password is incorrect",
+        self::USER_NOT_AUTHORIZE => "You have not any permissions to do this operation"
     ];
 
     public function __construct(public int $delai = 90)
@@ -125,7 +126,7 @@ class Authen
     {
         if (array_key_exists($error, self::_ERROR))
             return self::_ERROR[$error];
-        return "Une erreur inconnue a été rencontrée";
+        return "An error was encountered";
     }
 
     /**
@@ -143,13 +144,13 @@ class Authen
      * Login de l'utilisateur et génére le token d'autorisation
      * @param string $user 
      * @param string $pass le mot de passe en clair
-     * @return array [int code_retour, string $token, string $mail, string $lastcnx]
+     * @return array [int code_retour, string token, string mail, string lastcnx, string validitytoken]
      * Les codes retours possibles : 
      * RET_OK|RET_ERROR|USER_MAIL_ERROR|USER_NOT_FOUND|USER_NOT_AUTHORIZE|USER_BAD_PIN|USER_LOCK
      */
     static function login(string $user, string $pass, int $delai = 60): array
     {
-        $dataVoid = ["", "", ""];
+        $dataVoid = ["", "", "", ""];
         $User = new Table(DBParam::$prefixe, new User());
 
         $rows = $User->get(["user" => $user]);
@@ -183,7 +184,7 @@ class Authen
         ]))
             return [self::USER_ERROR, ...$dataVoid];
 
-        return [self::USER_OK, $genTok, $Myuser->mail, $lastCnx]; // success
+        return [self::USER_OK, $genTok, $Myuser->mail, $lastCnx, $timeDelai]; // success
     }
 
     /**
@@ -213,7 +214,7 @@ class Authen
     }
 
     /**
-     * Permet de supprimer un utilisateur ainsi que les tokens
+     * Permet de supprimer un utilisateur ainsi ses tokens
      * @param string $user à supprimer
      * @return bool  vrai si ok
      */

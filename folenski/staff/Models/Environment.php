@@ -8,7 +8,7 @@
  * @version 1.1 10/12/2022: utilisation des tags
  * @version 1.2 26/12/2022: utilisation des types small pour mysql
  * @version 1.3 10/01/2023: suppression de la colonne j_contact
- * @version 1.4 09/07/2023: propriété _error ajoutée pour supprimer un warning
+ * @version 1.4 09/07/2023: propriété _error ajoutée, suppression du champ j_route
  * 
  */
 
@@ -24,7 +24,6 @@ final class Environment implements TableInterface
         "name"       => "VARCHAR(3) PRIMARY KEY",
         "j_option"   => "#JSON_SM NOT NULL",
         "j_index"    => "#JSON_SM NOT NULL",
-        "j_route"    => "#JSON_SM NOT NULL",
         "created_at" => "DATETIME NOT NULL",
         "updated_at" => "DATETIME NOT NULL",
     ];
@@ -45,19 +44,18 @@ final class Environment implements TableInterface
      */
     function check(array $fields): array|false
     {
-        [$ret, $fail, $name, $j_option, $j_index, $j_route]
+        [$ret, $fail, $name, $j_option, $j_index]
             = Carray::arrayCheck($fields, [
                 "name" => ["type" => "string"],
                 "j_option" => ["json" => true],
-                "j_index" => ["json" => true],
-                "j_route" => ["json" => true]
+                "j_index" => ["json" => true]
             ]);
         if (!$ret) {
             $this->_error = $fail;
             return false;
         }
         $this->_error = false;
-        return compact("name", "j_option", "j_index", "j_route");
+        return compact("name", "j_option", "j_index");
     }
 
     /**

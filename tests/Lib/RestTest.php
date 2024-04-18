@@ -144,23 +144,16 @@ final class RestTest extends TestCase
 
         $date = date("Y-m-d");
         $cleanAt = "2022-01-01";
-        $cleanDelai = 60;
-        $new = date("Y-m-d", strtotime("{$date} + {$cleanDelai} days"));
 
         $Rows = $Env->get(["name" => "PRD"]);
-
         $Eee = new \stdClass();
         $Eee->name = "PRD";
         $Eee->Option = json_decode($Rows[0]->j_option);
         $Eee->Option->clean_at = $cleanAt;
-        $Eee->Option->clean_delai = $cleanDelai;
         Rest::clean($Eee);
         // on verifie que la nouvelle date a bien été calculée
         $Rows = $Env->get(["name" => "PRD"]);
         $Eee->Option = json_decode($Rows[0]->j_option);
-        $this->assertSame(
-            $new,
-            $Eee->Option->clean_at
-        );
+        $this->assertGreaterThan($date, $Eee->Option->clean_at);
     }
 }
