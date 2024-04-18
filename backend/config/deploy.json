@@ -1,0 +1,32 @@
+{
+    "working_path": "backend/delivery",
+    "name_delivery": "wwwstaff",
+    "comment": "Delivery for wwwstaff",
+    "version": "1.0",
+    "tasks": [
+        {
+            "id" : "wwwstaff_php",
+            "path": "folenski"
+
+        },
+        {
+            "id" : "public_root",            
+            "path": "public",
+            "files" : [
+                ".htaccess", "index.php"
+            ]
+        },
+        {
+            "id" : "sqlite3_db",
+            "path": "sqldb"
+        },
+        {
+            "id" : "wwwstaff_backend",
+            "path": "backend"
+        },
+        {
+            "id" : "vendor_php",
+            "path": "vendor"
+        }
+    ]
+}

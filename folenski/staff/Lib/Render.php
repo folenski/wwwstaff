@@ -8,6 +8,7 @@
  * @version 1.0 14/07/2022: Version Initiale 
  * @version 1.1 05/08/2022: Suppression de l héritage Table
  * @version 1.2 18/12/2022: Refactoring de la classe
+ * @version 1.3 17/04/2024: Modification de la règle pour la compilation des fichiers de rendu php
  * 
  */
 
@@ -18,8 +19,6 @@ use Staff\Databases\Table;
 use Staff\Models\Template;
 use Staff\Models\Data;
 use LightnCandy\LightnCandy;
-use Staff\Config\Config;
-use stdClass;
 
 class Render
 {
@@ -51,7 +50,7 @@ class Render
         foreach ($this->data as $id_div => $val) {
             if (!array_key_exists($id_div, $this->_list_template))
                 throw new \Exception("Key id_div {$id_div} not found");
-                
+
             $renderer = include("{$this->_rep_out}/{$this->_list_template[$id_div]->file_php}");
             $render_out[$id_div] = $renderer($this->data[$id_div]);
         }
@@ -196,7 +195,7 @@ class Render
     }
 
     /**
-     * Compile tous les templates en utilisant LightnCandy (si le champs 'compile' = 1)
+     * Compile le template si le fichier de rendu n'existe pas, utilise LightnCandy
      * @param string $rep_out le répertoire où sont stockés les fichiers
      * @return bool faux en cas d'erreur
      */
@@ -207,17 +206,16 @@ class Render
         $rows = $Table->get(limit: 0);
         foreach ($rows as $val) {
             $this->_list_template[$val->id_div] = $val;
-            if ($val->compile != 1) continue;
-            if ($val->file_php != "") {
-                $phpStr = LightnCandy::compile(
-                    $val->template,
-                    array("flags" => LightnCandy::FLAG_NOESCAPE)
-                );
-                if (file_put_contents("{$rep_out}/{$val->file_php}", "<?php {$phpStr} ?>") === false)
-                    return false;
-                if ($Table->put(["compile" => 0], ["id_div" => $val->id_div]) === false)
-                    return false;
-            }
+            if ($val->file_php == "") return false;
+            if (file_exists("{$rep_out}/{$val->file_php}")) continue;
+            $phpStr = LightnCandy::compile(
+                $val->template,
+                array("flags" => LightnCandy::FLAG_NOESCAPE)
+            );
+            if (file_put_contents("{$rep_out}/{$val->file_php}", "<?php {$phpStr} ?>") === false)
+                return false;
+            if ($Table->put(["compile" => 0], ["id_div" => $val->id_div]) === false)
+                return false;
         }
         return true;
     }

@@ -8,9 +8,11 @@ package-lock.json
 mockapi/lib/
 mockapi/lib64/
 **/__pycache__/
-node_modules/
-vendor/
+**/node_modules/
+**/vendor/
 reqman/reqman.html
-sqldb/*.db
-tests/dependances/tmp/*
-.vscode/
+**/sqldb/*.db
+**/tests/dependances/tmp/*
+**/.vscode/
+**/tmp/
+**/delivery/

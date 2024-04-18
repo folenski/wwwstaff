@@ -14,11 +14,7 @@ if (file_exists("{$rep_root}public/index.html")) {
 $autoload = "{$rep_root}vendor/autoload.php";
 require $autoload;
 
-use Staff\Controller\Router;
-
-if (Router::start($rep_root)) exit(0);
-// en cas d'erreur  
-header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+use Staff\Controller\Patch;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,24 +25,34 @@ header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Error 404</title>
     <style>
-        .center-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            text-align: center;
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
+        h1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h2 {
+            font-size: 1.4em;
+            font-weight: 300;
+            font-style: normal;
+            margin-left: 2em;
+            color:brown
+        }
+        .text-info {
+            color: #17a2b8;
+        }
+        .text-danger {
+            color: #dc3545;
         }
     </style>
 
 </head>
 
 <body>
-    <br /><br />
-    <div class="center-text">
-        <pre>
-        ▌║█║▌│║▌│║▌║▌█║Error 404 ▌│║▌║▌│║║▌█║▌║█
-    </pre>
+    <h1>
+        <pre>🅸🅽🆂🆃🅰🅻🅻</pre>
+    </h1>
+    <div>
+        <?= Patch::apply($rep_root); ?>
     </div>
 </body>
 

@@ -99,4 +99,37 @@ class CliFonct
 
         return ["errors" => [...$tabErr], "options" => [...$tabOpt], "args" => [...$tabArgs]];
     }
+
+    /**
+     * Clear the contents of a directory recursively.
+     *
+     * @param string $dir The directory path to clear.
+     * @throws Exception If unable to remove a file or directory.
+     * @return void
+     */
+    static function clearDirectory(string $dir): void
+    {
+        $rdi = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $it = new \RecursiveIteratorIterator($rdi, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($it as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+    }
+
+    /**
+     * Create a directory if it doesn't already exist.
+     *
+     * @param string $dir The directory path to create.
+     */
+    static function createDirectory(string $dir): void
+    {
+        if (!is_dir($dir)) {
+            CliFonct::print("The directory {$dir} does not exist !!!", CliFonct::TERM_ROUGE);
+            mkdir($dir);
+        }
+    }
 }

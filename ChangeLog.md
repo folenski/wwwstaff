@@ -7,7 +7,8 @@ Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un he
 ### Added
 - Use Swagger to provide information about the REST API : message.
 - Add new properties to the option object (table environment), see our wiki for more details.
-- refactoring code to Www class and Render Class
+- Refactoring code to Www class and Render Class
+- Add update fonctionality 
 
 ### Fixed
 

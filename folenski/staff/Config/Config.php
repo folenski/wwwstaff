@@ -6,6 +6,7 @@
  * @version 1.0.0 12/12/2022: Version initiale
  * @version 1.0.1 13/07/2023: add route
  * @version 1.1.0 18/07/2023: add route pour les messages
+ * @version 1.2.0 14/04/2024: add delivery config
  * 
  */
 
@@ -18,10 +19,12 @@ final class Config
     const REP_CONFIG = "/backend/config/";
     const REP_VIEWS = "/backend/views/";
     const REP_DATA = "/backend/data/";
+    const REP_DELIVERY = "delivery" . DIRECTORY_SEPARATOR;
     const REP_PUBLIC = "/public/";
     const REP_TMP = "/tmp/";
     const REP_SQLITE = "/sqldb/";
-    const FILE_INI = "config.ini";
+    const FILE_INI = "config.json";
+    const FILE_DEPLOY = "deploy.json";
     const VIEWS_INIT = "folenski/views/init.php";
     const VIEWS_UNDER = "folenski/views/under.html";
 

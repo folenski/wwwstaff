@@ -24,14 +24,13 @@ class Router
 {
     /**
      * [[Point d'entrée]], initialise l'environnement et appelle les contrôleurs. Si la base de données
-     * n'a pas été initialisée, créér les tables et charge les données via des fichiers json
+     * n'a pas été initialisée, créé les tables et charge les données via des fichiers json
      * 
      * @param string $www le répertoire racine du projet
      * @return bool retourne false en cas d'erreur 
      */
     static function start(string $www): bool
     {
-        $www .= "/";
         if (($ret = DBParam::parse(file: $www . Config::REP_CONFIG . Config::FILE_INI, server: $_SERVER["SERVER_NAME"])) !== true)
             die(DBParam::ERROR[$ret]);
 
