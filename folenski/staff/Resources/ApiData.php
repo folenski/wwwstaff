@@ -7,6 +7,7 @@
  * @version 1.0 09/12/2022: version Intiale
  * @version 1.1 10/12/2022: ajout des champs ref et id_div
  * @version 1.2 13/08/2023, mise en place du swagger
+ * @version 1.3 21/04/2024, on retourne le tableau avec les objets j_content
  */
 
 namespace Staff\Resources;
@@ -33,12 +34,10 @@ final class ApiData implements RestInterface
      *        required=true,
      *        @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(response=200, description="Data object",
-     *        @OA\JsonContent(type="array", @OA\Items(
-     *           @OA\Property(property="ref", type="string", example="menu"),
-     *           @OA\Property(property="id_div", type="string", example="tpl_menu"),
-     *           @OA\Property(property="data", type="string", example="..." ),
-     *         )),
+     *     @OA\Response(response=200, description="Data j_content",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="data", type="array", @OA\Items()),
+     *         ),
      *     ),
      *     @OA\Response(response=400, description="Parameter missing", @OA\JsonContent(ref="#/components/schemas/controlsFailed")),
      *     @OA\Response(response=503, description="Internal error", @OA\JsonContent(ref="#/components/schemas/resourcesUnavail")),
@@ -54,20 +53,19 @@ final class ApiData implements RestInterface
         );
         if (!$controle) return $this->controlsFailed($fails);
 
-        $rows = $Data->get(id: ["ref" => $ref]);
+        $rows = $Data->get(id: ["ref" => $ref], limit: 0);
         if ($rows === false) return $this->resourcesUnavail();
 
+        if (count($rows) == 1) {
+            return $this->retOk(data: ["data" => json_decode($rows[0]->j_content)]);
+        }
         $bodyOut = [];
         foreach ($rows as $value) {
             array_push(
                 $bodyOut,
-                [
-                    "ref" => $value->ref,
-                    "id_div" => $value->id_div,
-                    "data" => json_decode($value->j_content)
-                ]
+                json_decode($value->j_content)
             );
         }
-        return $this->retOk(data: $bodyOut);
+        return $this->retOk(data: ["data" => $bodyOut]);
     }
 }

@@ -11,54 +11,39 @@
         "prod": false,
         "clean_limit": 1,
         "purge": 7,
-        "routes": ["www", "message", "admin", "reload", "rest"],
+        "routes": [
+          "www",
+          "message",
+          "admin",
+          "reload",
+          "rest"
+        ],
         "custom_link": [],
         "contact": {
           "user": "svcadmin",
-          "mail": "sample@mail.com",
-          "send_mail": false,
           "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
-        }
-      },
-      "j_index": [
-        {
-          "language": "fr",
-          "uri": "fr/",
-          "default": true,
-          "ref_nav": "fr_menu",
-          "ref_content": "fr_accueil",
-          "entry_file": "demo.php",
-          "title": "Démo en francais",
-          "meta": "Lorem ipsum, dolor sit amet consectetur"
         },
-        {
-          "language": "en",
-          "uri": "en/",
-          "ref_nav": "en_menu",
-          "ref_content": "en_home",
-          "entry_file": "demo.php",
-          "title": "English demo",
-          "meta": "Lorem ipsum"
-        }
-      ]
-    },
-    {
-      "name": "TST",
-      "j_option": {
-        "maintenance": true,
-        "pref_uri": "/menu/",
-        "prod": false,
-        "clean_limit": 1,
-        "purge": 30,
-        "routes": ["www", "message", "admin", "reload"],
-        "contact": {
-          "user": "svcadmin",
-          "mail": "sample@mail.com",
-          "send_mail": false,
-          "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
-        }
-      },
-      "_j_index": "inc/index.json"
+        "index": [
+          {
+            "language": "fr",
+            "uri": "fr/",
+            "ref_nav": "fr_menu",
+            "ref_content": "fr_accueil",
+            "entry_file": "demo.php",
+            "title": "Démo en francais",
+            "meta": "Lorem ipsum, dolor sit amet consectetur"
+          },
+          {
+            "language": "en",
+            "uri": "en/",
+            "ref_nav": "en_menu",
+            "ref_content": "en_home",
+            "entry_file": "demo.php",
+            "title": "English demo",
+            "meta": "Lorem ipsum"
+          }
+        ]
+      }
     },
     {
       "name": "PRD",
@@ -68,16 +53,19 @@
         "prod": false,
         "clean_limit": 1,
         "purge": 30,
-        "routes": ["www", "message", "admin", "reload"],
+        "routes": [
+          "www",
+          "message",
+          "admin",
+          "reload"
+        ],
         "custom_link": [],
         "contact": {
           "user": "svcadmin",
-          "mail": "sample@mail.com",
-          "send_mail": false,
           "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
-        }
-      },
-      "_j_index": "inc/index.json"
+        },
+        "_index": "inc/index.json"
+      }
     }
   ]
 }

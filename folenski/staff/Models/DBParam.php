@@ -34,9 +34,10 @@ class DBParam
     static string $env;
     static string $db;
     static string $file_pdo;
+    static string $mail;
 
     /**
-     * Analyse le fichier de configuration du site, les formats ini ou json sont autorisés
+     * Analyse le fichier de configuration du site, le format doit être en json
      *   
      * @param string $file fichier de config du projet
      * @param string|null $env l'environnement (accès via le cli) 
@@ -48,19 +49,12 @@ class DBParam
         if ($env === null && $server === null) return self::PARAM_ERROR;
 
         self::$file_pdo = dirname($file) . "/";
-        if (substr($file, -3) === 'ini')
-            $ini = parse_ini_file($file, true);
-        else
-            $ini = json_decode(file_get_contents($file), true);
+        $ini = json_decode(file_get_contents($file), true);
         if ($ini === null || $ini === false) return self::PARSE_ERROR;
 
         if ($env !== null) {
             if (!array_key_exists($env, $ini)) return self::NOT_FOUND;
-            if (($prefixe = $ini[$env]["prefixe"] ?? "") != "") $prefixe .= "_";
-            self::$prefixe = $prefixe;
-            self::$env = $env;
-            self::$db = $valeur["db"] ?? "sqlite";
-            self::$file_pdo .= $ini[$env]["pdo"];
+            self::_setParam($ini[$env], $env);
             return true;
         }
 
@@ -68,19 +62,12 @@ class DBParam
         foreach ($ini as $key => $valeur) {
             if (!array_key_exists("servername", $valeur)) return self::PARSE_ERROR;
             if ($server == $valeur["servername"]) {
-                if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
-                self::$prefixe = $prefixe;
-                self::$env = $key;
-                self::$db = $valeur["db"] ?? "sqlite";
-                self::$file_pdo .= $valeur["pdo"];
+                self::_setParam($valeur, $key);
                 return true;
             }
             if (array_key_exists("default", $valeur)) {
-                if (($prefixe = $valeur["prefixe"] ?? "") != "") $prefixe .= "_";
-                self::$prefixe = $prefixe;
-                self::$env = $key;
-                self::$db = $valeur["db"] ?? "sqlite";
-                self::$file_pdo .= $valeur["pdo"];
+                self::_setParam($valeur, $key);
+                return true;
             }
         }
         return isset(self::$prefixe) ? true : self::NOT_FOUND;
@@ -104,5 +91,20 @@ class DBParam
             "black_list" => new BlackList(),
             default => null
         };
+    }
+
+    /**
+     * Permet d'initialiser les paramétrages de la base de données
+     * @param object $valeur    contient les paramétrages contenus dans la table environment 
+     * @param string $key       environnement determiné en fonction de l'url principalement
+     */
+    private static function _setParam(mixed $valeur, string $key): void{
+        $prefixe = $valeur["prefixe"] ?? "";
+        $prefixe .= ($prefixe !== "") ? "_" : "";
+        self::$prefixe = $prefixe;
+        self::$env = $key;
+        self::$db = $valeur["db"] ?? "sqlite";
+        self::$file_pdo .= $valeur["pdo"];
+        self::$mail = $valeur["mail"] ?? "";
     }
 }

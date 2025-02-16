@@ -141,11 +141,11 @@ final class ApiMsg implements RestInterface
         }
         if (!$Msg->put($fields)) return $this->resourcesUnavail("insert message to {$user} failed");
 
-        if ($Contact->send_mail === true) {
+        if ($Contact?->send_mail === true) {
             $message = preg_replace(
                 ['/{{nom}}/', '/{{mail}}/', '/{{host}}/', '/{{message}}/'],
                 [$nom, $mail, $host, $message],
-                $Contact->mail_template
+                $Contact->mail_template ?? "no template"
             );
             if (!Rest::envoi_mail($Contact->mail, $message)) {
                 return $this->retOk(

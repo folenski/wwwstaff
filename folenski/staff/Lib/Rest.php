@@ -71,8 +71,12 @@ class Rest
      * @param bool $log vrai si on doit logger le message
      * @return bool vrai si la réponse a été affichée
      */
-    static function reponse(array $data, string $composant = "COMMUN", bool $log = false): bool
-    {
+    static function reponse(
+        array $data,
+        string $composant = "COMMUN",
+        bool $log = false,
+        bool $test = false
+    ): bool {
         $http = (array_key_exists("http", $data)) ? $data["http"] : self::HTTP_OK;
         $error = (array_key_exists("errorcode", $data)) ? $data["errorcode"] : 0;
         $responseLog = $response = (array_key_exists("response", $data)) ? $data["response"] : [];
@@ -87,7 +91,7 @@ class Rest
             log: $log
         );
         if ($error != 0) $response["errorcode"] = $error;
-        http_response_code($http);
+        if (!$test) http_response_code($http);
         if (($retour = json_encode($response)) === false) {
             echo json_encode('{"errorcode" : 99}');
             return false;

@@ -5,6 +5,7 @@
  * 
  * @author  folenski
  * @since 1.1 14/07/2023: adaptation apres refactoring de code
+ * @since 1.2 19/04/2024: adaptation modification fonction choose_by_lang
  */
 
 declare(strict_types=1);
@@ -20,33 +21,47 @@ final class WwwTest extends TestCase
     {
         $Indexs = [new \stdClass(), new \stdClass(), new \stdClass()];
         $Indexs[0]->language = "fr";
-        $Indexs[0]->default = true;
         $Indexs[1]->language = "en";
         $Indexs[2]->language = "sp";
 
-        $Index = Www::choose_by_lang($Indexs, ["sp"]);
+        $Choose = Www::choose_by_lang($Indexs, ["sp"]);   // trouver dans la liste
         $this->assertSame(
-            $Index->language,
-            "sp"
+            "sp",
+            $Choose->language,
         );
-        $Index = Www::choose_by_lang($Indexs, ["oo", "--"]);
+        $Choose = Www::choose_by_lang($Indexs, ["oo", "--"]);  // on prend le 1er soit fr
         $this->assertSame(
-            $Index->language,
-            "fr" // langue par défaut
+            "fr", 
+            $Choose->language
         );
     }
 
     public function testWwwChooseIndexByLang2(): void
     {
-        // pas d'index par defaut
         $Indexs = [new \stdClass(), new \stdClass(), new \stdClass()];
-        $Indexs[0]->language = "fr";
+        $Indexs[0]->nolang = "fr";
         $Indexs[1]->language = "en";
         $Indexs[2]->language = "sp";
 
+        $Choose = Www::choose_by_lang($Indexs, []); 
         $this->assertSame(
-            false,
-            Www::choose_by_lang($Indexs, [])
+            "en",
+            $Choose->language
+        );
+    }
+
+    
+    public function testWwwChooseIndexByLang3(): void
+    {
+        $Indexs = [new \stdClass(), new \stdClass(), new \stdClass()];
+        $Indexs[0]->nolang = "fr";
+        $Indexs[1]->nolang = "en";
+        $Indexs[2]->nolang = "sp";
+
+        $Choose = Www::choose_by_lang($Indexs, []); 
+        $this->assertSame(
+            False,
+            $Choose
         );
     }
 
@@ -82,6 +97,13 @@ final class WwwTest extends TestCase
         );
     }
 
+    public function testWwwLangNavVoid(): void
+    {
+        $this->assertSame(
+            ["0" => "en"],
+            Www::nav_langages()
+        );
+    }
 
     public function testWwwStart(): void
     {
@@ -112,9 +134,9 @@ final class WwwTest extends TestCase
         $Render = new Render(dirname(__DIR__)  . "/dependances/tmp", "@", "/toto");
         $param["uri"] = "fr/news";
         $Env = new stdClass();
-        $Env->index = (array)json_decode($json);
         $Env->Option = new stdClass();
         $Env->Option->prod = true;
+        $Env->Option->index = (array)json_decode($json);
 
         $www = Www::start("progress", $Env, $param, $Render);
         $this->assertIsArray($www);

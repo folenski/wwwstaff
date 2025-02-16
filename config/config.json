@@ -6,17 +6,12 @@
       "prefixe": "site",
       "prod": true
     },
-    "TST": {
-      "servername": "www.test.monurl.com",
-      "db": "sqlite",
-      "pdo": "devsetting.ini",
-      "prefixe": "site"
-    },
     "DEV": {
       "servername": "localhost",
       "db": "sqlite",
       "pdo": "devsetting.ini",
       "prefixe": "site",
+      "mail": "sample@mail.com",
       "default": true
     }
   }

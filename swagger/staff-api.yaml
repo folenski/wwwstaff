@@ -103,14 +103,13 @@ paths:
             type: string
       responses:
         '200':
-          description: 'Data object'
+          description: 'Data j_content'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  properties: { ref: { type: string, example: menu }, id_div: { type: string, example: tpl_menu }, data: { type: string, example: ... } }
-                  type: object
+                properties:
+                  data: { type: array, items: {  } }
+                type: object
         '400':
           description: 'Parameter missing'
           content:
