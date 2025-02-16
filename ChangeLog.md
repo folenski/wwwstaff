@@ -1,8 +1,19 @@
 # Changelog
 
-Projet commencé en 2020 afin de faciliter la production d'un site WEB sur un hebergement mutualisé (php)
+Project started in 2020 to facilitate the production of a WEB site on a shared hosting (php)
 
-## [Unreleased]
+## [1.3.0] - 2025-02-16
+
+### Added
+- Simplify the mechanism for **finding an endpoint** (table environment).
+- Move config directory to project root (should be moved to subdirectory of project)
+- Update config.ini format to JSON and incorporate the 'mail' property
+- Revise the logic for selecting the context used in page construction
+
+### Fixed
+- Bug send mail
+
+## [1.2.0] - 2024-04-18
 
 ### Added
 - Use Swagger to provide information about the REST API : message.

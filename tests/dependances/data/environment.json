@@ -5,60 +5,62 @@
       "name": "DEV",
       "j_option": {
         "log": true,
-        "debug": true,
+        "debug": false,
         "maintenance": false,
         "pref_uri": "/menu/",
         "prod": false,
         "clean_limit": 1,
         "purge": 7,
-        "routes": ["www", "message", "admin", "reload"],
+        "routes": [
+          "www",
+          "message",
+          "admin",
+          "reload",
+          "rest"
+        ],
         "custom_link": [],
         "contact": {
           "user": "svcadmin",
           "mail": "sample@mail.com",
           "send_mail": false,
           "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
-        }
-      },
-      "j_index": [
-        {
-          "language": "fr",
-          "uri": "fr/",
-          "default": true,
-          "nav": "fr_menu",
-          "start": "fr_accueil",
-          "entry_file": "demo.php",
-          "const": {
+        },
+        "index": [
+          {
+            "language": "fr",
+            "uri": "fr/",
+            "ref_nav": "fr_menu",
+            "ref_content": "fr_accueil",
+            "entry_file": "demo.php",
             "title": "Démo en francais",
             "meta": "Lorem ipsum, dolor sit amet consectetur"
-          }
-        },
-        {
-          "language": "en",
-          "uri": "en/",
-          "nav": "en_menu",
-          "start": "en_home",
-          "entry_file": "demo.php",
-          "const": {
+          },
+          {
+            "language": "en",
+            "uri": "en/",
+            "ref_nav": "en_menu",
+            "ref_content": "en_home",
+            "entry_file": "demo.php",
             "title": "English demo",
             "meta": "Lorem ipsum"
           }
-        }
-      ],
-      "_j_route": "inc/route.json"
+        ]
+      }
     },
     {
       "name": "TST",
       "j_option": {
-        "log": true,
-        "debug": true,
-        "maintenance": false,
+        "maintenance": true,
         "pref_uri": "/menu/",
         "prod": false,
         "clean_limit": 1,
-        "purge": 7,
-        "routes": ["www", "message", "admin", "reload"],
-        "custom_link": [],
+        "purge": 30,
+        "routes": [
+          "www",
+          "message",
+          "admin",
+          "reload"
+        ],
         "contact": {
           "user": "svcadmin",
           "mail": "sample@mail.com",
@@ -71,23 +73,26 @@
     {
       "name": "PRD",
       "j_option": {
-        "log": true,
-        "debug": true,
-        "maintenance": false,
+        "maintenance": true,
         "pref_uri": "/menu/",
         "prod": false,
         "clean_limit": 1,
-        "purge": 7,
-        "routes": ["www", "message", "admin", "reload"],
+        "purge": 30,
+        "routes": [
+          "www",
+          "message",
+          "admin",
+          "reload"
+        ],
         "custom_link": [],
         "contact": {
           "user": "svcadmin",
           "mail": "sample@mail.com",
           "send_mail": false,
           "mail_template": "Bonjour,<br/><p>Message reçu de {{nom}} (email {{mail}}), sur le site ({host}}.</p><p>{{message}}</p><br/>Cordialement,<br/><br/>- Admin - "
-        }
-      },
-      "_j_index": "inc/index.json"
+        },
+        "_index": "inc/index.json"
+      }
     }
   ]
 }

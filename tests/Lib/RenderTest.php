@@ -102,7 +102,8 @@ final class RenderTest extends TestCase
      */
     public function testUpdatePref(): void
     {
-        $Rend = new Render(_rep_out: "", _external_pref: "/mymy/");
+        $rep = dirname(__DIR__) .  "/dependances/tmp/";
+        $Rend = new Render(_rep_out: $rep, _external_pref: "/mymy/");
 
         $template = $Rend->fetch_data("fr_menu", "nav");
         $this->assertSame(

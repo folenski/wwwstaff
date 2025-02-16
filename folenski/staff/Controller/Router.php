@@ -8,6 +8,7 @@
  * @version  1.1 09/12/2022: maj routage
  * @version  1.2 10/01/2023: maj suppression champs j_contact
  * @version  1.3 12/07/2023: refonte du routage
+ * @version  1.4 19/04/2024: prise en compte de la structure de la table environment
  * 
  */
 
@@ -31,12 +32,13 @@ class Router
      */
     static function start(string $www): bool
     {
+        $www .= (substr($www, -1) === '/') ? '' : '/';
         if (($ret = DBParam::parse(file: $www . Config::REP_CONFIG . Config::FILE_INI, server: $_SERVER["SERVER_NAME"])) !== true)
             die(DBParam::ERROR[$ret]);
 
         Database::init(DBParam::$file_pdo, $www . Config::REP_SQLITE);
 
-        $load = self::_load(DBParam::$env);
+        $load = self::_load(DBParam::$env, DBParam::$mail);
         if ($load === false) {
             self::link(root: $www, action: Config::VIEWS_INIT);
             return true;
@@ -121,11 +123,12 @@ class Router
     }
 
     /**
-     * Lit la table environment en fonction du contexte determiné dans le fichier config.ini
-     * @param string $environnement determiné en fonction de l'url principalement
+     * Lit la table environment en fonction du contexte déterminé dans le fichier de config
+     * @param string $environnement déterminé en fonction de l'url principalement
+     * @param string $mail le mail recevoir les données de contact
      * @return array|false retourne un tableau [ options, routes] ou false si la base est vide
      */
-    private static function _load(string $environnement): array|false
+    private static function _load(string $environnement, string $mail = ""): array|false
     {
         $Env = new Table(Entite: DBParam::get_table("environment"), prefixe: DBParam::$prefixe);
 
@@ -138,7 +141,7 @@ class Router
 
         $WwwCfg->name = $environnement;
         $WwwCfg->Option = (object)json_decode($enrlu->j_option) ?? new stdClass();
-        $WwwCfg->index = (array)json_decode($enrlu->j_index);
+        $WwwCfg->index = $WwwCfg->Option->index ?? new stdClass();
         $WwwCfg->Option->prod = $WwwCfg->Option->prod ?? false;
         $WwwCfg->Option->log = $WwwCfg->Option->log ?? false;
         $WwwCfg->Option->debug = $WwwCfg->Option->debug ?? false;
@@ -146,6 +149,13 @@ class Router
         $WwwCfg->Option->clean_limit = $WwwCfg->Option->clean_limit ?? 7;
         $WwwCfg->Option->purge = $WwwCfg->Option->purge ?? 30;
         $WwwCfg->Option->revised  = date("d/m/Y", strtotime("{$enrlu->updated_at}"));
+
+        if (isset($WwwCfg->Option->contact)) {  // si il n'existe pas de propriété contact, on ne fait rien
+            if ($mail != "") {
+                $WwwCfg->Option->contact->send_mail = true; // activer l'envoi de mail
+                $WwwCfg->Option->contact->mail = $mail;
+            } 
+        }
 
         $routes = self::_get_routes($WwwCfg->Option);
         if (isset(($WwwCfg->Option->custom_link)) && (gettype($WwwCfg->Option->custom_link) == "array")) {

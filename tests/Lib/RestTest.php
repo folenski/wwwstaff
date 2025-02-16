@@ -26,7 +26,10 @@ final class RestTest extends TestCase
     public function testResponse(): void
     {
         $this->expectOutputString('{"data":"no"}');
-        Rest::reponse(["http" => Rest::HTTP_OK, "errorcode" => 0, "response" => ["data" => "no"]]);
+        Rest::reponse(
+            ["http" => Rest::HTTP_OK, "errorcode" => 0, "response" => ["data" => "no"]],
+            test: true
+        );
     }
 
     /**
@@ -35,7 +38,10 @@ final class RestTest extends TestCase
     public function testResponseKo(): void
     {
         $this->expectOutputString('{"data":"no","errorcode":2}');
-        Rest::reponse(["http" => Rest::HTTP_OK, "errorcode" => 2, "response" => ["data" => "no"]]);
+        Rest::reponse(
+            ["http" => Rest::HTTP_OK, "errorcode" => 2, "response" => ["data" => "no"]],
+            test: true
+        );
     }
 
     /**
@@ -44,7 +50,11 @@ final class RestTest extends TestCase
     public function testResponseData(): void
     {
         $this->expectOutputString('{"token":"123456"}');
-        Rest::reponse(["http" => Rest::HTTP_OK, "response" => ["token" => "123456"]], log: true);
+        Rest::reponse(
+            ["http" => Rest::HTTP_OK, "response" => ["token" => "123456"]],
+            log: true,
+            test: true
+        );
     }
 
     /**

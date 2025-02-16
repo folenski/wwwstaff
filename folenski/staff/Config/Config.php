@@ -16,13 +16,13 @@ final class Config
 {
     const VERSION = 3;
 
-    const REP_CONFIG = "/backend/config/";
-    const REP_VIEWS = "/backend/views/";
-    const REP_DATA = "/backend/data/";
-    const REP_DELIVERY = "delivery" . DIRECTORY_SEPARATOR;
-    const REP_PUBLIC = "/public/";
-    const REP_TMP = "/tmp/";
-    const REP_SQLITE = "/sqldb/";
+    const REP_CONFIG = "config/";
+    const REP_VIEWS = "backend/views/";
+    const REP_DATA = "backend/data/";
+    const REP_DELIVERY = "delivery/";
+    const REP_PUBLIC = "public/";
+    const REP_TMP = "backend/tmp/";
+    const REP_SQLITE = "sqldb/";
     const FILE_INI = "config.json";
     const FILE_DEPLOY = "deploy.json";
     const VIEWS_INIT = "folenski/views/init.php";

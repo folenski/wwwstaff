@@ -7,6 +7,7 @@
  * @since 1.0 09/08/2022: Version initiale
  * @since 1.1 19/08/2022: correction bug sur le choix de l'index lorsque l'uri est renseignée 
  * @since 1.2 12/12/2022: utlisation class Config
+ * @since 1.3 19/04/2024: simplification du choix par langue, suppression du choix par défaut
  * 
  */
 
@@ -30,9 +31,9 @@ class Www
         $uri = $param["uri"] ?? "";
 
         if ($action == "start") {
-            $Index = self::choose_by_lang($Env->index, self::nav_langages());
+            $Index = self::choose_by_lang($Env->Option->index, self::nav_langages());
         } else {
-            $Index = self::choose_by_uri($Env->index, $uri);
+            $Index = self::choose_by_uri($Env->Option->index, $uri);
             if ($Index === false) return self::error_Fatal("sorry, link breaking");
         }
         if ($Index === false) return self::error_Fatal("oups something wrong with environment config");
@@ -95,7 +96,7 @@ class Www
     static function nav_langages(string $langs = null): array
     {
         $tab = [];
-        if ($langs === null) $langs = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+        if ($langs === null) $langs = $_SERVER["HTTP_ACCEPT_LANGUAGE"] ?? "en";
         foreach (explode(",", $langs) as $value) {
             array_push($tab, substr($value, 0, 2));
         }
@@ -103,22 +104,20 @@ class Www
     }
 
     /**
-     * Choisit l'index du site en fonction de la langue ou sinon il prend l'index par défaut
-     * @param array $indexs le tableau des indexs
-     * @param array $langs tableau sur les langues supportées par le navigateur
-     * @return object|false l'index ou null si celui n'est pas trouvé
+     * Chooses the index of the site (table environment):  it takes the first index that corresponds to the language or the first one with language property
+     * @param array $indexs the array of indexes
+     * @param array $langs array of languages supported by the browser
+     * @return object|false returns the index
      */
     static function choose_by_lang(array $indexs, array $langs): object|false
     {
-        foreach ($langs as $lg) {
-            foreach ($indexs as $Val) {
-                if ($Val->language === $lg) return $Val;
-            }
+        foreach ($indexs as $Val) {
+            if (!property_exists($Val, "language")) continue;
+            if (in_array($Val->language, $langs)) return $Val;
+            if (!isset($defaultVal)) $defaultVal = $Val;
         }
-        foreach ($indexs as $Val) {  // on recherche la valeur par defaut 
-            if (@$Val->default === true) return $Val;
-        }
-        return false;
+        if (isset($defaultVal)) return $defaultVal;
+        else return false;
     }
 
     /**
